@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruckus Party - logo overdrive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Black+Han+Sans&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#14171e;--ink-2:#1b1f28;--ink-3:#232936;--line:#323a4a;--bone:#e9e4d8;--bone-dim:#a39e93;--brass:#e0a96d;--brass-deep:#b9824a}
+  *{box-sizing:border-box}html,body{margin:0}button{font:inherit}
+  body{background:radial-gradient(1200px 600px at 80% -10%,#1d2230 0,transparent 60%),var(--ink);color:var(--bone);font-family:"Atkinson Hyperlegible",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:24px 18px 64px}
+  header.top{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}.eyebrow{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:700}
+  h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(1.5rem,4vw,2.2rem);margin:.35rem 0 0;letter-spacing:-.035em}.lead{color:var(--bone-dim);font-size:.9rem;margin:.45rem 0 0;max-width:59ch;text-wrap:pretty}
+  #chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}#chips button{font-weight:700;font-size:.84rem;color:var(--bone-dim);background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:10px 15px;min-height:44px;cursor:pointer;display:flex;align-items:center;gap:8px}
+  #chips button[aria-pressed="true"]{border-color:var(--brass);color:var(--bone);background:var(--ink-3)}#chips button .swatch{width:11px;height:11px;border-radius:4px;background:var(--brass);flex:none}
+  .dir-panel[hidden]{display:none}.dir-panel{animation:fade .28s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .dir-card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;overflow:hidden}.dir-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .dir-name{font-family:"Syne",sans-serif;font-weight:800;font-size:1.1rem;line-height:1.15}.dir-mood{font-size:.74rem;color:var(--bone-dim);margin-top:2px}.dir-tag{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 9px;border-radius:99px;white-space:nowrap;background:var(--ink-3);color:var(--bone-dim);border:1px solid var(--line)}
+  .dir-body{padding:0}.dir-why{display:flex;gap:9px;align-items:flex-start;padding:13px 18px;border-top:1px solid var(--line);background:rgba(255,255,255,.015);font-size:.82rem;color:var(--bone-dim)}.dir-why b{color:var(--bone)}
+  .concept{min-height:590px;padding:clamp(18px,4vw,42px);display:grid;grid-template-columns:minmax(0,1.45fr) minmax(230px,.55fr);gap:clamp(20px,4vw,48px);align-items:center;overflow:hidden}.brand-stage{position:relative;min-height:380px;display:grid;place-items:center;border-radius:24px;overflow:hidden}.brand-lockup{width:min(100%,570px);position:relative;z-index:2}.brand-lockup svg{width:100%;height:auto;display:block}.preview-rail{display:grid;gap:18px}.rail-label{margin:0 0 8px;font-size:.69rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.icons{display:flex;align-items:end;gap:14px}.icon{display:grid;place-items:center;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.22)}.icon svg{width:100%;height:100%}.i16{width:16px;height:16px;border-radius:4px}.i32{width:32px;height:32px;border-radius:8px}.i64{width:64px;height:64px;border-radius:15px}.phone{width:148px;padding:10px 10px 12px;border-radius:27px;background:#131313;border:2px solid rgba(255,255,255,.2);box-shadow:0 18px 35px rgba(0,0,0,.25)}.phone-screen{min-height:236px;padding:22px 12px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border-radius:18px}.home-icon{width:82px;height:82px;border-radius:20px;overflow:hidden;box-shadow:0 8px 16px rgba(0,0,0,.23)}.home-icon svg{width:100%;height:100%}.phone-name{font-size:.65rem;font-weight:700}.replay{min-height:44px;padding:8px 13px;border:1px solid currentColor;border-radius:10px;color:inherit;background:transparent;font-weight:700;cursor:pointer}.replay:focus-visible,#chips button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+  /* D - Urlo comune */
+  .concept-d{color:#fff5dc;background:#500d2f}.concept-d .brand-stage{background:#ff5b37;isolation:isolate}.concept-d .brand-stage::before{content:"";position:absolute;inset:-40%;background:repeating-conic-gradient(from 4deg,#d9ff4b 0 7deg,transparent 7deg 22deg);opacity:.9;transform:rotate(0);z-index:-1}.concept-d .brand-stage::after{content:"";position:absolute;width:72%;aspect-ratio:1;border-radius:50%;background:#500d2f;z-index:-1}.d-lock{transform:rotate(-2deg)}.d-lock .ray{transform-origin:300px 210px}.d-lock .word,.d-lock .party,.d-lock .mouth{transform-box:fill-box;transform-origin:center}.d-lock.live .ray{animation:dRay .5s cubic-bezier(.18,.89,.32,1.28) both}.d-lock.live .ray:nth-child(2){animation-delay:.05s}.d-lock.live .ray:nth-child(3){animation-delay:.1s}.d-lock.live .ray:nth-child(4){animation-delay:.15s}.d-lock.live .mouth{animation:dMouth .42s cubic-bezier(.2,.85,.22,1) .25s both}.d-lock.live .word{animation:dWord .46s cubic-bezier(.17,.86,.27,1.18) .43s both}.d-lock.live .party{animation:dParty .36s steps(4,end) .82s both}@keyframes dRay{from{opacity:0;transform:scale(.15) rotate(-18deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes dMouth{from{opacity:0;transform:scale(.3) rotate(-18deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes dWord{from{opacity:0;transform:translateY(35px) scaleX(.76)}to{opacity:1;transform:none}}@keyframes dParty{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+  .concept-d .icon,.concept-d .home-icon{background:#500d2f}.concept-d .phone-screen{background:#ff5b37;color:#500d2f}.concept-d .replay{background:#d9ff4b;color:#500d2f;border-color:#500d2f}
+
+  /* E - Nodo ribelle */
+  .concept-e{color:#e8fff7;background:#071f1b}.concept-e .brand-stage{background:#8bffd1;color:#071f1b}.concept-e .brand-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,31,27,.09) 1px,transparent 1px),linear-gradient(rgba(7,31,27,.09) 1px,transparent 1px);background-size:32px 32px}.e-lock .path{stroke-dasharray:1070;stroke-dashoffset:1070}.e-lock .node,.e-lock .word,.e-lock .party{transform-box:fill-box;transform-origin:center}.e-lock.live .path{animation:eDraw 1s cubic-bezier(.65,0,.2,1) both}.e-lock.live .node{animation:eNode .28s cubic-bezier(.2,.9,.25,1.4) both}.e-lock.live .n1{animation-delay:.2s}.e-lock.live .n2{animation-delay:.44s}.e-lock.live .n3{animation-delay:.68s}.e-lock.live .n4{animation-delay:.9s}.e-lock.live .word{animation:eWord .38s ease .78s both}.e-lock.live .party{animation:eParty .38s ease 1.04s both}@keyframes eDraw{to{stroke-dashoffset:0}}@keyframes eNode{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}@keyframes eWord{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}@keyframes eParty{from{opacity:0;letter-spacing:.7em}to{opacity:1;letter-spacing:.28em}}
+  .concept-e .icon,.concept-e .home-icon{background:#071f1b}.concept-e .phone-screen{background:#8bffd1;color:#071f1b}.concept-e .replay{background:#ff4c36;color:#071f1b;border-color:#071f1b}
+
+  @media(max-width:680px){.wrap{padding:18px 12px 48px}.concept{min-height:0;grid-template-columns:1fr;padding:16px}.brand-stage{min-height:320px;border-radius:18px}.preview-rail{grid-template-columns:1fr 148px;align-items:end}.phone{width:148px}.dir-head{align-items:flex-start}.dir-tag{display:none}}
+  @media(max-width:430px){.preview-rail{grid-template-columns:1fr}.phone{width:100%;display:grid;place-items:center}.phone-screen{width:148px}.brand-stage{min-height:280px}.d-lock{transform:rotate(-2deg) scale(1.05)}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.d-lock .ray,.d-lock .mouth,.d-lock .word,.d-lock .party,.e-lock .node,.e-lock .word,.e-lock .party{opacity:1!important;transform:none!important}.e-lock .path{stroke-dashoffset:0!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Logo lab - secondo round</div>
+    <h1 id="mockTitle">Due idee che non potrebbero appartenere a un'app qualsiasi.</h1>
+    <p class="lead">Stesso test per entrambe: carattere a piena scala, leggibilità come icona Home e un ingresso che racconta il gioco senza mostrare carte o dadi.</p>
+  </header>
+  <nav id="chips" role="tablist" aria-label="Direzioni"></nav>
+  <main id="stage"><div id="panels">
+    <section class="dir-panel" data-name="D - Urlo comune" data-mood="fanzine da festa · corale, sfacciato" data-why="Il simbolo nasce da più voci che esplodono insieme: è rumoroso, sociale e impossibile da scambiare per un'app di utilità." data-role="Più Ruckus">
+      <div class="concept concept-d">
+        <div class="brand-stage">
+          <div class="brand-lockup d-lock live" data-animated>
+            <svg viewBox="0 0 600 420" role="img" aria-label="Logo Ruckus Party Urlo comune">
+              <g fill="#d9ff4b">
+                <path class="ray" d="M75 130 17 87l84 14z"/><path class="ray" d="M486 82 543 23l-22 91z"/><path class="ray" d="M527 262 594 287l-86 10z"/><path class="ray" d="M119 310 63 390l17-96z"/>
+              </g>
+              <path class="mouth" d="M109 204c28-105 345-125 390 7 31 92-55 147-188 145-144-2-226-59-202-152Z" fill="#500d2f" stroke="#fff5dc" stroke-width="10"/>
+              <text class="word" x="300" y="250" text-anchor="middle" fill="#fff5dc" font-family="Black Han Sans, sans-serif" font-size="92" letter-spacing="-5">RUCKUS</text>
+              <rect class="party" x="359" y="278" width="139" height="48" rx="0" fill="#d9ff4b" transform="rotate(-4 359 278)"/>
+              <text class="party" x="428" y="311" text-anchor="middle" fill="#500d2f" font-family="Atkinson Hyperlegible, sans-serif" font-size="24" font-weight="700" letter-spacing="7">PARTY</text>
+            </svg>
+          </div>
+          <button class="replay" type="button" onclick="const x=this.parentElement.querySelector('[data-animated]');x.classList.remove('live');void x.offsetWidth;x.classList.add('live')">Rivedi l'ingresso</button>
+        </div>
+        <aside class="preview-rail">
+          <div><p class="rail-label">Tiene anche minuscolo</p><div class="icons">
+            <div class="icon i16"><svg viewBox="0 0 100 100"><path d="M13 49C17 14 79 7 88 49c8 36-16 48-39 47C23 95 9 77 13 49Z" fill="#ff5b37"/><path d="m29 31-18-9 15 17m49-12 14-17-7 22" stroke="#d9ff4b" stroke-width="7"/><path d="m50 24 7 19 20-7-14 16 15 16-21-7-7 21-7-21-21 7 15-16-14-16 20 7Z" fill="#fff5dc"/></svg></div>
+            <div class="icon i32"><svg viewBox="0 0 100 100"><path d="M13 49C17 14 79 7 88 49c8 36-16 48-39 47C23 95 9 77 13 49Z" fill="#ff5b37"/><path d="m29 31-18-9 15 17m49-12 14-17-7 22" stroke="#d9ff4b" stroke-width="7"/><path d="m50 24 7 19 20-7-14 16 15 16-21-7-7 21-7-21-21 7 15-16-14-16 20 7Z" fill="#fff5dc"/></svg></div>
+            <div class="icon i64"><svg viewBox="0 0 100 100"><path d="M13 49C17 14 79 7 88 49c8 36-16 48-39 47C23 95 9 77 13 49Z" fill="#ff5b37"/><path d="m29 31-18-9 15 17m49-12 14-17-7 22" stroke="#d9ff4b" stroke-width="7"/><path d="m50 24 7 19 20-7-14 16 15 16-21-7-7 21-7-21-21 7 15-16-14-16 20 7Z" fill="#fff5dc"/></svg></div>
+          </div></div>
+          <div class="phone"><div class="phone-screen"><div class="home-icon"><svg viewBox="0 0 100 100"><path d="M13 49C17 14 79 7 88 49c8 36-16 48-39 47C23 95 9 77 13 49Z" fill="#ff5b37"/><path d="m29 31-18-9 15 17m49-12 14-17-7 22" stroke="#d9ff4b" stroke-width="7"/><path d="m50 24 7 19 20-7-14 16 15 16-21-7-7 21-7-21-21 7 15-16-14-16 20 7Z" fill="#fff5dc"/></svg></div><span class="phone-name">Ruckus Party</span></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="dir-panel" data-name="E - Nodo ribelle" data-mood="segnaletica radicale · preciso, sociale" data-why="Una sola linea passa tra quattro persone e diventa una R: il gesto centrale del gioco si trasforma in un segno proprietario e scalabile." data-role="Più iconico" hidden>
+      <div class="concept concept-e">
+        <div class="brand-stage">
+          <div class="brand-lockup e-lock live" data-animated>
+            <svg viewBox="0 0 640 400" role="img" aria-label="Logo Ruckus Party Nodo ribelle">
+              <path class="path" d="M83 316V91h126c83 0 118 34 118 91 0 59-43 89-119 89H83m140-1 104 75" fill="none" stroke="#071f1b" stroke-width="25" stroke-linecap="square" stroke-linejoin="round"/>
+              <g fill="#ff4c36" stroke="#071f1b" stroke-width="8"><circle class="node n1" cx="83" cy="316" r="18"/><circle class="node n2" cx="83" cy="91" r="18"/><circle class="node n3" cx="327" cy="182" r="18"/><circle class="node n4" cx="327" cy="345" r="18"/></g>
+              <text class="word" x="360" y="190" fill="#071f1b" font-family="Syne, sans-serif" font-size="52" font-weight="800" letter-spacing="-3">UCKUS</text>
+              <text class="party" x="374" y="247" fill="#ff4c36" font-family="Atkinson Hyperlegible, sans-serif" font-size="26" font-weight="700" letter-spacing="7">PARTY</text>
+            </svg>
+          </div>
+          <button class="replay" type="button" onclick="const x=this.parentElement.querySelector('[data-animated]');x.classList.remove('live');void x.offsetWidth;x.classList.add('live')">Rivedi il passaggio</button>
+        </div>
+        <aside class="preview-rail">
+          <div><p class="rail-label">Tiene anche minuscolo</p><div class="icons">
+            <div class="icon i16"><svg viewBox="0 0 100 100"><path d="M25 85V17h34c23 0 32 11 32 26 0 17-12 25-32 25H25m38 0 28 22" fill="none" stroke="#8bffd1" stroke-width="12"/><circle cx="25" cy="85" r="8" fill="#ff4c36"/><circle cx="25" cy="17" r="8" fill="#ff4c36"/><circle cx="91" cy="90" r="8" fill="#ff4c36"/></svg></div>
+            <div class="icon i32"><svg viewBox="0 0 100 100"><path d="M25 85V17h34c23 0 32 11 32 26 0 17-12 25-32 25H25m38 0 28 22" fill="none" stroke="#8bffd1" stroke-width="12"/><circle cx="25" cy="85" r="8" fill="#ff4c36"/><circle cx="25" cy="17" r="8" fill="#ff4c36"/><circle cx="91" cy="90" r="8" fill="#ff4c36"/></svg></div>
+            <div class="icon i64"><svg viewBox="0 0 100 100"><path d="M25 85V17h34c23 0 32 11 32 26 0 17-12 25-32 25H25m38 0 28 22" fill="none" stroke="#8bffd1" stroke-width="12"/><circle cx="25" cy="85" r="8" fill="#ff4c36"/><circle cx="25" cy="17" r="8" fill="#ff4c36"/><circle cx="91" cy="90" r="8" fill="#ff4c36"/></svg></div>
+          </div></div>
+          <div class="phone"><div class="phone-screen"><div class="home-icon"><svg viewBox="0 0 100 100"><path d="M25 85V17h34c23 0 32 11 32 26 0 17-12 25-32 25H25m38 0 28 22" fill="none" stroke="#8bffd1" stroke-width="12"/><circle cx="25" cy="85" r="8" fill="#ff4c36"/><circle cx="25" cy="17" r="8" fill="#ff4c36"/><circle cx="91" cy="90" r="8" fill="#ff4c36"/></svg></div><span class="phone-name">Ruckus Party</span></div></div>
+        </aside>
+      </div>
+    </section>
+  </div></main>
+</div>
+<script>
+(function(){
+  const panels=[...document.querySelectorAll('.dir-panel')];const chips=document.getElementById('chips');
+  panels.forEach(p=>{const inner=p.innerHTML;const role=p.dataset.role||'';p.innerHTML=`<div class="dir-card"><div class="dir-head"><div><div class="dir-name">${p.dataset.name}</div><div class="dir-mood">${p.dataset.mood}</div></div><span class="dir-tag">${role||'Direzione'}</span></div><div class="dir-body">${inner}</div><div class="dir-why">✶&nbsp;<span><b>Perché:</b> ${p.dataset.why}</span></div></div>`});
+  function show(i){panels.forEach((p,j)=>p.toggleAttribute('hidden',j!==i));[...chips.children].forEach((c,j)=>c.setAttribute('aria-pressed',j===i));const animated=panels[i].querySelector('[data-animated]');if(animated){animated.classList.remove('live');void animated.offsetWidth;animated.classList.add('live')}}
+  panels.forEach((p,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-pressed',i===0?'true':'false');b.innerHTML=`<span class="swatch"></span>${p.dataset.name}`;b.addEventListener('click',()=>show(i));chips.appendChild(b)});show(0);
+})();
+</script>
+</body>
+</html>

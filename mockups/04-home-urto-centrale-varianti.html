@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  viewer-template.html · scocca del visualizzatore di direzioni (skill `mockup`)
+  ─────────────────────────────────────────────────────────────────────────────
+  SCOCCA FISSA, CONTENUTO VARIABILE.
+  La skill sostituisce SOLO il contenuto di <div id="panels"> con i 3/4 pannelli
+  reali. Ogni direzione è un <section class="dir-panel" data-name data-mood data-why>
+  che contiene SOLO il design di anteprima: la barra-titolo (nome+mood) e la riga
+  "perché" sono disegnate automaticamente dallo script qui sotto.
+  I chip in #chips sono generati automaticamente, uno per pannello.
+  NON modificare la scocca o lo script: cambia solo #panels (e <title>).
+-->
+<title>Ruckus Party - nuove Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171e; --ink-2:#1b1f28; --ink-3:#232936;
+    --line:#323a4a; --bone:#e9e4d8; --bone-dim:#a39e93;
+    --brass:#e0a96d; --brass-deep:#b9824a; --ok:#7fb59a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:radial-gradient(1200px 600px at 80% -10%, #1d2230 0, transparent 60%), var(--ink);
+    color:var(--bone); font-family:"Hanken Grotesk",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:24px 18px 64px}
+
+  header.top{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
+  .eyebrow{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:700}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:clamp(1.4rem,4vw,2rem);margin:.35rem 0 0;letter-spacing:-.015em}
+  .lead{color:var(--bone-dim);font-size:.9rem;margin:.45rem 0 0;max-width:52ch}
+
+  /* chip bar */
+  #chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+  #chips button{
+    font:inherit;font-weight:600;font-size:.84rem;color:var(--bone-dim);
+    background:var(--ink-2);border:1px solid var(--line);border-radius:11px;
+    padding:10px 15px;min-height:44px;cursor:pointer;display:flex;align-items:center;gap:8px;
+    transition:color .15s ease, background .15s ease, border-color .15s ease;
+  }
+  #chips button:hover{color:var(--bone)}
+  #chips button[aria-pressed="true"]{border-color:var(--brass);color:var(--bone);background:var(--ink-3)}
+  #chips button .swatch{width:11px;height:11px;border-radius:4px;background:var(--brass);flex:none}
+
+  /* palco */
+  #stage{position:relative}
+  .dir-panel[hidden]{display:none}
+  .dir-panel{animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .dir-card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .dir-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .dir-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.1rem;line-height:1.15}
+  .dir-mood{font-size:.74rem;color:var(--bone-dim);margin-top:2px}
+  .dir-tag{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 9px;border-radius:99px;white-space:nowrap;background:var(--ink-3);color:var(--bone-dim);border:1px solid var(--line)}
+  .dir-tag[data-role="Attuale"]{background:rgba(224,169,109,.16);color:var(--brass);border-color:var(--brass-deep)}
+  .dir-tag[data-role="Variante +"]{background:rgba(127,181,154,.14);color:var(--ok);border-color:#3f5a4f}
+  .dir-body{padding:20px 18px}
+  .dir-why{display:flex;gap:9px;align-items:flex-start;padding:13px 18px;border-top:1px solid var(--line);background:rgba(255,255,255,.015);font-size:.82rem;color:var(--bone-dim)}
+  .dir-why b{color:var(--bone);font-weight:600}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+
+  /* ───────── stili di esempio dei pannelli (la skill li sostituisce) ───────── */
+  .demo-nav{display:flex;gap:8px;align-items:center;font-size:.7rem;color:var(--bone-dim);margin-bottom:14px}
+  .demo-dot{width:8px;height:8px;border-radius:99px;background:var(--line)}
+  .demo-h{margin:0 0 8px;line-height:1.05}
+  .demo-p{margin:0 0 16px;font-size:.86rem;color:var(--bone-dim)}
+  .demo-btn{font:inherit;font-weight:700;font-size:.82rem;border:0;border-radius:9px;padding:11px 16px;min-height:44px;cursor:pointer;transition:transform .12s ease, filter .12s ease}
+  .demo-btn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+  .t-edit .demo-h{font-family:"Bodoni Moda",serif;font-weight:500;font-size:1.7rem;color:#f1ece1}
+  .t-edit .demo-btn{background:#e9e4d8;color:#181818}
+  .t-retro{background:linear-gradient(180deg,#241a12,#1b1f28);margin:-20px -18px;padding:20px 18px;border-radius:0}
+  .t-retro .demo-h{font-family:"Bodoni Moda",serif;font-style:italic;font-weight:500;font-size:1.7rem;color:#f0c98a}
+  .t-retro .demo-btn{background:#d98b3f;color:#1a1206}
+  .t-tech .demo-h{font-family:"Hanken Grotesk";font-weight:700;letter-spacing:-.02em;font-size:1.6rem;color:#dfe7f2}
+  .t-tech .demo-btn{background:#5b7fb0;color:#0c1118}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Direzioni a confronto</div>
+    <h1 id="mockTitle">Home - nuove possibilità</h1>
+    <p class="lead">Tocca un nome in alto per cambiare direzione. Ogni tile mostra l'estetica, un'interazione viva e il <b>perché</b>.</p>
+  </header>
+
+  <nav id="chips" role="tablist" aria-label="Direzioni"></nav>
+
+  <main id="stage">
+    <div id="panels">
+
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Franklin:wght@500;600;700&display=swap');
+
+        .home-preview {
+          --aubergine: #0d0818;
+          --ink: #1b1230;
+          --ivory: #f7efd9;
+          --coral: #ff4b3e;
+          --coral-dark: #d93a2e;
+          --gold: #ffc53d;
+          width: min(100%, 368px);
+          min-height: 595px;
+          margin: 0 auto;
+          padding: 20px 17px 18px;
+          overflow: hidden;
+          border: 3px solid var(--ink);
+          border-radius: 28px;
+          color: var(--ivory);
+          background: var(--aubergine);
+          font-family: "Hanken Grotesk", sans-serif;
+          box-shadow: 0 20px 42px rgba(0,0,0,.32);
+        }
+        .home-preview button { font-family: "Hanken Grotesk", sans-serif; }
+        .home-topline {
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          color: #d7cce5;
+          font-size: .68rem;
+          font-weight: 700;
+        }
+        .home-topline b { color: var(--gold); letter-spacing: .08em; }
+        .lang-chip {
+          min-width: 48px;
+          min-height: 44px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(247,239,217,.38);
+          border-radius: 999px;
+          color: var(--ink);
+          background: var(--gold);
+          font-weight: 700;
+        }
+        .kinetic-logo {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: flex-end;
+          font-family: "Bricolage Grotesque", sans-serif;
+          font-weight: 700;
+          line-height: .72;
+          letter-spacing: -.095em;
+          text-transform: uppercase;
+        }
+        .kinetic-letter {
+          position: relative;
+          display: inline-block;
+          transform: rotate(var(--r, 0deg));
+          transform-origin: 50% 82%;
+          animation: letter-collision 620ms cubic-bezier(.18,.82,.16,1) var(--d, 0ms) both;
+        }
+        .party-lock {
+          position: relative;
+          z-index: 3;
+          width: max-content;
+          padding: 5px 11px 4px;
+          color: var(--aubergine);
+          background: var(--gold);
+          font-size: .68rem;
+          font-weight: 700;
+          letter-spacing: .2em;
+          text-transform: uppercase;
+          transform: rotate(-2deg);
+          animation: party-lock 380ms cubic-bezier(.22,.9,.24,1) 540ms both;
+        }
+        .home-promise {
+          max-width: 32ch;
+          margin: 12px 0 16px;
+          color: #d7cce5;
+          font-size: .78rem;
+          line-height: 1.48;
+          text-wrap: pretty;
+        }
+        .action-stack { display: grid; gap: 10px; }
+        .home-action {
+          position: relative;
+          width: 100%;
+          min-height: 74px;
+          padding: 13px 14px;
+          overflow: hidden;
+          display: grid;
+          grid-template-columns: 1fr 72px;
+          align-items: center;
+          gap: 8px;
+          border: 2px solid var(--ink);
+          border-radius: 15px;
+          color: var(--ink);
+          text-align: left;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .home-action:focus-visible { outline: 3px solid #ffd66b; outline-offset: 3px; }
+        .home-action strong {
+          display: block;
+          font-size: 1.08rem;
+          line-height: 1.05;
+          letter-spacing: -.025em;
+        }
+        .home-action small { display: block; margin-top: 5px; font-size: .64rem; font-weight: 600; opacity: .72; }
+        .action-party { min-height: 110px; color: #fff; background: var(--coral); box-shadow: 0 5px 0 var(--coral-dark); }
+        .action-quick { background: var(--gold); }
+        .action-games { background: var(--ivory); }
+        .object-slot { width: 70px; height: 70px; display: grid; place-items: center; }
+        .obj-wheel {
+          position: relative;
+          width: 64px;
+          height: 64px;
+          display: block;
+          border: 4px solid var(--ivory);
+          border-radius: 50%;
+          background: conic-gradient(var(--gold) 0 60deg, var(--coral-dark) 60deg 120deg, var(--ivory) 120deg 180deg, var(--gold) 180deg 240deg, var(--coral-dark) 240deg 300deg, var(--ivory) 300deg);
+          box-shadow: 0 5px 0 rgba(27,18,48,.35);
+        }
+        .obj-wheel::before {
+          content: "";
+          position: absolute;
+          inset: 21px;
+          border: 3px solid var(--ivory);
+          border-radius: 50%;
+          background: var(--ink);
+        }
+        .obj-wheel::after {
+          content: "";
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          border-right: 7px solid transparent;
+          border-left: 7px solid transparent;
+          border-top: 13px solid var(--gold);
+          transform: translateX(-50%);
+        }
+        .obj-die {
+          position: relative;
+          width: 53px;
+          height: 53px;
+          display: block;
+          border: 3px solid var(--ink);
+          border-radius: 13px;
+          background: var(--ivory);
+          box-shadow: 4px 5px 0 rgba(27,18,48,.22);
+          transform: rotate(8deg);
+        }
+        .obj-die::before {
+          content: "";
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: var(--ink);
+          box-shadow: 27px 0 var(--ink), 13.5px 13.5px var(--ink), 0 27px var(--ink), 27px 27px var(--ink);
+        }
+        .obj-cards { position: relative; width: 62px; height: 60px; display: block; }
+        .obj-cards i {
+          position: absolute;
+          inset: 4px 12px 0;
+          border: 3px solid var(--ink);
+          border-radius: 8px;
+          background: var(--coral);
+          transform-origin: 50% 100%;
+        }
+        .obj-cards i:nth-child(1) { background: var(--gold); transform: rotate(-12deg); }
+        .obj-cards i:nth-child(2) { background: var(--coral); transform: rotate(0); }
+        .obj-cards i:nth-child(3) { background: var(--ivory); transform: rotate(12deg); }
+        .action-party:focus .obj-wheel { animation: wheel-turn 720ms cubic-bezier(.18,.78,.18,1); }
+        .action-quick:focus .obj-die { animation: die-toss 480ms cubic-bezier(.2,.8,.25,1); }
+        .action-games:focus .obj-cards { animation: cards-open 420ms cubic-bezier(.2,.8,.25,1); }
+        .choose-variation {
+          width: 100%;
+          min-height: 48px;
+          margin-top: 15px;
+          border: 2px solid var(--brass);
+          border-radius: 11px;
+          color: var(--bone);
+          background: var(--ink-3);
+          font: 700 .78rem "Hanken Grotesk", sans-serif;
+          cursor: pointer;
+        }
+
+        .impact-home .logo-zone { margin: 11px 0 0; }
+        .impact-home .kinetic-logo { font-size: clamp(3.1rem, 15vw, 4.25rem); }
+        .impact-home .kinetic-letter:nth-child(2),
+        .impact-home .kinetic-letter:nth-child(5) { color: var(--coral); }
+        .impact-home .party-lock { margin: 8px 0 0 5px; }
+        .impact-home .action-party { min-height: 118px; border-radius: 18px 6px 18px 6px; }
+        .impact-home .home-action:nth-child(2) {
+          width: 90%;
+          margin-left: auto;
+          border-radius: 5px 18px 5px 18px;
+          transform: rotate(.7deg);
+        }
+        .impact-home .home-action:nth-child(3) {
+          width: 95%;
+          border-radius: 18px 5px 18px 5px;
+          transform: rotate(-.6deg);
+        }
+
+        .pressure-home {
+          background:
+            linear-gradient(90deg, transparent 0 74%, rgba(255,75,62,.12) 74% 75%, transparent 75%),
+            var(--aubergine);
+        }
+        .pressure-home .logo-zone { position: relative; margin: 10px 0 15px; padding: 14px 6px 16px 0; border-right: 7px solid var(--coral); }
+        .pressure-home .kinetic-logo { justify-content: flex-end; font-size: clamp(2.62rem, 13vw, 3.7rem); }
+        .pressure-home .kinetic-letter { margin-left: -.04em; }
+        .pressure-home .kinetic-letter:nth-child(odd) { color: var(--gold); }
+        .pressure-home .party-lock { margin: 10px 0 0 auto; transform: rotate(0); }
+        .pressure-home .home-promise { margin-left: auto; text-align: right; }
+        .pressure-home .action-party { grid-template-columns: 72px 1fr; }
+        .pressure-home .action-party .object-slot { grid-column: 1; grid-row: 1; }
+        .pressure-home .action-party .action-copy { grid-column: 2; grid-row: 1; text-align: right; }
+        .pressure-home .action-stack { gap: 8px; }
+        .pressure-home .action-quick { width: 94%; }
+        .pressure-home .action-games { width: 91%; margin-left: auto; }
+
+        .cascade-home {
+          background:
+            repeating-linear-gradient(0deg, rgba(255,255,255,.026) 0 1px, transparent 1px 13px),
+            var(--aubergine);
+        }
+        .cascade-home .logo-zone { position: relative; min-height: 170px; margin-top: 3px; }
+        .cascade-home .kinetic-logo { width: 270px; flex-wrap: wrap; font-size: 3.9rem; }
+        .cascade-home .kinetic-letter:nth-child(4) { margin-left: 12px; }
+        .cascade-home .kinetic-letter:nth-child(n+4) { margin-top: 6px; }
+        .cascade-home .kinetic-letter:nth-child(1),
+        .cascade-home .kinetic-letter:nth-child(4),
+        .cascade-home .kinetic-letter:nth-child(6) { color: var(--coral); }
+        .cascade-home .party-lock { position: absolute; right: 4px; bottom: 13px; transform: rotate(4deg); }
+        .cascade-home .home-promise { margin-top: 4px; }
+        .cascade-home .action-party { transform: rotate(-.6deg); }
+        .cascade-home .action-quick { width: 92%; margin-left: auto; transform: rotate(.7deg); }
+        .cascade-home .action-games { width: 96%; transform: rotate(-.4deg); }
+
+        @keyframes letter-collision {
+          from { opacity: 0; transform: translate(var(--x, 0), var(--y, -70px)) rotate(var(--from-r, 0deg)) scale(.82); }
+          72% { opacity: 1; transform: translate(calc(var(--x, 0) * -.08), 0) rotate(calc(var(--r, 0deg) * 1.35)) scale(1.04); }
+          to { opacity: 1; transform: translate(0,0) rotate(var(--r, 0deg)) scale(1); }
+        }
+        @keyframes party-lock {
+          from { opacity: 0; transform: translateX(38px) rotate(5deg); }
+          to { opacity: 1; transform: translateX(0) rotate(-2deg); }
+        }
+        @keyframes wheel-turn { to { transform: rotate(720deg); } }
+        @keyframes die-toss {
+          0% { transform: translate(0,0) rotate(8deg); }
+          52% { transform: translate(-8px,-15px) rotate(108deg); }
+          100% { transform: translate(0,0) rotate(188deg); }
+        }
+        @keyframes cards-open {
+          0% { transform: scale(.88) rotate(-5deg); }
+          58% { transform: scale(1.06) rotate(4deg); }
+          100% { transform: scale(1) rotate(0); }
+        }
+        @media (max-width: 420px) {
+          .dir-body { padding: 14px 10px; }
+          .home-preview { border-radius: 22px; }
+        }
+
+        .impact-plus-home { position: relative; }
+        .impact-plus-home .logo-zone {
+          position: relative;
+          margin: 4px -3px 0;
+          padding: 18px 3px 13px;
+        }
+        .impact-plus-home .logo-zone::before {
+          content: "";
+          position: absolute;
+          z-index: 0;
+          right: -28px;
+          bottom: 7px;
+          left: 42%;
+          height: 13px;
+          background: var(--coral);
+          transform: rotate(-2deg);
+        }
+        .impact-plus-home .kinetic-logo {
+          z-index: 1;
+          font-size: clamp(3.35rem, 16vw, 4.55rem);
+          letter-spacing: -.13em;
+        }
+        .impact-plus-home .kinetic-letter:nth-child(2),
+        .impact-plus-home .kinetic-letter:nth-child(4) { color: var(--coral); }
+        .impact-plus-home .party-lock {
+          z-index: 2;
+          margin: 2px 7px 0 auto;
+          color: #fff;
+          background: var(--coral);
+          transform: rotate(1deg);
+        }
+        .impact-plus-home .home-promise { margin-top: 6px; }
+        .impact-plus-home .action-party {
+          min-height: 124px;
+          border-radius: 4px 20px 4px 20px;
+          transform: rotate(-.45deg);
+        }
+        .impact-plus-home .action-quick {
+          width: 91%;
+          margin-left: auto;
+          border-radius: 18px 3px 18px 3px;
+          clip-path: polygon(7% 0,100% 0,94% 100%,0 100%);
+          transform: rotate(.7deg);
+        }
+        .impact-plus-home .action-games {
+          width: 95%;
+          min-height: 68px;
+          padding-right: 8px;
+          border-width: 2px 0;
+          border-radius: 0;
+          color: var(--ivory);
+          background: transparent;
+          transform: rotate(-.35deg);
+        }
+        .impact-plus-home .action-games .obj-cards i { border-color: var(--ivory); }
+
+        .chorus-home {
+          --aubergine: #0d0818;
+          --ink: #17101f;
+          --ivory: #f7efd9;
+          --coral: #ff4b3e;
+          --coral-dark: #d93a2e;
+          --gold: #ffc53d;
+          color: var(--ink);
+          background:
+            linear-gradient(90deg, transparent 0 93%, var(--coral) 93% 96%, transparent 96%),
+            var(--ivory);
+          font-family: "Libre Franklin", sans-serif;
+        }
+        .chorus-home button { font-family: "Libre Franklin", sans-serif; }
+        .chorus-home .home-topline { color: #62566e; }
+        .chorus-home .home-topline b { color: var(--coral); }
+        .chorus-zone {
+          position: relative;
+          min-height: 164px;
+          margin: 5px -4px 0;
+          overflow: hidden;
+        }
+        .chorus-logo {
+          position: absolute;
+          inset: 7px 0 auto;
+          min-height: 135px;
+          font-family: "Archivo Black", sans-serif;
+          font-size: clamp(3.1rem, 15vw, 4.4rem);
+          line-height: .86;
+          letter-spacing: -.075em;
+          text-transform: uppercase;
+        }
+        .chorus-logo .voice {
+          position: absolute;
+          left: 0;
+          color: transparent;
+          -webkit-text-stroke: 2px var(--ink);
+          opacity: .15;
+          animation: voice-arrive 520ms cubic-bezier(.2,.82,.2,1) var(--voice-delay,0ms) both;
+        }
+        .chorus-logo .voice:nth-child(1) { top: 0; left: -25px; --voice-x:-80px; --voice-delay:0ms; }
+        .chorus-logo .voice:nth-child(2) { top: 33px; left: 34px; --voice-x:95px; --voice-delay:90ms; }
+        .chorus-logo .voice:nth-child(3) { top: 66px; left: -7px; --voice-x:-90px; --voice-delay:180ms; }
+        .chorus-logo strong {
+          position: absolute;
+          z-index: 2;
+          top: 34px;
+          left: 8px;
+          color: var(--coral);
+          text-shadow: 4px 4px 0 var(--gold);
+          animation: chorus-hit 470ms cubic-bezier(.18,.82,.18,1) 260ms both;
+        }
+        .chorus-logo b {
+          position: absolute;
+          z-index: 3;
+          right: 4px;
+          bottom: 0;
+          padding: 5px 10px;
+          color: var(--ivory);
+          background: var(--ink);
+          font-family: "Libre Franklin", sans-serif;
+          font-size: .67rem;
+          letter-spacing: .22em;
+          transform: rotate(-3deg);
+        }
+        .chorus-home .home-promise { color: #51465b; }
+        .chorus-home .action-stack { gap: 0; border-top: 3px solid var(--ink); }
+        .chorus-home .home-action {
+          min-height: 82px;
+          border-width: 0 0 3px;
+          border-radius: 0;
+          box-shadow: none;
+        }
+        .chorus-home .action-party { min-height: 112px; color: #fff; background: var(--coral); }
+        .chorus-home .action-quick { width: 93%; margin-left: auto; background: var(--gold); }
+        .chorus-home .action-games { width: 88%; color: var(--ink); background: transparent; }
+
+        .chain-home {
+          position: relative;
+          color: var(--ink);
+          background:
+            linear-gradient(90deg, transparent 0 26px, rgba(27,18,48,.09) 26px 28px, transparent 28px),
+            var(--ivory);
+        }
+        .chain-home::after {
+          content: "";
+          position: absolute;
+          z-index: 0;
+          top: 234px;
+          bottom: 40px;
+          left: 51px;
+          width: 6px;
+          background: var(--coral);
+          transform: rotate(1deg);
+        }
+        .chain-home > * { position: relative; z-index: 1; }
+        .chain-home .home-topline { color: #65596f; }
+        .chain-home .home-topline b { color: var(--coral-dark); }
+        .chain-zone { margin: 7px 0 11px; }
+        .chain-logo {
+          display: flex;
+          align-items: flex-end;
+          gap: 1px;
+          font-family: "Bricolage Grotesque", sans-serif;
+          font-size: 3.45rem;
+          font-weight: 700;
+          line-height: .88;
+          letter-spacing: -.09em;
+          text-transform: uppercase;
+        }
+        .chain-letter {
+          display: inline-block;
+          color: var(--ivory);
+          background: var(--ink);
+          transform: translateY(var(--step,0)) rotate(var(--turn,0));
+          animation: chain-link 470ms cubic-bezier(.2,.82,.2,1) var(--delay,0ms) both;
+        }
+        .chain-letter:nth-child(2),
+        .chain-letter:nth-child(5) { color: var(--ink); background: var(--gold); }
+        .chain-letter:nth-child(4) { color: #fff; background: var(--coral); }
+        .chain-party {
+          width: max-content;
+          margin: 11px 0 0 auto;
+          padding: 4px 10px;
+          border-bottom: 4px solid var(--coral);
+          font-family: "Bodoni Moda", serif;
+          font-size: 1.18rem;
+          font-style: italic;
+          font-weight: 500;
+          line-height: 1;
+        }
+        .chain-home .home-promise { color: #54485e; }
+        .chain-home .action-stack { gap: 11px; }
+        .chain-home .home-action {
+          min-height: 82px;
+          grid-template-columns: 70px 1fr;
+          border-radius: 3px;
+          box-shadow: 5px 5px 0 var(--ink);
+        }
+        .chain-home .home-action .object-slot { grid-column: 1; grid-row: 1; }
+        .chain-home .home-action .action-copy { grid-column: 2; grid-row: 1; }
+        .chain-home .action-party { min-height: 106px; transform: translateX(12px) rotate(-.5deg); }
+        .chain-home .action-quick { width: 91%; transform: translateX(-2px) rotate(.8deg); }
+        .chain-home .action-games { width: 88%; margin-left: auto; color: var(--ivory); background: var(--ink); transform: rotate(-.8deg); }
+        .chain-home .action-games .obj-cards i { border-color: var(--ivory); }
+
+        @keyframes voice-arrive {
+          from { opacity: 0; transform: translateX(var(--voice-x)) scale(.88); }
+          to { opacity: .15; transform: translateX(0) scale(1); }
+        }
+        @keyframes chorus-hit {
+          from { opacity: 0; transform: scale(1.28) rotate(-4deg); }
+          to { opacity: 1; transform: scale(1) rotate(0); }
+        }
+        @keyframes chain-link {
+          from { opacity: 0; transform: translateY(-80px) rotate(-16deg); }
+          to { opacity: 1; transform: translateY(var(--step,0)) rotate(var(--turn,0)); }
+        }
+      </style>
+
+      <section class="dir-panel" data-name="Urto centrale+" data-mood="Bricolage Grotesque + Hanken - collisione più netta, azioni non-card" data-why="Rafforza la strada scelta: logo più grande, Party integrato e tre azioni con forme diverse. Conserva chiarezza senza tornare a un menu generico." data-role="Variante +">
+        <div class="home-preview impact-plus-home">
+          <div class="home-topline"><b>LA STANZA È PRONTA</b><span class="lang-chip">ITA</span></div>
+          <div class="logo-zone">
+            <div class="kinetic-logo" aria-label="Ruckus">
+              <span class="kinetic-letter" style="--x:-92px;--y:-52px;--r:-7deg;--from-r:-24deg;--d:0ms">R</span>
+              <span class="kinetic-letter" style="--x:54px;--y:-94px;--r:5deg;--from-r:18deg;--d:48ms">U</span>
+              <span class="kinetic-letter" style="--x:-42px;--y:72px;--r:-4deg;--from-r:-19deg;--d:96ms">C</span>
+              <span class="kinetic-letter" style="--x:88px;--y:36px;--r:7deg;--from-r:27deg;--d:144ms">K</span>
+              <span class="kinetic-letter" style="--x:-68px;--y:-66px;--r:-5deg;--from-r:-21deg;--d:192ms">U</span>
+              <span class="kinetic-letter" style="--x:74px;--y:-34px;--r:4deg;--from-r:22deg;--d:240ms">S</span>
+            </div>
+            <div class="party-lock">Party</div>
+          </div>
+          <p class="home-promise">Raduna il gruppo. Un telefono accende il caos e tiene il ritmo.</p>
+          <div class="action-stack">
+            <button class="home-action action-party" type="button"><span class="action-copy"><strong>Start Party</strong><small>Giochi, classifica e finale</small></span><span class="object-slot"><span class="obj-wheel"></span></span></button>
+            <button class="home-action action-quick" type="button"><span class="action-copy"><strong>Quick Play</strong><small>Una sfida, subito</small></span><span class="object-slot"><span class="obj-die"></span></span></button>
+            <button class="home-action action-games" type="button"><span class="action-copy"><strong>Games</strong><small>Esplora il catalogo</small></span><span class="object-slot"><span class="obj-cards"><i></i><i></i><i></i></span></span></button>
+          </div>
+        </div>
+        <button class="choose-variation" data-save>Segna questa direzione</button>
+      </section>
+
+      <section class="dir-panel" data-name="Coro Ruckus" data-mood="Archivo Black + Libre Franklin - voci che si propagano nella stanza" data-why="Il caos non è più un urto singolo ma un contagio tra persone. Rende il gruppo protagonista e porta una personalità completamente diversa." data-role="" hidden>
+        <div class="home-preview chorus-home">
+          <div class="home-topline"><b>FALLO PARTIRE</b><span class="lang-chip">ITA</span></div>
+          <div class="chorus-zone">
+            <div class="chorus-logo" aria-label="Ruckus Party">
+              <span class="voice" aria-hidden="true">Ruckus</span>
+              <span class="voice" aria-hidden="true">Ruckus</span>
+              <span class="voice" aria-hidden="true">Ruckus</span>
+              <strong>Ruckus</strong><b>Party</b>
+            </div>
+          </div>
+          <p class="home-promise">Una voce chiama. Il gruppo risponde. La serata prende volume.</p>
+          <div class="action-stack">
+            <button class="home-action action-party" type="button"><span class="action-copy"><strong>Start Party</strong><small>Porta tutti dentro</small></span><span class="object-slot"><span class="obj-wheel"></span></span></button>
+            <button class="home-action action-quick" type="button"><span class="action-copy"><strong>Quick Play</strong><small>Lancia una sfida</small></span><span class="object-slot"><span class="obj-die"></span></span></button>
+            <button class="home-action action-games" type="button"><span class="action-copy"><strong>Games</strong><small>Scegli cosa giocare</small></span><span class="object-slot"><span class="obj-cards"><i></i><i></i><i></i></span></span></button>
+          </div>
+        </div>
+        <button class="choose-variation" data-save>Segna questa direzione</button>
+      </section>
+
+      <section class="dir-panel" data-name="Reazione a catena" data-mood="Bricolage Grotesque + Bodoni Moda - sequenza fisica, ritmo tra giochi" data-why="Racconta la promessa di prodotto: un gesto ne accende un altro e il telefono tiene la catena. È la più sistemica e la meno simile a una semplice Home." data-role="" hidden>
+        <div class="home-preview chain-home">
+          <div class="home-topline"><b>UNA COSA TIRA L’ALTRA</b><span class="lang-chip">ITA</span></div>
+          <div class="chain-zone">
+            <div class="chain-logo" aria-label="Ruckus">
+              <span class="chain-letter" style="--step:0px;--turn:-5deg;--delay:0ms">R</span>
+              <span class="chain-letter" style="--step:9px;--turn:3deg;--delay:55ms">U</span>
+              <span class="chain-letter" style="--step:-4px;--turn:-2deg;--delay:110ms">C</span>
+              <span class="chain-letter" style="--step:12px;--turn:5deg;--delay:165ms">K</span>
+              <span class="chain-letter" style="--step:1px;--turn:-4deg;--delay:220ms">U</span>
+              <span class="chain-letter" style="--step:7px;--turn:3deg;--delay:275ms">S</span>
+            </div>
+            <div class="chain-party">Party</div>
+          </div>
+          <p class="home-promise">Inizia da un gioco. Finisce con una storia che appartiene al gruppo.</p>
+          <div class="action-stack">
+            <button class="home-action action-party" type="button"><span class="object-slot"><span class="obj-wheel"></span></span><span class="action-copy"><strong>Start Party</strong><small>Avvia tutta la catena</small></span></button>
+            <button class="home-action action-quick" type="button"><span class="object-slot"><span class="obj-die"></span></span><span class="action-copy"><strong>Quick Play</strong><small>Fai partire una sfida</small></span></button>
+            <button class="home-action action-games" type="button"><span class="object-slot"><span class="obj-cards"><i></i><i></i><i></i></span></span><span class="action-copy"><strong>Games</strong><small>Scegli il prossimo anello</small></span></button>
+          </div>
+        </div>
+        <button class="choose-variation" data-save>Segna questa direzione</button>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ── Scocca generica: chip auto-costruiti dai pannelli, uno visibile alla volta ──
+(function(){
+  const panelsBox = document.getElementById('panels');
+  const panels = [...panelsBox.querySelectorAll('.dir-panel')];
+  const chips = document.getElementById('chips');
+
+  // Disegna la chrome (barra nome+mood, riga "perché") dentro ogni pannello dai data-*
+  panels.forEach(p=>{
+    const inner = p.innerHTML;
+    const role = p.dataset.role || '';
+    const tag = role ? `<span class="dir-tag" data-role="${role}">${role}</span>` : `<span class="dir-tag">Direzione</span>`;
+    p.innerHTML = `
+      <div class="dir-card">
+        <div class="dir-head">
+          <div>
+            <div class="dir-name">${p.dataset.name||'Direzione'}</div>
+            <div class="dir-mood">${p.dataset.mood||''}</div>
+          </div>${tag}
+        </div>
+        <div class="dir-body">${inner}</div>
+        ${p.dataset.why ? `<div class="dir-why">✶&nbsp;<span><b>Perché:</b> ${p.dataset.why}</span></div>` : ``}
+      </div>`;
+  });
+
+  function show(i){
+    panels.forEach((p,j)=>p.toggleAttribute('hidden', j!==i));
+    [...chips.children].forEach((c,j)=>c.setAttribute('aria-pressed', j===i));
+  }
+
+  panels.forEach((p,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-pressed', i===0 ? 'true':'false');
+    b.innerHTML = `<span class="swatch"></span>${p.dataset.name || ('Direzione '+(i+1))}`;
+    b.addEventListener('click', ()=>show(i));
+    chips.appendChild(b);
+  });
+
+  show(0);
+
+  // Esempio di interazione "viva ma leggera" con dato finto in localStorage.
+  // (La skill può riusare lo stesso pattern data-save nei pannelli reali.)
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('[data-save]');
+    if(!btn) return;
+    const on = btn.dataset.on === '1';
+    btn.dataset.on = on ? '0':'1';
+    btn.textContent = on ? 'Salva' : 'Salvato ✓';
+    try{ localStorage.setItem('mockup-demo-saved', on ? '0':'1'); }catch(_){}
+  });
+})();
+</script>
+</body>
+</html>

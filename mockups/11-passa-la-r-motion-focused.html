@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Passa la R - motion definitivo da valutare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet">
+  <style>
+    :root{--page:#111513;--panel:#1a211e;--line:#3a4742;--text:#fff0d1;--muted:#a9b8b2;--petrol:#0d3432;--deep:#132824;--mandarin:#ff643b;--honey:#f7c64b;--shell:#fff0d1;--mint:#6fd2b8;--focus:#ffe185}
+    *{box-sizing:border-box}html{min-width:320px;background:var(--page)}body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(circle at 8% 4%,rgba(111,210,184,.1),transparent 30rem),var(--page);font-family:"Atkinson Hyperlegible",sans-serif;-webkit-font-smoothing:antialiased}button{font:inherit}
+    .wrap{width:min(100% - 28px,980px);margin:0 auto;padding:24px 0 56px}.top{padding-bottom:18px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--honey);font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.top h1{max-width:20ch;margin:8px 0 8px;font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.8rem,5vw,3.4rem);line-height:1;letter-spacing:-.04em;text-wrap:balance}.top p{max-width:61ch;margin:0;color:var(--muted);font-size:.9rem;line-height:1.55;text-wrap:pretty}
+    .card{margin-top:20px;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--panel)}.card-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 18px;border-bottom:1px solid var(--line)}.card-head strong{font-family:"Bricolage Grotesque",sans-serif;font-size:1.05rem}.status{padding:5px 9px;border:1px solid #41685d;border-radius:99px;color:#9bd9c7;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .lab{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:32px;padding:clamp(18px,4vw,36px);background:var(--petrol)}.stage{position:relative;min-height:430px;display:grid;place-items:center;overflow:hidden;border:1px solid #496b63;background:var(--deep)}.stage::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,240,209,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,240,209,.04) 1px,transparent 1px);background-size:32px 32px}.lockup{position:relative;z-index:1;width:min(90%,520px);display:grid;justify-items:center;gap:18px}.signal{width:min(100%,390px);height:auto;overflow:visible}.wordmark{display:flex;align-items:end;justify-content:center;gap:9px;white-space:nowrap}.wordmark strong{color:var(--shell);font-family:"Archivo Black",sans-serif;font-size:clamp(2.6rem,7vw,5rem);line-height:.84;letter-spacing:-.055em;text-transform:uppercase}.party{padding:6px 8px 5px;color:var(--deep);background:var(--honey);font-size:.68rem;font-weight:700;line-height:1;letter-spacing:.14em;text-transform:uppercase}
+    .replay{position:absolute;z-index:3;right:12px;bottom:12px;min-width:132px;min-height:48px;padding:9px 13px;border:2px solid var(--deep);color:var(--deep);background:var(--honey);font-weight:700;cursor:pointer}.replay:hover{background:var(--shell)}.replay:active{transform:translateY(2px)}.replay:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+    .side{display:grid;align-content:center;gap:22px}.side h2{margin:0 0 10px;color:var(--shell);font-size:.69rem;letter-spacing:.12em;text-transform:uppercase}.home-preview{padding:20px 14px 14px;display:grid;place-items:center;gap:9px;border:2px solid #496b63;border-radius:26px;background:#081d1b}.app-icon{width:96px;height:96px;overflow:hidden;border-radius:22px;background:var(--deep);box-shadow:0 9px 0 #061816}.app-icon svg{display:block;width:100%;height:100%}.home-preview span{font-size:.67rem;font-weight:700}.sizes{display:flex;align-items:end;gap:14px}.size{display:block;overflow:hidden;background:var(--deep);box-shadow:0 5px 10px rgba(0,0,0,.25)}.size svg{display:block;width:100%;height:100%}.s16{width:16px;height:16px;border-radius:4px}.s32{width:32px;height:32px;border-radius:8px}.s64{width:64px;height:64px;border-radius:15px}.explain{margin:0;color:var(--muted);font-size:.78rem;line-height:1.55;text-wrap:pretty}.sequence{display:grid;gap:8px}.sequence span{display:flex;align-items:center;gap:8px;color:#cee3d9;font-size:.72rem}.sequence b{display:grid;width:22px;height:22px;place-items:center;border:1px solid #496b63;border-radius:50%;color:var(--honey);font-size:.65rem}
+    .why{padding:13px 18px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}.why b{color:var(--text)}
+
+    .live .carrier{animation:carrierIn 560ms cubic-bezier(.45,0,.55,1) both}.live .challenger{animation:challengerIn 560ms cubic-bezier(.45,0,.55,1) both}.live .r-tile{animation:rAtImpact 390ms cubic-bezier(.16,.84,.18,1.15) 330ms both;transform-origin:195px 75px}.live .impact{animation:impactFlash 250ms ease 325ms both;transform-origin:195px 75px}.live .wordmark{animation:wordReveal 360ms cubic-bezier(.16,.84,.18,1) 720ms both}.live .party{animation:partyReveal 280ms ease 930ms both}
+    @keyframes carrierIn{from{opacity:0;transform:translateX(-135px)}72%{opacity:1;transform:translateX(9px)}to{opacity:1;transform:none}}
+    @keyframes challengerIn{from{opacity:0;transform:translateX(135px)}72%{opacity:1;transform:translateX(-9px)}to{opacity:1;transform:none}}
+    @keyframes rAtImpact{0%{opacity:0;transform:scale(.25) rotate(-7deg)}32%{opacity:1;transform:scaleX(1.13) scaleY(.9) rotate(2deg)}68%{opacity:1;transform:scaleX(.95) scaleY(1.05) rotate(-1deg)}100%{opacity:1;transform:none}}
+    @keyframes impactFlash{0%{opacity:0;transform:scale(.35) rotate(-12deg)}42%{opacity:1;transform:scale(1.12)}100%{opacity:0;transform:scale(1.35)}}
+    @keyframes wordReveal{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+    @keyframes partyReveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0)}}
+
+    @media(max-width:700px){.wrap{width:min(100% - 24px,520px);padding-top:18px}.lab{grid-template-columns:1fr;padding:16px}.stage{min-height:350px}.side{grid-template-columns:minmax(0,1fr) 148px;align-items:end}.home-preview{padding:14px 8px}.app-icon{width:78px;height:78px}.status{display:none}}
+    @media(max-width:430px){.side{grid-template-columns:1fr}.stage{min-height:320px}.signal{width:min(100%,320px)}.replay{right:8px;bottom:8px}.wordmark strong{font-size:2.8rem}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.carrier,.challenger,.r-tile,.wordmark,.party{opacity:1!important;transform:none!important;clip-path:none!important}.impact{display:none}}
+  </style>
+</head>
+<body><main class="wrap">
+  <header class="top"><div class="eyebrow">Correzione mirata</div><h1>Passa la R, senza ridisegnarla.</h1><p>Il logo resta invariato. L'icona Home usa la R come elemento dominante e conserva soltanto i due innesti dello scontro, così resta leggibile anche minuscola.</p></header>
+  <section class="card">
+    <header class="card-head"><strong>Entrata della sfida</strong><span class="status">Unica proposta</span></header>
+    <div class="lab">
+      <div class="stage">
+        <div class="lockup live" data-animated>
+          <svg class="signal" viewBox="0 0 390 150" role="img" aria-label="Due segnali si passano la R di Ruckus">
+            <path class="carrier" d="M8 31h132l54 44-54 44H8l51-44Z" fill="#6fd2b8"/>
+            <path class="challenger" d="M382 31H250l-54 44 54 44h132l-51-44Z" fill="#ff643b"/>
+            <g class="r-tile">
+              <rect x="151" y="31" width="88" height="88" rx="12" fill="#f7c64b" stroke="#132824" stroke-width="6"/>
+              <text class="r-letter" x="195" y="98" text-anchor="middle" fill="#132824" font-family="Archivo Black, sans-serif" font-size="64">R</text>
+            </g>
+            <g class="impact" fill="none" stroke="#fff0d1" stroke-width="5" stroke-linecap="square"><path d="M195 13v-9M195 146v-9M130 75h-12M272 75h-12"/><path d="m146 27-9-10M253 132l-9-10M244 27l9-10M137 132l9-10"/></g>
+          </svg>
+          <div class="wordmark"><strong>Ruckus</strong><span class="party">Party</span></div>
+        </div>
+        <button class="replay" type="button" data-replay>Rivedi l'urto</button>
+      </div>
+      <aside class="side">
+        <div><h2>Icona Home funzionale</h2><div class="home-preview"><span class="app-icon" data-static-icon></span><span>Ruckus Party</span></div></div>
+        <div><h2>Riduzione</h2><div class="sizes" data-sizes></div></div>
+        <div class="sequence"><span><b>1</b>Mint e Mandarin si sfidano</span><span><b>2</b>Si scontrano al centro</span><span><b>3</b>Solo allora nasce la R</span></div>
+        <p class="explain">Honey resta il punto di incontro. Non rappresenta un giocatore e non introduce un nuovo colore.</p>
+      </aside>
+    </div>
+    <div class="why"><b>Perché:</b> la R è la conseguenza visiva dello scontro. Nell'icona Home diventa protagonista, mentre Mint e Mandarin mantengono il legame con il logo senza schiacciarlo.</div>
+  </section>
+</main>
+<script>
+(function(){
+  const staticSvg=`<svg viewBox="0 0 100 100" role="img" aria-label="Icona Home Ruckus Party"><rect width="100" height="100" fill="#132824"/><path class="home-carrier" d="M0 28h31l16 22-16 22H0l18-22Z" fill="#6fd2b8"/><path class="home-challenger" d="M100 28H69L53 50l16 22h31L82 50Z" fill="#ff643b"/><rect class="home-tile" x="22" y="14" width="56" height="72" rx="11" fill="#f7c64b" stroke="#132824" stroke-width="4"/><text class="home-r" x="50" y="68" text-anchor="middle" fill="#132824" font-family="Archivo Black, sans-serif" font-size="50">R</text></svg>`;
+  document.querySelector('[data-static-icon]').innerHTML=staticSvg;
+  [['s16','16'],['s32','32'],['s64','64']].forEach(([cls])=>{const el=document.createElement('span');el.className=`size ${cls}`;el.innerHTML=staticSvg;document.querySelector('[data-sizes]').appendChild(el)});
+  document.querySelector('[data-replay]').addEventListener('click',()=>{const x=document.querySelector('[data-animated]');x.classList.remove('live');void x.offsetWidth;x.classList.add('live')});
+})();
+</script>
+</body>
+</html>

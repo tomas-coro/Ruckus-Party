@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruckus Party - tre sistemi logo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Atkinson+Hyperlegible:wght@400;700&family=Bowlby+One+SC&family=Fjalla+One&family=Libre+Franklin:wght@500;600;700;800&family=Nunito+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --page: #111513;
+      --panel: #1a211e;
+      --line: #3a4742;
+      --text: #fff7e8;
+      --muted: #b6c3bc;
+      --focus: #ffe185;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--page); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% 5%, rgba(255, 100, 59, .13), transparent 28rem),
+        radial-gradient(circle at 92% 92%, rgba(111, 210, 184, .08), transparent 25rem),
+        var(--page);
+      font-family: "Libre Franklin", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+    .page-header {
+      width: min(100% - 32px, 1440px);
+      margin: 0 auto;
+      padding: 28px 0 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .page-header small {
+      display: block;
+      margin-bottom: 8px;
+      color: #ff7d59;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .page-header h1 {
+      max-width: 16ch;
+      margin: 0;
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: .96;
+      letter-spacing: -.04em;
+      text-wrap: balance;
+    }
+    .page-header p {
+      max-width: 42ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    .mobile-tabs {
+      display: none;
+      width: 100%;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--line);
+    }
+    .mobile-tabs button {
+      min-width: 132px;
+      min-height: 48px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      color: var(--muted);
+      background: #17201c;
+      font-size: .74rem;
+      font-weight: 800;
+    }
+    .mobile-tabs button[aria-selected="true"] { color: #14231f; background: #f7c64b; }
+
+    .directions {
+      width: min(100% - 32px, 1440px);
+      margin: 24px auto 48px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .direction {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+    .direction-head {
+      min-height: 126px;
+      padding: 18px 18px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, .16);
+    }
+    .direction-code {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      margin-bottom: 12px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: .72rem;
+      font-weight: 800;
+    }
+    .direction h2 { margin: 0 0 7px; font-size: 1.3rem; line-height: 1.1; text-wrap: balance; }
+    .direction-head p { margin: 0; font-size: .76rem; line-height: 1.48; text-wrap: pretty; }
+
+    .logo-stage {
+      position: relative;
+      min-height: 286px;
+      padding: 24px 18px 18px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .logo-stage::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 28%;
+      background: linear-gradient(transparent, rgba(0, 0, 0, .08));
+      pointer-events: none;
+    }
+    .logo-lockup { position: relative; z-index: 1; width: 100%; }
+    .replay {
+      position: absolute;
+      z-index: 3;
+      right: 12px;
+      bottom: 12px;
+      min-width: 48px;
+      min-height: 44px;
+      padding: 8px 11px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      color: inherit;
+      background: rgba(0, 0, 0, .18);
+      font-size: .67rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .replay:hover { background: rgba(0, 0, 0, .3); }
+
+    .preview-block { padding: 18px; border-top: 1px solid rgba(255, 255, 255, .16); }
+    .preview-title { margin: 0 0 13px; font-size: .72rem; font-weight: 800; }
+    .icon-preview {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 116px;
+      gap: 14px;
+      align-items: center;
+    }
+    .sizes { min-width: 0; display: flex; align-items: end; gap: 13px; }
+    .size-item { display: grid; justify-items: center; gap: 7px; color: inherit; font-size: .58rem; }
+    .app-mark { display: grid; place-items: center; overflow: hidden; flex: none; }
+    .size-16 { width: 16px; height: 16px; border-radius: 4px; }
+    .size-32 { width: 32px; height: 32px; border-radius: 7px; }
+    .size-64 { width: 64px; height: 64px; border-radius: 14px; }
+    .app-mark svg { width: 100%; height: 100%; display: block; }
+
+    .home-preview {
+      min-height: 145px;
+      padding: 14px 10px 9px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 7px;
+      border-radius: 19px;
+      background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+    }
+    .home-preview .app-mark { width: 78px; height: 78px; border-radius: 18px; box-shadow: 0 8px 18px rgba(0,0,0,.24); }
+    .home-preview span { font-size: .62rem; font-weight: 700; }
+
+    .tradeoff { min-height: 118px; padding: 16px 18px 18px; border-top: 1px solid rgba(255, 255, 255, .16); }
+    .tradeoff strong { display: block; margin-bottom: 7px; font-size: .74rem; }
+    .tradeoff p { margin: 0; font-size: .7rem; line-height: 1.5; text-wrap: pretty; }
+    .pick {
+      width: calc(100% - 36px);
+      min-height: 48px;
+      margin: 0 18px 18px;
+      border: 2px solid currentColor;
+      border-radius: 11px;
+      color: inherit;
+      background: transparent;
+      font-size: .76rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .pick:hover { transform: translateY(-1px); }
+    .direction[data-picked="true"] .pick::after { content: " - segnata"; }
+
+    /* A - Coro d'urto */
+    .direction-a { color: #fff0d1; background: #0d3432; }
+    .direction-a .direction-head { color: #132824; background: #ff643b; }
+    .direction-a .direction-code { background: #f7c64b; }
+    .stage-a { color: #fff0d1; background: #0d3432; }
+    .a-logo { position: relative; height: 170px; font-family: "Archivo Black", sans-serif; text-transform: uppercase; }
+    .a-echo, .a-main { position: absolute; left: 50%; top: 49%; font-size: clamp(2.9rem, 7vw, 4.35rem); line-height: .86; letter-spacing: -.04em; white-space: nowrap; }
+    .a-echo { color: transparent; -webkit-text-stroke: 2px #fff0d1; opacity: .13; }
+    .a-echo.one { transform: translate(-60%, -88%); }
+    .a-echo.two { transform: translate(-47%, -49%); }
+    .a-echo.three { transform: translate(-57%, -10%); }
+    .a-main { z-index: 2; color: #ff643b; text-shadow: 4px 4px 0 #f7c64b; transform: translate(-50%, -51%); }
+    .a-party {
+      position: absolute;
+      z-index: 3;
+      right: 4%;
+      bottom: 8px;
+      padding: 8px 13px 7px;
+      color: #fff0d1;
+      background: #132824;
+      font-family: "Libre Franklin", sans-serif;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .2em;
+      transform: rotate(-3deg);
+    }
+    .stage-a:not(.ready) .a-party { opacity: 0; }
+    .stage-a.ready .a-echo.one { animation: aVoiceLeft 480ms cubic-bezier(.16,.84,.18,1) both; }
+    .stage-a.ready .a-echo.two { animation: aVoiceRight 480ms cubic-bezier(.16,.84,.18,1) 90ms both; }
+    .stage-a.ready .a-echo.three { animation: aVoiceLeft 480ms cubic-bezier(.16,.84,.18,1) 180ms both; }
+    .stage-a.ready .a-main { animation: aHit 460ms cubic-bezier(.16,.84,.18,1) 280ms both; }
+    .stage-a.ready .a-party { animation: aParty 380ms cubic-bezier(.16,.84,.18,1) 760ms both; }
+    .direction-a .app-mark { background: #0d3432; }
+    .direction-a .home-preview { background-color: #143f3c; }
+
+    @keyframes aVoiceLeft {
+      from { opacity: 0; transform: translate(-90%, -88%) scale(.9); }
+      to { opacity: .13; transform: translate(-60%, -88%) scale(1); }
+    }
+    @keyframes aVoiceRight {
+      from { opacity: 0; transform: translate(-15%, -49%) scale(.9); }
+      to { opacity: .13; transform: translate(-47%, -49%) scale(1); }
+    }
+    @keyframes aHit {
+      from { opacity: 0; transform: translate(-50%, -51%) scale(1.18) rotate(-3deg); }
+      to { opacity: 1; transform: translate(-50%, -51%) scale(1) rotate(0); }
+    }
+    @keyframes aParty {
+      from { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateX(24px) rotate(4deg); }
+      to { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(0) rotate(-3deg); }
+    }
+
+    /* B - Tavolo comune */
+    .direction-b { color: #fbf7eb; background: #35154a; }
+    .direction-b .direction-head { color: #241033; background: #d8ff54; }
+    .direction-b .direction-code { background: #58c7f3; }
+    .stage-b { color: #fbf7eb; background: #35154a; }
+    .b-logo { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 13px; }
+    .b-symbol { width: 112px; height: 112px; overflow: visible; }
+    .b-word { min-width: 0; }
+    .b-word strong { display: block; font-family: "Bowlby One SC", sans-serif; font-size: clamp(2rem, 5vw, 3.1rem); line-height: .86; letter-spacing: -.025em; text-wrap: balance; }
+    .b-word span { display: block; margin-top: 10px; color: #d8ff54; font-family: "Nunito Sans", sans-serif; font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .stage-b:not(.ready) .b-piece { opacity: 0; }
+    .stage-b.ready .b-piece { animation: bGather 520ms cubic-bezier(.16,.84,.18,1) var(--delay) both; transform-origin: 60px 60px; }
+    .stage-b.ready .b-core { animation: bCore 330ms cubic-bezier(.16,.84,.18,1) 560ms both; transform-origin: 60px 60px; }
+    .stage-b.ready .b-word { animation: bWord 420ms cubic-bezier(.16,.84,.18,1) 680ms both; }
+    .direction-b .app-mark { background: #35154a; }
+    .direction-b .home-preview { background-color: #4b245d; }
+
+    @keyframes bGather {
+      from { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(.8); }
+      to { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+    }
+    @keyframes bCore { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+    @keyframes bWord { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* C - Passa il segnale */
+    .direction-c { color: #f5f0df; background: #151515; }
+    .direction-c .direction-head { color: #f5f0df; background: #4b61ff; }
+    .direction-c .direction-code { color: #151515; background: #f5e44c; }
+    .stage-c { color: #f5f0df; background: #151515; }
+    .c-logo { display: grid; justify-items: center; gap: 12px; }
+    .c-signal { width: min(100%, 230px); height: 76px; overflow: visible; }
+    .c-word { display: flex; align-items: end; gap: 8px; font-family: "Fjalla One", sans-serif; text-transform: uppercase; }
+    .c-word strong { color: #f5f0df; font-size: clamp(2.55rem, 6vw, 3.8rem); line-height: .84; letter-spacing: -.025em; }
+    .c-word span { padding: 5px 7px 4px; color: #151515; background: #f5e44c; font-family: "Atkinson Hyperlegible", sans-serif; font-size: .64rem; font-weight: 700; letter-spacing: .11em; }
+    .stage-c:not(.ready) .c-left, .stage-c:not(.ready) .c-right, .stage-c:not(.ready) .c-spark, .stage-c:not(.ready) .c-word { opacity: 0; }
+    .stage-c.ready .c-left { animation: cLeft 440ms cubic-bezier(.16,.84,.18,1) both; }
+    .stage-c.ready .c-right { animation: cRight 440ms cubic-bezier(.16,.84,.18,1) both; }
+    .stage-c.ready .c-spark { animation: cSpark 320ms cubic-bezier(.16,.84,.18,1) 410ms both; transform-origin: 115px 38px; }
+    .stage-c.ready .c-word { animation: cWord 430ms cubic-bezier(.16,.84,.18,1) 610ms both; }
+    .direction-c .app-mark { background: #151515; }
+    .direction-c .home-preview { background-color: #252525; }
+
+    @keyframes cLeft { from { opacity: 0; transform: translateX(-52px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes cRight { from { opacity: 0; transform: translateX(52px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes cSpark { from { opacity: 0; transform: scale(.2) rotate(-35deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes cWord { from { opacity: 0; clip-path: inset(0 50% 0 50%); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+
+    .logo-stage.settled .a-echo,
+    .logo-stage.settled .a-main,
+    .logo-stage.settled .a-party,
+    .logo-stage.settled .b-piece,
+    .logo-stage.settled .b-core,
+    .logo-stage.settled .b-word,
+    .logo-stage.settled .c-left,
+    .logo-stage.settled .c-right,
+    .logo-stage.settled .c-spark,
+    .logo-stage.settled .c-word {
+      animation: none !important;
+      opacity: 1;
+    }
+
+    @media (max-width: 980px) {
+      .page-header { grid-template-columns: 1fr; }
+      .directions { grid-template-columns: 1fr; width: min(100% - 24px, 620px); }
+      .direction { display: none; }
+      .direction.is-active { display: block; }
+      .mobile-tabs { display: flex; position: sticky; z-index: 10; top: 0; }
+      .logo-stage { min-height: 310px; }
+    }
+
+    @media (max-width: 430px) {
+      .page-header { width: calc(100% - 24px); padding-top: 22px; }
+      .page-header h1 { font-size: 2.1rem; }
+      .directions { width: 100%; margin-top: 0; }
+      .direction { border-inline: 0; border-radius: 0; }
+      .direction-head { min-height: 116px; }
+      .logo-stage { min-height: 290px; padding-inline: 14px; }
+      .a-echo, .a-main { font-size: 3.15rem; }
+      .a-party { right: 2%; }
+      .b-logo { grid-template-columns: 94px minmax(0, 1fr); }
+      .b-symbol { width: 94px; height: 94px; }
+      .b-word strong { font-size: 2rem; }
+      .icon-preview { grid-template-columns: minmax(0, 1fr) 108px; }
+      .home-preview .app-mark { width: 70px; height: 70px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .logo-stage.ready .a-party,
+      .logo-stage.ready .b-piece,
+      .logo-stage.ready .b-core,
+      .logo-stage.ready .b-word,
+      .logo-stage.ready .c-left,
+      .logo-stage.ready .c-right,
+      .logo-stage.ready .c-spark,
+      .logo-stage.ready .c-word { opacity: 1; clip-path: none; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <small>Phase 2B - identità candidata</small>
+      <h1>Tre anime per lo stesso rumore</h1>
+    </div>
+    <p>Ogni direzione include un simbolo autonomo, un wordmark animato e la prova reale alle dimensioni di favicon e icona Home. Nessuna usa carte o dadi come identità principale.</p>
+  </header>
+
+  <nav class="mobile-tabs" aria-label="Direzioni logo" role="tablist">
+    <button type="button" role="tab" aria-selected="true" data-tab="a">A. Coro d'urto</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="b">B. Tavolo comune</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="c">C. Passa il segnale</button>
+  </nav>
+
+  <main class="directions">
+    <article class="direction direction-a is-active" data-direction="a">
+      <header class="direction-head">
+        <span class="direction-code">A</span>
+        <h2>Coro d'urto</h2>
+        <p>Le voci arrivano da lati diversi, collidono e diventano un unico nome.</p>
+      </header>
+      <section class="logo-stage stage-a" aria-label="Animazione Coro d'urto">
+        <div class="logo-lockup a-logo" aria-label="Ruckus Party">
+          <span class="a-echo one" aria-hidden="true">Ruckus</span>
+          <span class="a-echo two" aria-hidden="true">Ruckus</span>
+          <span class="a-echo three" aria-hidden="true">Ruckus</span>
+          <strong class="a-main">Ruckus</strong>
+          <span class="a-party">Party</span>
+        </div>
+        <button class="replay" type="button" data-replay aria-label="Rivedi animazione Coro d'urto">Rivedi</button>
+      </section>
+      <section class="preview-block">
+        <p class="preview-title">Simbolo: la R che assorbe il coro</p>
+        <div class="icon-preview">
+          <div class="sizes" aria-label="Prove favicon">
+            <div class="size-item"><span class="app-mark size-16"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#0d3432"/><text x="20" y="75" fill="none" stroke="#fff0d1" stroke-width="4" opacity=".25" font-family="Archivo Black" font-size="72">R</text><text x="30" y="75" fill="#ff643b" font-family="Archivo Black" font-size="72">R</text></svg></span><span>16</span></div>
+            <div class="size-item"><span class="app-mark size-32"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#0d3432"/><text x="18" y="75" fill="none" stroke="#fff0d1" stroke-width="3" opacity=".3" font-family="Archivo Black" font-size="72">R</text><text x="29" y="75" fill="#ff643b" font-family="Archivo Black" font-size="72">R</text><rect x="68" y="69" width="18" height="8" fill="#f7c64b"/></svg></span><span>32</span></div>
+            <div class="size-item"><span class="app-mark size-64"><svg viewBox="0 0 100 100" role="img" aria-label="Icona Coro d'urto"><rect width="100" height="100" fill="#0d3432"/><text x="13" y="75" fill="none" stroke="#fff0d1" stroke-width="2.5" opacity=".22" font-family="Archivo Black" font-size="72">R</text><text x="23" y="75" fill="none" stroke="#fff0d1" stroke-width="2.5" opacity=".18" font-family="Archivo Black" font-size="72">R</text><text x="32" y="75" fill="#ff643b" font-family="Archivo Black" font-size="72">R</text><rect x="69" y="68" width="18" height="9" fill="#f7c64b"/></svg></span><span>64</span></div>
+          </div>
+          <div class="home-preview"><span class="app-mark"><svg viewBox="0 0 100 100" role="img" aria-label="Anteprima icona Home Coro d'urto"><rect width="100" height="100" fill="#0d3432"/><text x="13" y="75" fill="none" stroke="#fff0d1" stroke-width="2.5" opacity=".22" font-family="Archivo Black" font-size="72">R</text><text x="23" y="75" fill="none" stroke="#fff0d1" stroke-width="2.5" opacity=".18" font-family="Archivo Black" font-size="72">R</text><text x="32" y="75" fill="#ff643b" font-family="Archivo Black" font-size="72">R</text><rect x="69" y="68" width="18" height="9" fill="#f7c64b"/></svg></span><span>Ruckus Party</span></div>
+        </div>
+      </section>
+      <section class="tradeoff"><strong>Perché sceglierla</strong><p>È la continuità più forte con Petrolio Festa. Il rischio è affidarsi molto alla tipografia: la R deve essere rifinita come disegno vettoriale dopo la scelta.</p></section>
+      <button class="pick" type="button" data-pick="a">Segna A</button>
+    </article>
+
+    <article class="direction direction-b" data-direction="b">
+      <header class="direction-head">
+        <span class="direction-code">B</span>
+        <h2>Tavolo comune</h2>
+        <p>Quattro personalità diverse convergono attorno allo stesso centro e fanno gruppo.</p>
+      </header>
+      <section class="logo-stage stage-b" aria-label="Animazione Tavolo comune">
+        <div class="logo-lockup b-logo" aria-label="Ruckus Party">
+          <svg class="b-symbol" viewBox="0 0 120 120" role="img" aria-label="Simbolo Tavolo comune">
+            <path class="b-piece" style="--x:-28px;--y:-24px;--r:-20deg;--delay:0ms" d="M12 15H55V52H26L12 38Z" fill="#d8ff54"/>
+            <path class="b-piece" style="--x:28px;--y:-24px;--r:20deg;--delay:70ms" d="M65 12H105L112 31L94 53H65Z" fill="#58c7f3"/>
+            <path class="b-piece" style="--x:-28px;--y:24px;--r:18deg;--delay:140ms" d="M10 67H53V108H29L10 91Z" fill="#ff6a4d"/>
+            <path class="b-piece" style="--x:28px;--y:24px;--r:-18deg;--delay:210ms" d="M67 66H109V95L94 109H67Z" fill="#fbf7eb"/>
+            <rect class="b-core" x="47" y="47" width="27" height="27" rx="8" fill="#35154a" stroke="#fbf7eb" stroke-width="4"/>
+          </svg>
+          <div class="b-word"><strong>Ruckus<br>Party</strong><span>Giocate insieme</span></div>
+        </div>
+        <button class="replay" type="button" data-replay aria-label="Rivedi animazione Tavolo comune">Rivedi</button>
+      </section>
+      <section class="preview-block">
+        <p class="preview-title">Simbolo: quattro persone, un solo centro</p>
+        <div class="icon-preview">
+          <div class="sizes" aria-label="Prove favicon">
+            <div class="size-item"><span class="app-mark size-16"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#35154a"/><path d="M8 10h40v35H20L8 33zm44 0h40v23L80 45H52zM8 53h40v37H22L8 77zm44 0h40v25L80 90H52z" fill="#d8ff54"/><rect x="39" y="39" width="22" height="22" rx="7" fill="#35154a" stroke="#fbf7eb" stroke-width="4"/></svg></span><span>16</span></div>
+            <div class="size-item"><span class="app-mark size-32"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#35154a"/><path d="M8 10h40v35H20L8 33z" fill="#d8ff54"/><path d="M52 10h40v23L80 45H52z" fill="#58c7f3"/><path d="M8 53h40v37H22L8 77z" fill="#ff6a4d"/><path d="M52 53h40v25L80 90H52z" fill="#fbf7eb"/><rect x="39" y="39" width="22" height="22" rx="7" fill="#35154a" stroke="#fbf7eb" stroke-width="4"/></svg></span><span>32</span></div>
+            <div class="size-item"><span class="app-mark size-64"><svg viewBox="0 0 100 100" role="img" aria-label="Icona Tavolo comune"><rect width="100" height="100" fill="#35154a"/><path d="M8 10h40v35H20L8 33z" fill="#d8ff54"/><path d="M52 10h40v23L80 45H52z" fill="#58c7f3"/><path d="M8 53h40v37H22L8 77z" fill="#ff6a4d"/><path d="M52 53h40v25L80 90H52z" fill="#fbf7eb"/><rect x="39" y="39" width="22" height="22" rx="7" fill="#35154a" stroke="#fbf7eb" stroke-width="4"/></svg></span><span>64</span></div>
+          </div>
+          <div class="home-preview"><span class="app-mark"><svg viewBox="0 0 100 100" role="img" aria-label="Anteprima icona Home Tavolo comune"><rect width="100" height="100" fill="#35154a"/><path d="M8 10h40v35H20L8 33z" fill="#d8ff54"/><path d="M52 10h40v23L80 45H52z" fill="#58c7f3"/><path d="M8 53h40v37H22L8 77z" fill="#ff6a4d"/><path d="M52 53h40v25L80 90H52z" fill="#fbf7eb"/><rect x="39" y="39" width="22" height="22" rx="7" fill="#35154a" stroke="#fbf7eb" stroke-width="4"/></svg></span><span>Ruckus Party</span></div>
+        </div>
+      </section>
+      <section class="tradeoff"><strong>Perché sceglierla</strong><p>Racconta meglio il gruppo e funziona senza lettere anche molto piccola. Il rischio è ricordare una griglia o una ruota se le forme diventano troppo regolari.</p></section>
+      <button class="pick" type="button" data-pick="b">Segna B</button>
+    </article>
+
+    <article class="direction direction-c" data-direction="c">
+      <header class="direction-head">
+        <span class="direction-code">C</span>
+        <h2>Passa il segnale</h2>
+        <p>Due impulsi opposti si incontrano e accendono la scintilla che mette in moto la stanza.</p>
+      </header>
+      <section class="logo-stage stage-c" aria-label="Animazione Passa il segnale">
+        <div class="logo-lockup c-logo" aria-label="Ruckus Party">
+          <svg class="c-signal" viewBox="0 0 230 76" role="img" aria-label="Simbolo Passa il segnale">
+            <path class="c-left" d="M8 10H82L106 38L82 66H8L36 38Z" fill="#4b61ff"/>
+            <path class="c-right" d="M222 10H148L124 38L148 66H222L194 38Z" fill="#ff493d"/>
+            <path class="c-spark" d="M115 13L121 31L139 38L121 45L115 63L109 45L91 38L109 31Z" fill="#f5e44c" stroke="#151515" stroke-width="3"/>
+          </svg>
+          <div class="c-word"><strong>Ruckus</strong><span>Party</span></div>
+        </div>
+        <button class="replay" type="button" data-replay aria-label="Rivedi animazione Passa il segnale">Rivedi</button>
+      </section>
+      <section class="preview-block">
+        <p class="preview-title">Simbolo: due impulsi, una scintilla</p>
+        <div class="icon-preview">
+          <div class="sizes" aria-label="Prove favicon">
+            <div class="size-item"><span class="app-mark size-16"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#151515"/><path d="M4 26h34l17 24-17 24H4l20-24z" fill="#4b61ff"/><path d="M96 26H62L45 50l17 24h34L76 50z" fill="#ff493d"/><path d="M50 27l6 17 17 6-17 6-6 17-6-17-17-6 17-6z" fill="#f5e44c"/></svg></span><span>16</span></div>
+            <div class="size-item"><span class="app-mark size-32"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="#151515"/><path d="M4 26h34l17 24-17 24H4l20-24z" fill="#4b61ff"/><path d="M96 26H62L45 50l17 24h34L76 50z" fill="#ff493d"/><path d="M50 27l6 17 17 6-17 6-6 17-6-17-17-6 17-6z" fill="#f5e44c"/></svg></span><span>32</span></div>
+            <div class="size-item"><span class="app-mark size-64"><svg viewBox="0 0 100 100" role="img" aria-label="Icona Passa il segnale"><rect width="100" height="100" fill="#151515"/><path d="M4 26h34l17 24-17 24H4l20-24z" fill="#4b61ff"/><path d="M96 26H62L45 50l17 24h34L76 50z" fill="#ff493d"/><path d="M50 27l6 17 17 6-17 6-6 17-6-17-17-6 17-6z" fill="#f5e44c" stroke="#151515" stroke-width="2"/></svg></span><span>64</span></div>
+          </div>
+          <div class="home-preview"><span class="app-mark"><svg viewBox="0 0 100 100" role="img" aria-label="Anteprima icona Home Passa il segnale"><rect width="100" height="100" fill="#151515"/><path d="M4 26h34l17 24-17 24H4l20-24z" fill="#4b61ff"/><path d="M96 26H62L45 50l17 24h34L76 50z" fill="#ff493d"/><path d="M50 27l6 17 17 6-17 6-6 17-6-17-17-6 17-6z" fill="#f5e44c" stroke="#151515" stroke-width="2"/></svg></span><span>Ruckus Party</span></div>
+        </div>
+      </section>
+      <section class="tradeoff"><strong>Perché sceglierla</strong><p>È il simbolo più chiaro e rapido nelle dimensioni da app. Il rischio è allontanarsi dal tono materico di Petrolio Festa verso un’identità più sportiva.</p></section>
+      <button class="pick" type="button" data-pick="c">Segna C</button>
+    </article>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      function play(stage) {
+        if (stage.motionTimer) window.clearTimeout(stage.motionTimer);
+        stage.classList.remove("ready", "settled");
+        void stage.offsetWidth;
+        requestAnimationFrame(() => {
+          stage.classList.add("ready");
+          stage.motionTimer = window.setTimeout(() => {
+            stage.classList.add("settled");
+            stage.motionTimer = null;
+          }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1180);
+        });
+      }
+
+      document.querySelectorAll(".logo-stage").forEach(stage => play(stage));
+
+      document.addEventListener("click", event => {
+        const replay = event.target.closest("[data-replay]");
+        if (replay) play(replay.closest(".logo-stage"));
+
+        const tab = event.target.closest("[data-tab]");
+        if (tab) {
+          document.querySelectorAll("[data-tab]").forEach(button => button.setAttribute("aria-selected", String(button === tab)));
+          document.querySelectorAll("[data-direction]").forEach(panel => panel.classList.toggle("is-active", panel.dataset.direction === tab.dataset.tab));
+          const activeStage = document.querySelector(`[data-direction="${tab.dataset.tab}"] .logo-stage`);
+          if (activeStage) play(activeStage);
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }
+
+        const pick = event.target.closest("[data-pick]");
+        if (pick) {
+          document.querySelectorAll("[data-direction]").forEach(panel => panel.dataset.picked = String(panel.dataset.direction === pick.dataset.pick));
+          localStorage.setItem("ruckus-logo-candidate", pick.dataset.pick);
+        }
+      });
+
+      const saved = localStorage.getItem("ruckus-logo-candidate");
+      if (saved && document.querySelector(`[data-direction="${saved}"]`)) {
+        document.querySelector(`[data-direction="${saved}"]`).dataset.picked = "true";
+      }
+    })();
+  </script>
+</body>
+</html>

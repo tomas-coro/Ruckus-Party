@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruckus Party - Petrolio festa motion lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Franklin:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --petrol: #0d3432;
+      --petrol-deep: #132824;
+      --mandarin: #ff643b;
+      --mandarin-dark: #c8442b;
+      --honey: #f7c64b;
+      --shell: #fff0d1;
+      --mint: #6fd2b8;
+      --ink: #171a18;
+      --panel: #1c2220;
+      --line: #35423e;
+      --muted: #a9b8b2;
+      --focus: #ffe185;
+      --showman-pink: #e34c96;
+      --showman-deep: #8f285f;
+      --showman-light: #ffacd0;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      min-height: 100vh;
+      color: var(--shell);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255,100,59,.13), transparent 24rem),
+        #111513;
+      font-family: "Libre Franklin", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+
+    .lab-shell {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 24px 16px 54px;
+      display: grid;
+      grid-template-columns: minmax(210px, 280px) minmax(320px, 375px);
+      justify-content: center;
+      align-items: start;
+      gap: 28px;
+    }
+    .lab-notes {
+      position: sticky;
+      top: 24px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+    }
+    .lab-kicker {
+      margin: 0 0 8px;
+      color: var(--mandarin);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .lab-notes h1 {
+      margin: 0;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 1.7rem;
+      line-height: 1.04;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+    .lab-notes p,
+    .lab-notes li { color: var(--muted); font-size: .82rem; line-height: 1.55; text-wrap: pretty; }
+    .lab-notes ol { margin: 18px 0 0; padding-left: 20px; }
+    .lab-notes li + li { margin-top: 8px; }
+
+    .phone {
+      width: min(100%, 375px);
+      min-height: 790px;
+      padding: 19px 17px 20px;
+      overflow: hidden;
+      border: 3px solid var(--petrol-deep);
+      border-radius: 30px;
+      color: var(--shell);
+      background:
+        linear-gradient(90deg, transparent 0 94%, rgba(255,100,59,.14) 94% 96%, transparent 96%),
+        var(--petrol);
+      box-shadow: 0 24px 56px rgba(0,0,0,.42);
+    }
+    .phone-top {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .phone-top strong {
+      color: var(--mandarin);
+      font-size: .66rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .language {
+      min-width: 48px;
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--petrol-deep);
+      border-radius: 999px;
+      color: var(--petrol-deep);
+      background: var(--honey);
+      font-size: .7rem;
+      font-weight: 700;
+    }
+
+    .chorus-zone { position: relative; min-height: 174px; margin-top: 2px; overflow: hidden; }
+    .chorus-logo {
+      position: absolute;
+      inset: 5px 0 auto;
+      min-height: 150px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 3.72rem;
+      line-height: .86;
+      letter-spacing: -.085em;
+      text-transform: uppercase;
+    }
+    .chorus-voice {
+      position: absolute;
+      left: 0;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--shell);
+      opacity: .13;
+      animation: voice-arrive 520ms cubic-bezier(.2,.82,.2,1) var(--delay) both;
+    }
+    .chorus-voice:nth-child(1) { top: 0; left: -24px; --voice-x: -88px; --delay: 0ms; }
+    .chorus-voice:nth-child(2) { top: 34px; left: 31px; --voice-x: 102px; --delay: 90ms; }
+    .chorus-voice:nth-child(3) { top: 68px; left: -8px; --voice-x: -96px; --delay: 180ms; }
+    .chorus-main {
+      position: absolute;
+      z-index: 2;
+      top: 35px;
+      left: 7px;
+      color: var(--mandarin);
+      text-shadow: 4px 4px 0 var(--honey);
+      animation: chorus-hit 470ms cubic-bezier(.18,.82,.18,1) 260ms both;
+    }
+    .chorus-party {
+      position: absolute;
+      z-index: 3;
+      right: 3px;
+      bottom: 0;
+      padding: 7px 13px 6px;
+      color: var(--shell);
+      background: var(--petrol-deep);
+      font-family: "Libre Franklin", sans-serif;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .23em;
+      opacity: 0;
+      transform-origin: 50% 50%;
+      animation: party-arrival 470ms cubic-bezier(.16,.86,.2,1) 940ms both;
+    }
+    .promise {
+      max-width: 32ch;
+      margin: 0 0 18px;
+      color: #cee3d9;
+      font-size: .8rem;
+      line-height: 1.52;
+      text-wrap: pretty;
+    }
+
+    .mode-stack { display: grid; gap: 13px; }
+    .mode {
+      position: relative;
+      width: 100%;
+      min-height: 88px;
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: 1fr 92px;
+      align-items: center;
+      gap: 8px;
+      border: 3px solid var(--petrol-deep);
+      color: var(--petrol-deep);
+      text-align: left;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mode:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+    .mode:active { transform: translate(3px,3px); box-shadow: 2px 2px 0 var(--petrol-deep); }
+    .mode strong { display: block; font-size: 1.13rem; line-height: 1.06; letter-spacing: -.025em; }
+    .mode small { display: block; margin-top: 5px; font-size: .63rem; font-weight: 600; opacity: .76; }
+    .mode-status {
+      display: block;
+      min-height: 1.2em;
+      margin-top: 7px;
+      font-size: .61rem;
+      font-weight: 700;
+    }
+    .mode-status[data-state="error"] { color: #8b1538; }
+    .mode-party {
+      min-height: 132px;
+      border-radius: 5px 22px 5px 22px;
+      background: var(--mandarin);
+      box-shadow: 6px 6px 0 var(--petrol-deep);
+      transform: rotate(-.35deg);
+    }
+    .mode-party::before {
+      content: "PARTY NIGHT";
+      position: absolute;
+      top: 12px;
+      left: 15px;
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      opacity: .72;
+    }
+    .mode-party .mode-copy { padding-top: 15px; }
+    .mode-quick {
+      width: 91%;
+      min-height: 102px;
+      margin-left: auto;
+      border-radius: 19px 4px 19px 4px;
+      background: var(--honey);
+      box-shadow: 6px 6px 0 var(--petrol-deep);
+      transform: rotate(.55deg);
+    }
+    .mode-games {
+      width: 95%;
+      min-height: 108px;
+      border-radius: 3px 17px 3px 17px;
+      background: var(--shell);
+      box-shadow: 6px 6px 0 var(--petrol-deep);
+      transform: rotate(-.4deg);
+    }
+    .object-stage { width: 92px; min-height: 78px; display: grid; place-items: center; }
+
+    .wheel-assembly { position: relative; width: 82px; height: 88px; display: grid; place-items: end center; }
+    .wheel-disc {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      border: 5px solid var(--shell);
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--honey) 0 60deg,
+        var(--shell) 60deg 120deg,
+        var(--mandarin-dark) 120deg 180deg,
+        var(--honey) 180deg 240deg,
+        var(--shell) 240deg 300deg,
+        var(--mandarin-dark) 300deg
+      );
+      box-shadow: 0 6px 0 rgba(19,40,36,.28);
+      transition: transform 1120ms cubic-bezier(.16,.72,.16,1);
+      will-change: transform;
+    }
+    .wheel-disc::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 17px;
+      height: 17px;
+      transform: translate(-50%, -50%);
+      border: 4px solid var(--shell);
+      border-radius: 50%;
+      background: var(--petrol-deep);
+    }
+    .wheel-pointer {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-right: 9px solid transparent;
+      border-left: 9px solid transparent;
+      border-top: 17px solid var(--honey);
+      filter: drop-shadow(0 2px 0 var(--petrol-deep));
+      transform: translateX(-50%);
+    }
+
+    .die-scene { width: 64px; height: 64px; display: grid; place-items: center; perspective: 420px; }
+    .die-cube {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      transform-style: preserve-3d;
+      transform: rotateX(0deg) rotateY(0deg);
+      transition: transform 920ms cubic-bezier(.18,.76,.18,1);
+      will-change: transform;
+    }
+    .die-face {
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--petrol-deep);
+      border-radius: 11px;
+      background: var(--shell);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.45);
+      backface-visibility: hidden;
+    }
+    .die-front { transform: translateZ(26px); }
+    .die-back { transform: rotateY(180deg) translateZ(26px); }
+    .die-right { transform: rotateY(90deg) translateZ(26px); }
+    .die-left { transform: rotateY(-90deg) translateZ(26px); }
+    .die-top { transform: rotateX(90deg) translateZ(26px); }
+    .die-bottom { transform: rotateX(-90deg) translateZ(26px); }
+    .pip { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--petrol-deep); }
+    .pip.tl { top: 8px; left: 8px; }
+    .pip.tc { top: 8px; left: 50%; transform: translateX(-50%); }
+    .pip.tr { top: 8px; right: 8px; }
+    .pip.ml { top: 50%; left: 8px; transform: translateY(-50%); }
+    .pip.mc { top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .pip.mr { top: 50%; right: 8px; transform: translateY(-50%); }
+    .pip.bl { bottom: 8px; left: 8px; }
+    .pip.bc { bottom: 8px; left: 50%; transform: translateX(-50%); }
+    .pip.br { right: 8px; bottom: 8px; }
+
+    .cards-stage { position: relative; width: 96px; height: 82px; perspective: 540px; }
+    .ace-card {
+      position: absolute;
+      top: 8px;
+      left: 25px;
+      width: 48px;
+      height: 68px;
+      transform: translate(0,0) rotate(0deg);
+      transform-origin: 50% 100%;
+      transition: transform 480ms cubic-bezier(.18,.82,.2,1);
+    }
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform 420ms cubic-bezier(.18,.82,.2,1);
+    }
+    .card-back,
+    .card-front {
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--petrol-deep);
+      border-radius: 7px;
+      backface-visibility: hidden;
+      box-shadow: 0 4px 0 rgba(19,40,36,.24);
+    }
+    .card-back {
+      background:
+        repeating-linear-gradient(135deg, rgba(255,240,209,.32) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(45deg, rgba(111,210,184,.17) 0 1px, transparent 1px 6px),
+        linear-gradient(145deg, var(--showman-light), var(--showman-pink) 48%, var(--showman-deep));
+      border-color: var(--shell);
+      box-shadow:
+        0 4px 0 rgba(19,40,36,.24),
+        inset 0 0 0 2px var(--showman-deep),
+        inset 0 0 0 4px rgba(255,240,209,.78);
+    }
+    .card-back::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 1px solid rgba(255,240,209,.82);
+    }
+    .card-back::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      background: var(--shell);
+      clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+      opacity: .88;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+    .card-front {
+      padding: 4px 5px;
+      display: grid;
+      align-content: space-between;
+      color: var(--petrol-deep);
+      background: var(--shell);
+      transform: rotateY(180deg);
+    }
+    .card-rank { font-family: "Archivo Black", sans-serif; font-size: .84rem; line-height: 1; }
+    .card-suit { align-self: center; justify-self: center; font-family: serif; font-size: 1.45rem; line-height: 1; }
+    .ace-card[data-suit="hearts"] .card-front,
+    .ace-card[data-suit="diamonds"] .card-front { color: var(--mandarin-dark); }
+    .cards-stage.is-shuffling .ace-card:nth-child(1) { animation: shuffle-one 660ms cubic-bezier(.22,.78,.2,1); }
+    .cards-stage.is-shuffling .ace-card:nth-child(2) { animation: shuffle-two 660ms cubic-bezier(.22,.78,.2,1) 40ms; }
+    .cards-stage.is-shuffling .ace-card:nth-child(3) { animation: shuffle-three 660ms cubic-bezier(.22,.78,.2,1) 80ms; }
+    .cards-stage.is-shuffling .ace-card:nth-child(4) { animation: shuffle-four 660ms cubic-bezier(.22,.78,.2,1) 120ms; }
+    .cards-stage.is-revealed .ace-card:nth-child(1) { transform: translate(-27px,-2px) rotate(-24deg); }
+    .cards-stage.is-revealed .ace-card:nth-child(2) { transform: translate(-10px,-9px) rotate(-8deg); }
+    .cards-stage.is-revealed .ace-card:nth-child(3) { transform: translate(10px,-9px) rotate(8deg); }
+    .cards-stage.is-revealed .ace-card:nth-child(4) { transform: translate(27px,-2px) rotate(24deg); }
+    .ace-card.is-revealed .card-inner { transform: rotateY(180deg); }
+
+    @keyframes voice-arrive {
+      from { opacity: 0; transform: translateX(var(--voice-x)) scale(.88); }
+      to { opacity: .13; transform: translateX(0) scale(1); }
+    }
+    @keyframes chorus-hit {
+      from { opacity: 0; transform: scale(1.28) rotate(-4deg); }
+      to { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    @keyframes party-arrival {
+      0% { opacity: 0; transform: translate(80px,-30px) rotate(16deg) scale(.62); }
+      68% { opacity: 1; transform: translate(-8px,3px) rotate(-7deg) scale(1.08); }
+      100% { opacity: 1; transform: translate(0,0) rotate(-3deg) scale(1); }
+    }
+    @keyframes shuffle-one {
+      0%,100% { transform: translate(0,0) rotate(0); }
+      42% { transform: translate(-35px,-8px) rotate(-18deg); }
+      72% { transform: translate(24px,3px) rotate(12deg); }
+    }
+    @keyframes shuffle-two {
+      0%,100% { transform: translate(0,0) rotate(0); }
+      38% { transform: translate(31px,-12px) rotate(15deg); }
+      70% { transform: translate(-22px,4px) rotate(-11deg); }
+    }
+    @keyframes shuffle-three {
+      0%,100% { transform: translate(0,0) rotate(0); }
+      36% { transform: translate(-25px,5px) rotate(-13deg); }
+      68% { transform: translate(34px,-10px) rotate(17deg); }
+    }
+    @keyframes shuffle-four {
+      0%,100% { transform: translate(0,0) rotate(0); }
+      44% { transform: translate(37px,1px) rotate(20deg); }
+      74% { transform: translate(-29px,-9px) rotate(-15deg); }
+    }
+
+    @media (max-width: 700px) {
+      body { background: var(--petrol); }
+      .lab-shell { display: block; padding: 0; }
+      .lab-notes { display: none; }
+      .phone { width: 100%; min-height: auto; padding-bottom: 28px; border: 0; border-radius: 0; box-shadow: none; }
+    }
+    @media (max-width: 360px) {
+      .phone { padding-inline: 14px; }
+      .chorus-logo { font-size: 3.42rem; }
+      .mode { grid-template-columns: 1fr 84px; }
+      .object-stage { width: 84px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+      }
+      .chorus-voice { opacity: .13; transform: none; }
+      .chorus-main { opacity: 1; transform: none; }
+      .chorus-party { opacity: 1; transform: rotate(-3deg); }
+    }
+  </style>
+</head>
+<body>
+  <main class="lab-shell">
+    <aside class="lab-notes">
+      <p class="lab-kicker">Motion lab</p>
+      <h1>Petrolio festa</h1>
+      <p>Tocca le tre modalità. Ogni oggetto esegue un gesto autonomo e termina in uno stato leggibile.</p>
+      <ol>
+        <li>La ruota gira sotto il fermo immobile.</li>
+        <li>Il dado 3D termina su un valore casuale.</li>
+        <li>Le carte si mescolano e rivelano quattro assi.</li>
+      </ol>
+    </aside>
+
+    <section class="phone" aria-label="Home Ruckus Party Petrolio festa">
+      <header class="phone-top">
+        <strong>Fallo partire</strong>
+        <span class="language">ITA</span>
+      </header>
+
+      <div class="chorus-zone">
+        <div class="chorus-logo" aria-label="Ruckus Party">
+          <span class="chorus-voice" aria-hidden="true">Ruckus</span>
+          <span class="chorus-voice" aria-hidden="true">Ruckus</span>
+          <span class="chorus-voice" aria-hidden="true">Ruckus</span>
+          <strong class="chorus-main">Ruckus</strong>
+          <b class="chorus-party">Party</b>
+        </div>
+      </div>
+      <p class="promise">Una voce chiama. Il gruppo risponde. La serata prende volume.</p>
+
+      <div class="mode-stack">
+        <button class="mode mode-party" type="button" data-action="spin-wheel">
+          <span class="mode-copy"><strong>Start Party</strong><small>Più giochi, classifica e finale</small><span class="mode-status" data-wheel-status aria-live="polite">Tocca la ruota</span></span>
+          <span class="object-stage">
+            <span class="wheel-assembly">
+              <span class="wheel-pointer" data-wheel-pointer aria-hidden="true"></span>
+              <span class="wheel-disc" data-wheel-disc aria-hidden="true"></span>
+            </span>
+          </span>
+        </button>
+
+        <button class="mode mode-quick" type="button" data-action="roll-die">
+          <span class="mode-copy"><strong>Quick Play</strong><small>Una sfida, subito</small><span class="mode-status" data-die-status aria-live="polite">Lancia il dado</span></span>
+          <span class="object-stage">
+            <span class="die-scene">
+              <span class="die-cube" data-die-cube data-value="1">
+                <span class="die-face die-front"><i class="pip mc"></i></span>
+                <span class="die-face die-back"><i class="pip tl"></i><i class="pip ml"></i><i class="pip bl"></i><i class="pip tr"></i><i class="pip mr"></i><i class="pip br"></i></span>
+                <span class="die-face die-right"><i class="pip tl"></i><i class="pip mc"></i><i class="pip br"></i></span>
+                <span class="die-face die-left"><i class="pip tl"></i><i class="pip bl"></i><i class="pip tr"></i><i class="pip br"></i></span>
+                <span class="die-face die-top"><i class="pip tl"></i><i class="pip br"></i></span>
+                <span class="die-face die-bottom"><i class="pip tl"></i><i class="pip bl"></i><i class="pip mc"></i><i class="pip tr"></i><i class="pip br"></i></span>
+              </span>
+            </span>
+          </span>
+        </button>
+
+        <button class="mode mode-games" type="button" data-action="shuffle-cards">
+          <span class="mode-copy"><strong>Games</strong><small>Apri il catalogo</small><span class="mode-status" data-cards-status aria-live="polite">Mescola le carte</span></span>
+          <span class="object-stage">
+            <span class="cards-stage" data-cards-stage>
+              <span class="ace-card" data-rank="A" data-suit="spades"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&spades;</span></span></span></span>
+              <span class="ace-card" data-rank="A" data-suit="hearts"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&hearts;</span></span></span></span>
+              <span class="ace-card" data-rank="A" data-suit="diamonds"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&diams;</span></span></span></span>
+              <span class="ace-card" data-rank="A" data-suit="clubs"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&clubs;</span></span></span></span>
+            </span>
+          </span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const state = {
+        dieTurns: 0,
+        wheelTurns: 0,
+        cardsTimer: null,
+        lastCardOrder: ""
+      };
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function randomInt(max) {
+        if (!Number.isInteger(max) || max < 1) {
+          throw new RangeError("randomInt richiede un intero positivo.");
+        }
+        if (!globalThis.crypto || typeof globalThis.crypto.getRandomValues !== "function") {
+          throw new Error("Casualità sicura non disponibile in questo browser.");
+        }
+
+        const range = 0x100000000;
+        const limit = Math.floor(range / max) * max;
+        const values = new Uint32Array(1);
+        do {
+          globalThis.crypto.getRandomValues(values);
+        } while (values[0] >= limit);
+        return (values[0] % max) + 1;
+      }
+
+      function reportFailure(status, error) {
+        status.dataset.state = "error";
+        status.textContent = error.message;
+        console.error(error);
+      }
+
+      function shuffledCards(cards) {
+        const shuffled = [...cards];
+        for (let index = shuffled.length - 1; index > 0; index -= 1) {
+          const swapIndex = randomInt(index + 1) - 1;
+          [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+        }
+
+        let order = shuffled.map(card => card.dataset.suit).join(",");
+        if (order === state.lastCardOrder && shuffled.length > 1) {
+          shuffled.push(shuffled.shift());
+          order = shuffled.map(card => card.dataset.suit).join(",");
+        }
+        state.lastCardOrder = order;
+        return shuffled;
+      }
+
+      function spinWheel() {
+        const disc = document.querySelector("[data-wheel-disc]");
+        const status = document.querySelector("[data-wheel-status]");
+        try {
+          const segment = randomInt(6) - 1;
+          const labels = ["Scintilla", "Sfida", "Cambio", "Mossa", "Coppia", "Jolly"];
+          state.wheelTurns += 3;
+          const finalAngle = (state.wheelTurns * 360) - (segment * 60) - 30;
+          disc.dataset.segment = String(segment + 1);
+          disc.style.transform = `rotate(${finalAngle}deg)`;
+          status.dataset.state = "ok";
+          status.textContent = reducedMotion.matches ? labels[segment] : "La ruota sta girando";
+          window.setTimeout(() => {
+            status.textContent = labels[segment];
+          }, reducedMotion.matches ? 0 : 1140);
+        } catch (error) {
+          reportFailure(status, error);
+        }
+      }
+
+      function rollDie() {
+        const cube = document.querySelector("[data-die-cube]");
+        const status = document.querySelector("[data-die-status]");
+        const rotations = {
+          1: [0, 0],
+          2: [-90, 0],
+          3: [0, -90],
+          4: [0, 90],
+          5: [90, 0],
+          6: [0, 180]
+        };
+        try {
+          const value = randomInt(6);
+          state.dieTurns += 2;
+          const [faceX, faceY] = rotations[value];
+          const spin = state.dieTurns * 360;
+          cube.dataset.value = String(value);
+          cube.style.transform = `rotateX(${spin + faceX}deg) rotateY(${spin + faceY}deg)`;
+          status.dataset.state = "ok";
+          status.textContent = reducedMotion.matches ? `È uscito ${value}` : "Il dado sta girando";
+          window.setTimeout(() => {
+            status.textContent = `È uscito ${value}`;
+          }, reducedMotion.matches ? 0 : 940);
+        } catch (error) {
+          reportFailure(status, error);
+        }
+      }
+
+      function revealAces() {
+        const stage = document.querySelector("[data-cards-stage]");
+        const cards = [...stage.querySelectorAll(".ace-card")];
+        const status = document.querySelector("[data-cards-status]");
+        if (state.cardsTimer) {
+          window.clearTimeout(state.cardsTimer);
+          state.cardsTimer = null;
+        }
+
+        stage.classList.remove("is-shuffling", "is-revealed");
+        cards.forEach(card => card.classList.remove("is-revealed"));
+        shuffledCards(cards).forEach(card => stage.append(card));
+        void stage.offsetWidth;
+
+        if (reducedMotion.matches) {
+          stage.classList.add("is-revealed");
+          cards.forEach(card => card.classList.add("is-revealed"));
+          status.textContent = "Quattro assi";
+          return;
+        }
+
+        stage.classList.add("is-shuffling");
+        status.textContent = "Mescolo";
+        state.cardsTimer = window.setTimeout(() => {
+          stage.classList.remove("is-shuffling");
+          stage.classList.add("is-revealed");
+          cards.forEach(card => card.classList.add("is-revealed"));
+          status.textContent = "Quattro assi";
+          state.cardsTimer = null;
+        }, 760);
+      }
+
+      window.__ruckusMotion = { randomInt };
+
+      document.addEventListener("click", event => {
+        const action = event.target.closest("[data-action]")?.dataset.action;
+        if (action === "spin-wheel") spinWheel();
+        if (action === "roll-die") rollDie();
+        if (action === "shuffle-cards") revealAces();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 
 `Phase 2B - visual direction / design system / high-fidelity prototype: in corso`
 
-Il repository contiene definizione di prodotto, UX architecture, prototipo low-fidelity, direzione visiva selezionata e candidato high-fidelity rivisto, ma nessuna implementazione prodotto. `Manifesto Sociale` è approvata e affinata con ruota, dado, carte, Montserrat e palette funzionale; il prototipo high-fidelity attende il gate finale dell'owner.
+Il repository contiene definizione di prodotto, UX architecture, prototipo low-fidelity, direzione visiva selezionata e candidato high-fidelity rivisto, ma nessuna implementazione prodotto. `Manifesto Sociale` resta la baseline approvata. Il prototipo corrente incorpora `Petrolio festa` come affinamento candidato con nuova palette, tipografia e motion della Home; attende il gate finale dell'owner e non costituisce approvazione implicita.
 
 ## Phase 1 - Product Definition
 
@@ -105,10 +105,14 @@ Backend, account, multiplayer online e implementazione dell'app restano fuori da
 
 - Tre direzioni visive confrontabili: `mockups/01-phase-2b-direzioni.html`.
 - `Manifesto Sociale` selezionata e affinata con Home teatrale, interni più calmi, Montserrat unica e palette funzionale.
+- `Petrolio festa` prodotto come candidato successivo e verificato nel motion lab: `mockups/06-petrolio-festa-motion.html`.
+- Sistema logo `Passa la R` e icona Home approvati dall'owner in D-021: `mockups/11-passa-la-r-motion-focused.html`.
 - Design system e limiti: `docs/PHASE_2B_DESIGN.md`.
-- Prototipo high-fidelity: `prototypes/phase-2b-high-fidelity.html`.
-- QA completato su flusso, viewport, tap target, lingue, modali e reduced motion.
+- Prototipo high-fidelity corrente con Home `Petrolio festa`: `prototypes/phase-2b-high-fidelity.html`.
+- QA mirato della Home corrente completato su mobile, desktop, interazioni, lingue e reduced motion; QA end-to-end completo da rieseguire prima del gate finale.
 
 ## Gate Phase 2B ancora aperto
 
-L'owner deve approvare o richiedere correzioni sul prototipo high-fidelity. Solo dopo il gate si può dichiarare conclusa Phase 2B e definire il workstream successivo senza implementarlo automaticamente.
+L'owner deve approvare `Petrolio festa` nel prototipo high-fidelity oppure richiedere correzioni. Solo dopo questa risposta e il QA end-to-end sullo stato corrente si può dichiarare conclusa Phase 2B e definire il workstream successivo senza implementarlo automaticamente.
+
+Il prossimo workstream coerente è trasferire il sistema logo `Passa la R` già approvato nel prototipo high-fidelity, senza interpretare questo trasferimento come approvazione di `Petrolio festa` o chiusura della Phase.

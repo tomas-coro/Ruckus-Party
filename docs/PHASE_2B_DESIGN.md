@@ -2,7 +2,7 @@
 
 ## Stato
 
-`Manifesto Sociale` è stata approvata dall'owner il 2026-08-22 come base della V1. Il successivo affinamento ha reso la Home più teatrale e spontanea attraverso ruota, dado e carte, mantenendo le schermate operative più calme. Il prototipo high-fidelity rivisto è candidato all'approvazione owner prima di qualsiasi implementazione UI reale.
+`Manifesto Sociale` è stata approvata dall'owner il 2026-08-22 come base della V1. `Petrolio festa` è il candidato di affinamento più recente: trasferisce nel prototipo high-fidelity una palette petrolio, una nuova coppia tipografica e motion indipendente per ruota, dado e carte. Non è ancora approvato dall'owner e non sostituisce automaticamente la baseline di D-019.
 
 ## Obiettivo
 
@@ -33,7 +33,28 @@ Phase 2B non include codice prodotto, backend, account, multiplayer online, pers
 
 Confronto cliccabile: `mockups/01-phase-2b-direzioni.html`.
 
-## Design system - Manifesto Sociale
+### Petrolio festa - candidato più recente, non approvato
+
+- Mood: energico, adulto, materico e sociale, senza codici nightlife.
+- Riferimento: grafica da festa stampata, tipografia da manifesto e oggetti analogici da tavolo.
+- Palette candidata: Petrol `#0D3432`, Petrol Deep `#132824`, Mandarin `#FF643B`, Honey `#F7C64B`, Shell `#FFF0D1` e Mint `#6FD2B8`.
+- Tipografia candidata: `Archivo Black` per wordmark e titoli espressivi, `Libre Franklin` per interfaccia e corpo.
+- Motion candidata: ruota con fermo immobile, dado 3D con risultato leggibile e quattro assi mescolati e rivelati; ogni gesto termina senza loop.
+- Tradeoff: migliora carattere e calore, ma modifica palette e tipografia approvate nella baseline e richiede quindi un nuovo gate owner.
+
+Confronto motion verificabile: `mockups/06-petrolio-festa-motion.html`. Il relativo controllo automatico vive in `mockups/06-petrolio-festa-motion.test.cjs`.
+
+### Sistema logo approvato - Passa la R
+
+- Lockup: due aree Mint e Mandarin si scontrano su Petrol Deep; la tessera Honey con la R appare soltanto al contatto e `PARTY` viene rivelato dopo l'impatto.
+- Icona Home: R Honey dominante su Petrol Deep, con due innesti laterali Mint e Mandarin. Non comprime il lockup completo nel quadrato.
+- Motion: evento singolo senza loop, con stato finale stabile. In reduced motion logo, R e `PARTY` sono visibili immediatamente.
+- Riduzioni verificate: 16, 32, 64 e 96 CSS px.
+- Stato: approvato dall'owner il 2026-08-23 in D-021. Il trasferimento nel prototipo high-fidelity resta il prossimo workstream; l'approvazione del logo non approva automaticamente D-020.
+
+Mockup approvato: `mockups/11-passa-la-r-motion-focused.html`. QA automatico: `mockups/11-passa-la-r-motion-focused.test.cjs`.
+
+## Design system baseline approvato - Manifesto Sociale
 
 ### Principi
 
@@ -112,7 +133,7 @@ Il percorso principale dimostra:
 
 Gli shortcut laterali rendono verificabili anche no-match, errore recuperabile, uscita anticipata e finale senza ripercorrere ogni volta il flusso completo.
 
-Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`.
+Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`. Lo stato corrente incorpora `Petrolio festa` come candidato da valutare, senza registrarlo come approvato.
 
 ## Lingue
 
@@ -120,7 +141,7 @@ Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`.
 - Inglese applicato a interfaccia, istruzioni, errori e contenuti senza perdere lo stato.
 - I nomi dei giochi sono localizzati nel prototipo, ma naming e catalogo finali restano fuori da Phase 2B.
 
-## QA eseguito
+## QA baseline eseguito prima del candidato Petrolio festa
 
 - Flusso completo automatico da Home al secondo gioco e al finale.
 - Viewport 375, 768 e 1440 CSS px senza overflow della pagina.
@@ -133,10 +154,28 @@ Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`.
 - `prefers-reduced-motion` verificato tramite emulazione.
 - Nessun errore JavaScript rilevato durante i percorsi automatici.
 
+## QA del trasferimento Petrolio festa
+
+- Test originale del motion lab superato su ruota, dado, carte e reduced motion.
+- Home del prototipo verificata a 375, 430 e 1440 CSS px senza overflow orizzontale o tap target sotto 44x44 CSS px.
+- Tre oggetti scenici verificati nel prototipo con risultato finale leggibile, casualità via Web Crypto e nessun errore JavaScript.
+- Accessi separati verso Party Night, Quick Play e Games e cambio italiano-inglese verificati senza perdere la funzione scenica degli oggetti.
+- Reduced motion verificato senza animazioni attive e senza bloccare i risultati.
+
+Il QA completo end-to-end del prototipo corrente resta da rieseguire prima della consegna finale di Phase 2B, perché il controllo di questo workstream è intenzionalmente limitato alla Home trasferita.
+
+## QA del sistema logo Passa la R
+
+- Collisione e reveal verificati causalmente: la R resta invisibile prima del contatto e appare nello stesso intervallo dell'urto.
+- `PARTY` resta nascosto fino al completamento dell'impatto.
+- Icona Home verificata a 16, 32, 64 e 96 CSS px con R dominante e margini interni misurati.
+- Viewport 390, 430 e 1440 CSS px, focus, replay, console e reduced motion verificati.
+
 ## Limiti e prossimi controlli
 
 - La direzione è una base approvata, non ancora branding commerciale definitivo.
 - Font remoti sono accettabili nel prototipo, ma la strategia di caricamento appartiene all'implementazione.
 - Durate, nomi e contenuti dei giochi sono dati finti per verificare il flusso.
 - Il prototipo usa `localStorage` soltanto come stato finto; il dominio prodotto non deve dipendere direttamente da questa API.
-- L'approvazione del prototipo high-fidelity è il gate finale di Phase 2B.
+- L'owner deve scegliere se approvare `Petrolio festa` come affinamento della baseline o richiedere correzioni; la sua presenza nel prototipo non vale come approvazione.
+- L'approvazione del prototipo high-fidelity corrente resta il gate finale di Phase 2B.

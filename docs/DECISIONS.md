@@ -181,3 +181,25 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Tradeoff: la Home più teatrale richiede disciplina per non competere con `Start Party`; gli oggetti di gioco devono ricomparire soltanto quando hanno un ruolo e la palette deve mantenere associazioni funzionali stabili.
 - Status: `Recommended`, confermata dall'owner il 2026-08-22 come base migliorabile.
 - Owner answer: proseguire con `Manifesto Sociale`; approvati ruota centrale animabile, dado e carte scenici, Home più suggestiva, interni più calmi, Montserrat unica e palette funzionale proposta.
+
+## Decisione owner aperta in Phase 2B
+
+### D-020 - Affinamento Petrolio festa
+
+- Problem: decidere se il candidato più recente debba sostituire palette e tipografia della baseline `Manifesto Sociale` mantenendone struttura Session-first e oggetti scenici.
+- Recommendation: valutare `Petrolio festa` nel prototipo high-fidelity corrente. Usa Petrol, Mandarin, Honey, Shell e Mint; abbina `Archivo Black` a `Libre Franklin`; assegna a ruota, dado e carte tre interazioni indipendenti e prive di loop.
+- Why: il candidato rende la Home più calda, materica e riconoscibile, mentre le interazioni restano leggibili e rispettano reduced motion.
+- Tradeoff: cambia due elementi esplicitamente approvati in D-019, palette e Montserrat unica, quindi non può essere promosso a nuova baseline senza una risposta owner.
+- Status: `Needs owner decision`.
+- Owner answer: non ancora ricevuta.
+
+## Decisione confermata dall'owner sul sistema logo
+
+### D-021 - Logo Passa la R e icona Home
+
+- Problem: rendere il nome e l'icona Home riconoscibili come Ruckus Party senza ridurre il marchio a frecce generiche o schiacciare il logo completo dentro un quadrato.
+- Recommendation: adottare `Passa la R`. Nel logo Mint e Mandarin si scontrano e solo allora rivelano la tessera Honey con la R; `PARTY` appare dopo l'impatto. L'icona Home usa una R Honey dominante su Petrol Deep con due innesti laterali Mint e Mandarin, ottimizzati per le riduzioni.
+- Why: il movimento comunica una sfida tra persone, mentre l'icona conserva il DNA del logo e resta leggibile a 16, 32, 64 e 96 CSS px.
+- Tradeoff: l'icona non replica il lockup completo, ma sacrifica la corrispondenza letterale per garantire riconoscibilità alle dimensioni di sistema.
+- Status: `Recommended`, confermata dall'owner il 2026-08-23.
+- Owner answer: approvato il sistema `Passa la R` dopo la correzione del timing d'impatto e dell'icona Home; autorizzati commit e push. Questa risposta non approva D-020 né chiude il gate finale di Phase 2B.

@@ -6,7 +6,7 @@
   <title>Ruckus Party - Phase 2B high-fidelity prototype</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Franklin:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --canvas: oklch(0.955 0 0);
@@ -1187,70 +1187,74 @@
     }
   </style>
   <style>
-    /* Phase 2B refinement: playful dial system approved after reference review. */
+    /* Phase 2B candidate refinement: Petrolio festa, pending owner approval. */
     :root {
-      --canvas: #0d0818;
-      --surface: #f7efd9;
-      --surface-2: #eadfc5;
-      --ink: #1b1230;
-      --muted: #675a78;
-      --line: #b9a8c7;
-      --primary: #ff4b3e;
-      --primary-dark: #d93a2e;
+      --canvas: #0d3432;
+      --surface: #fff0d1;
+      --surface-2: #f0ddb7;
+      --ink: #132824;
+      --muted: #4f645e;
+      --line: #93a49b;
+      --primary: #ff643b;
+      --primary-dark: #c8442b;
       --on-primary: #ffffff;
-      --sun: #ffc53d;
+      --sun: #f7c64b;
       --blue: #1f6f5c;
+      --mint: #6fd2b8;
       --success: #1f6f5c;
       --danger: #b72f3c;
-      --focus: #ffd66b;
+      --focus: #ffe185;
+      --showman-pink: #e34c96;
+      --showman-deep: #8f285f;
+      --showman-light: #ffacd0;
     }
 
     body,
     body *,
     body *::before,
     body *::after {
-      font-family: "Montserrat", sans-serif !important;
+      font-family: "Libre Franklin", sans-serif !important;
     }
 
     body {
       background:
-        radial-gradient(circle at 8% 12%, rgba(255, 75, 62, .16), transparent 25rem),
-        radial-gradient(circle at 88% 86%, rgba(255, 197, 61, .10), transparent 23rem),
+        radial-gradient(circle at 8% 12%, rgba(255, 100, 59, .16), transparent 25rem),
+        radial-gradient(circle at 88% 86%, rgba(247, 198, 75, .10), transparent 23rem),
         var(--canvas);
     }
 
     .review-panel {
-      border-color: #3c3050;
+      border-color: #35423e;
       color: var(--surface);
-      background: #160e27;
+      background: #132824;
       box-shadow: 10px 10px 0 rgba(0, 0, 0, .28);
     }
 
     .review-panel::before { color: var(--ink); background: var(--sun); }
     .review-panel h1 { color: var(--surface); }
-    .review-panel p, .legend { color: #b9aec9; }
-    .route-list { border-color: #3c3050; }
+    .review-panel p, .legend { color: #a9b8b2; }
+    .route-list { border-color: #35423e; }
 
     .route-button {
-      border-color: #3c3050;
-      color: #d8cee6;
-      background: #160e27;
+      border-color: #35423e;
+      color: #cee3d9;
+      background: #132824;
     }
 
     .route-button:hover,
     .route-button[aria-current="true"] {
-      border-color: #3c3050;
+      border-color: #35423e;
       color: #fff;
       background: var(--primary);
     }
 
     .device {
-      border-color: #07040c;
+      border-color: #071c1a;
       background: var(--surface);
       box-shadow: 10px 10px 0 var(--primary), 17px 17px 0 rgba(0, 0, 0, .28);
     }
 
-    .device-status { color: #d8cee6; background: var(--canvas); }
+    .device-status { color: #cee3d9; background: var(--canvas); }
     #app { background: var(--surface); }
 
     .app-header {
@@ -1258,7 +1262,7 @@
       background: var(--surface);
     }
 
-    .app-header::after { right: 18px; left: 18px; background: rgba(27, 18, 48, .35); }
+    .app-header::after { right: 18px; left: 18px; background: rgba(19, 40, 36, .35); }
     .app-header strong { font-size: .78rem; letter-spacing: .035em; }
 
     .icon-button {
@@ -1295,7 +1299,7 @@
       letter-spacing: -.05em;
     }
 
-    .screen-copy { color: #5e526e; font-size: .91rem; }
+    .screen-copy { color: #4f645e; font-size: .91rem; }
 
     .primary-button {
       min-height: 56px;
@@ -1306,7 +1310,7 @@
       box-shadow: 0 5px 0 var(--primary-dark);
     }
 
-    .primary-button:hover { border: 0; background: #ff5c50; }
+    .primary-button:hover { border: 0; background: #ff7555; }
     .primary-button:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--primary-dark); }
 
     .secondary-button {
@@ -1327,7 +1331,7 @@
 
     .bottom-actions {
       border-top-color: rgba(27, 18, 48, .25);
-      background: rgba(247, 239, 217, .98);
+      background: rgba(255, 240, 209, .98);
     }
 
     .choice {
@@ -1348,17 +1352,17 @@
       border-color: var(--ink);
       border-radius: 12px;
       color: var(--ink);
-      background: #fffaf0;
+      background: #fff8e8;
     }
 
     .info-block {
       border: 1.5px solid var(--ink);
       border-radius: 14px;
-      background: #fff8e7;
+      background: #fff6de;
       box-shadow: 0 4px 0 rgba(27, 18, 48, .14);
     }
 
-    .info-block p { color: #5e526e; }
+    .info-block p { color: #4f645e; }
     .summary-list, .score-list { border-top-color: var(--ink); }
     .summary-list li, .score-list li { border-bottom-color: rgba(27, 18, 48, .35); }
 
@@ -1386,7 +1390,7 @@
     .player-choice {
       border-color: var(--ink);
       border-radius: 13px;
-      background: #fff8e7;
+      background: #fff6de;
     }
 
     .private-cover,
@@ -1409,32 +1413,29 @@
     .physical-screen .context-label { color: var(--blue); }
     .physical-screen .info-block:first-of-type { border-left-color: var(--blue); }
 
-    /* Home: suggestive, tactile and intentionally less structured. */
+    /* Home: Petrolio festa is the expressive brand stage. */
     .home-header {
       min-height: 54px;
-      grid-template-columns: 52px 1fr 58px;
+      grid-template-columns: 1fr 58px;
+      padding-inline: 17px;
       color: var(--surface);
-      background: var(--ink);
+      background: var(--canvas);
     }
 
     .home-header::after { display: none; }
 
-    .home-mini-mark {
-      width: 34px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      background: var(--primary);
-      font-size: .72rem !important;
-      letter-spacing: -.04em !important;
-      transform: rotate(-4deg);
+    .home-call {
+      color: var(--primary);
+      font-size: .66rem !important;
+      font-weight: 800;
+      letter-spacing: .14em !important;
+      text-transform: uppercase;
     }
 
     .language-toggle {
       min-width: 48px;
       min-height: 44px;
-      border: 1px solid rgba(247, 239, 217, .3);
+      border: 2px solid var(--ink);
       border-radius: 999px;
       color: var(--ink);
       background: var(--sun);
@@ -1442,113 +1443,226 @@
       font-weight: 900;
     }
 
-    .home-screen { color: var(--surface); background: var(--ink); }
+    .home-screen { color: var(--surface); background: var(--canvas); }
 
     .home-screen .content {
+      min-height: 640px;
       overflow: hidden;
-      padding: 4px 20px 18px;
+      padding: 0 17px 22px;
       background:
-        radial-gradient(circle at 10% 38%, rgba(255, 75, 62, .13), transparent 12rem),
-        var(--ink);
+        linear-gradient(90deg, transparent 0 94%, rgba(255, 100, 59, .14) 94% 96%, transparent 96%),
+        var(--canvas);
     }
 
     .home-screen .content::after { display: none; }
-    .home-screen .content > * { position: relative; z-index: 1; }
 
-    .home-intro { position: relative; z-index: 3; }
-
-    .home-wordmark {
+    .chorus-zone {
       position: relative;
-      width: max-content;
-      margin: 3px 0 7px;
-      padding: 8px 11px 7px;
-      color: #fff;
-      font-size: 2.72rem;
-      font-weight: 900;
-      line-height: .74;
-      letter-spacing: -.075em;
-      text-transform: uppercase;
-      transform: rotate(-2deg);
+      min-height: 164px;
+      overflow: hidden;
     }
 
-    .home-wordmark::before {
-      content: "";
+    .chorus-logo {
       position: absolute;
-      z-index: -1;
-      inset: 1px -5px -1px 1px;
-      border: 2px solid #fff;
-      background: var(--primary);
-      transform: rotate(1.5deg);
-    }
-
-    .home-wordmark span { display: block; }
-
-    .home-kicker {
-      margin-bottom: 9px;
-      color: var(--sun);
-      font-size: .62rem;
-      font-weight: 800;
-      letter-spacing: .12em;
+      inset: 5px 0 auto;
+      min-height: 145px;
+      font-family: "Archivo Black", sans-serif !important;
+      font-size: 3.45rem;
+      line-height: .86;
+      letter-spacing: -.04em;
       text-transform: uppercase;
     }
 
-    .home-intro .screen-copy {
-      max-width: 34ch;
-      margin-bottom: 0;
-      color: #cfc4dd;
-      font-size: .77rem;
-      line-height: 1.48;
+    .chorus-voice {
+      position: absolute;
+      left: 0;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--surface);
+      opacity: .13;
+      animation: voice-arrive 520ms cubic-bezier(.2, .82, .2, 1) var(--delay) both;
     }
 
-    .party-orbit {
+    .chorus-voice:nth-child(1) { top: 0; left: -24px; --voice-x: -52px; --delay: 0ms; }
+    .chorus-voice:nth-child(2) { top: 34px; left: 31px; --voice-x: 62px; --delay: 90ms; }
+    .chorus-voice:nth-child(3) { top: 68px; left: -8px; --voice-x: -58px; --delay: 180ms; }
+
+    .chorus-main {
+      position: absolute;
+      z-index: 2;
+      top: 35px;
+      left: 7px;
+      color: var(--primary);
+      font-family: "Archivo Black", sans-serif !important;
+      text-shadow: 4px 4px 0 var(--sun);
+      animation: chorus-hit 470ms cubic-bezier(.18, .82, .18, 1) 260ms both;
+    }
+
+    .chorus-party {
+      position: absolute;
+      z-index: 3;
+      right: 3px;
+      bottom: 0;
+      padding: 7px 13px 6px;
+      color: var(--surface);
+      background: var(--ink);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .23em;
+      opacity: 1;
+      transform-origin: 50% 50%;
+      animation: party-arrival 470ms cubic-bezier(.16, .86, .2, 1) 780ms both;
+    }
+
+    .home-promise {
+      max-width: 32ch;
+      margin: 0 0 16px;
+      color: #cee3d9;
+      font-size: .79rem;
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    .home-mode-stack { display: grid; gap: 12px; }
+
+    .home-mode {
       position: relative;
-      min-height: 250px;
+      width: 100%;
+      min-height: 88px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px;
+      align-items: stretch;
+      border: 3px solid var(--ink);
+      color: var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .home-mode-route,
+    .home-object-action {
+      border: 0;
+      color: inherit;
+      background: transparent;
+    }
+
+    .home-mode-route {
+      min-width: 0;
+      padding: 13px 6px 13px 14px;
+      text-align: left;
+    }
+
+    .home-mode-route:active { opacity: .72; }
+
+    .home-mode-route strong {
+      display: block;
+      font-size: 1.08rem;
+      line-height: 1.06;
+      letter-spacing: -.025em;
+    }
+
+    .home-mode-route small {
+      display: block;
+      margin-top: 5px;
+      font-size: .63rem;
+      font-weight: 600;
+      line-height: 1.35;
+      opacity: .76;
+    }
+
+    .home-mode-status {
+      display: block;
+      min-height: 1.2em;
+      margin-top: 7px;
+      font-size: .61rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .home-mode-status[data-state="error"] { color: #8b1538; }
+
+    .home-object-action {
+      min-width: 88px;
+      min-height: 100%;
+      padding: 6px;
       display: grid;
       place-items: center;
-      margin: -4px 0 1px;
-      isolation: isolate;
+      border-left: 2px solid rgba(19, 40, 36, .18);
     }
 
-    .party-wheel {
-      position: relative;
-      z-index: 3;
-      width: 190px;
-      height: 205px;
-      min-height: 190px;
-      padding: 14px 0 0;
-      border: 0;
-      border-radius: 50%;
-      background: transparent;
-      cursor: pointer;
-      touch-action: manipulation;
+    .home-object-action:hover { background: rgba(255, 255, 255, .14); }
+    .home-object-action:active { background: rgba(19, 40, 36, .1); }
+
+    .home-mode-party {
+      min-height: 126px;
+      border-radius: 5px 22px 5px 22px;
+      background: var(--primary);
+      transform: rotate(-.25deg);
     }
 
-    .wheel-face {
+    .home-mode-party::before {
+      content: "PARTY NIGHT";
+      position: absolute;
+      top: 11px;
+      left: 14px;
+      font-size: .5rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      opacity: .72;
+      pointer-events: none;
+    }
+
+    .home-mode-party .home-mode-route { padding-top: 29px; }
+
+    .home-mode-quick {
+      width: 91%;
+      min-height: 96px;
+      margin-left: auto;
+      border-radius: 19px 4px 19px 4px;
+      background: var(--sun);
+      transform: rotate(.4deg);
+    }
+
+    .home-mode-games {
+      width: 95%;
+      min-height: 100px;
+      border-radius: 3px 17px 3px 17px;
+      background: var(--surface);
+      transform: rotate(-.3deg);
+    }
+
+    .wheel-assembly {
       position: relative;
-      width: 180px;
-      height: 180px;
-      display: block;
-      margin: 0 auto;
+      width: 82px;
+      height: 88px;
+      display: grid;
+      place-items: end center;
+    }
+
+    .wheel-disc {
+      position: relative;
+      width: 76px;
+      height: 76px;
       border: 5px solid var(--surface);
       border-radius: 50%;
       background: conic-gradient(
-        var(--primary) 0 60deg,
+        var(--sun) 0 60deg,
         var(--surface) 60deg 120deg,
-        var(--sun) 120deg 180deg,
-        var(--surface) 180deg 240deg,
-        var(--blue) 240deg 300deg,
-        var(--surface) 300deg 360deg
+        var(--primary-dark) 120deg 180deg,
+        var(--sun) 180deg 240deg,
+        var(--surface) 240deg 300deg,
+        var(--primary-dark) 300deg
       );
-      box-shadow: 0 10px 26px rgba(0, 0, 0, .35);
+      box-shadow: 0 6px 0 rgba(19, 40, 36, .28);
+      transition: transform 1120ms cubic-bezier(.16, .72, .16, 1);
+      will-change: transform;
     }
 
-    .wheel-face i {
+    .wheel-disc::after {
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 32px;
-      height: 32px;
-      border: 5px solid var(--surface);
+      width: 17px;
+      height: 17px;
+      border: 4px solid var(--surface);
       border-radius: 50%;
       background: var(--ink);
       transform: translate(-50%, -50%);
@@ -1556,175 +1670,213 @@
 
     .wheel-pointer {
       position: absolute;
-      z-index: 4;
-      top: 1px;
+      z-index: 3;
+      top: 0;
       left: 50%;
       width: 0;
       height: 0;
-      border-right: 11px solid transparent;
-      border-left: 11px solid transparent;
-      border-top: 19px solid var(--sun);
-      filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .4));
+      border-right: 9px solid transparent;
+      border-left: 9px solid transparent;
+      border-top: 17px solid var(--sun);
+      filter: drop-shadow(0 2px 0 var(--ink));
       transform: translateX(-50%);
     }
 
-    .wheel-status {
-      position: absolute;
-      z-index: 5;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      color: #d7cce5;
-      font-size: .63rem;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-align: center;
+    .die-scene {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      perspective: 420px;
     }
 
-    .orbit-card-stack {
-      position: absolute;
-      z-index: 2;
-      top: 47px;
-      left: 7px;
-      width: 66px;
-      height: 88px;
-      transform: rotate(-13deg);
+    .die-cube {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      transform-style: preserve-3d;
+      transform: rotateX(0deg) rotateY(0deg);
+      transition: transform 920ms cubic-bezier(.18, .76, .18, 1);
+      will-change: transform;
     }
 
-    .orbit-card-stack i {
+    .die-face {
       position: absolute;
       inset: 0;
       border: 3px solid var(--ink);
-      border-radius: 9px;
+      border-radius: 11px;
       background: var(--surface);
-      box-shadow: 0 5px 12px rgba(0, 0, 0, .32);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .45);
+      backface-visibility: hidden;
     }
 
-    .orbit-card-stack i::before {
-      content: "R";
-      position: absolute;
-      top: 8px;
-      left: 9px;
-      color: var(--ink);
-      font-size: .72rem;
-      font-weight: 900;
-    }
+    .die-front { transform: translateZ(26px); }
+    .die-back { transform: rotateY(180deg) translateZ(26px); }
+    .die-right { transform: rotateY(90deg) translateZ(26px); }
+    .die-left { transform: rotateY(-90deg) translateZ(26px); }
+    .die-top { transform: rotateX(90deg) translateZ(26px); }
+    .die-bottom { transform: rotateX(-90deg) translateZ(26px); }
 
-    .orbit-card-stack i:nth-child(1) { background: var(--blue); transform: translate(-13px, 8px) rotate(-11deg); }
-    .orbit-card-stack i:nth-child(2) { background: var(--sun); transform: translate(-6px, 3px) rotate(-5deg); }
-    .orbit-card-stack i:nth-child(3) { background: var(--surface); }
-
-    .orbit-die {
+    .pip {
       position: absolute;
-      z-index: 4;
-      right: 8px;
-      bottom: 52px;
-      width: 62px;
-      height: 62px;
-      border: 3px solid var(--ink);
-      border-radius: 15px;
-      background: var(--primary);
-      box-shadow: 0 7px 14px rgba(0, 0, 0, .34);
-      transform: rotate(12deg);
-    }
-
-    .orbit-die i {
-      position: absolute;
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: #fff;
+      background: var(--ink);
     }
 
-    .orbit-die i:nth-child(1) { top: 11px; left: 11px; }
-    .orbit-die i:nth-child(2) { top: 11px; right: 11px; }
-    .orbit-die i:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .orbit-die i:nth-child(4) { right: 11px; bottom: 11px; }
-    .orbit-die i:nth-child(5) { bottom: 11px; left: 11px; }
+    .pip.tl { top: 8px; left: 8px; }
+    .pip.tc { top: 8px; left: 50%; transform: translateX(-50%); }
+    .pip.tr { top: 8px; right: 8px; }
+    .pip.ml { top: 50%; left: 8px; transform: translateY(-50%); }
+    .pip.mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .pip.mr { top: 50%; right: 8px; transform: translateY(-50%); }
+    .pip.bl { bottom: 8px; left: 8px; }
+    .pip.bc { bottom: 8px; left: 50%; transform: translateX(-50%); }
+    .pip.br { right: 8px; bottom: 8px; }
 
-    .home-actions { display: grid; gap: 12px; }
+    .cards-stage {
+      position: relative;
+      width: 88px;
+      height: 76px;
+      perspective: 540px;
+    }
 
-    .home-primary {
-      min-height: 58px;
-      padding: 11px 16px;
+    .ace-card {
+      position: absolute;
+      top: 7px;
+      left: 22px;
+      width: 44px;
+      height: 63px;
+      transform: translate(0, 0) rotate(0deg);
+      transform-origin: 50% 100%;
+      transition: transform 480ms cubic-bezier(.18, .82, .2, 1);
+    }
+
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform 420ms cubic-bezier(.18, .82, .2, 1);
+    }
+
+    .card-back,
+    .card-front {
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--ink);
+      border-radius: 7px;
+      backface-visibility: hidden;
+      box-shadow: 0 4px 0 rgba(19, 40, 36, .24);
+    }
+
+    .card-back {
+      background:
+        repeating-linear-gradient(135deg, rgba(255, 240, 209, .32) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(45deg, rgba(111, 210, 184, .17) 0 1px, transparent 1px 6px),
+        linear-gradient(145deg, var(--showman-light), var(--showman-pink) 48%, var(--showman-deep));
+      border-color: var(--surface);
+      box-shadow:
+        0 4px 0 rgba(19, 40, 36, .24),
+        inset 0 0 0 2px var(--showman-deep),
+        inset 0 0 0 4px rgba(255, 240, 209, .78);
+    }
+
+    .card-back::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 1px solid rgba(255, 240, 209, .82);
+    }
+
+    .card-back::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      background: var(--surface);
+      clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+      opacity: .88;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .card-front {
+      padding: 4px 5px;
       display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      border: 0;
-      border-radius: 14px;
-      color: #fff;
-      background: var(--primary);
-      box-shadow: 0 5px 0 var(--primary-dark);
+      align-content: space-between;
+      color: var(--ink);
+      background: var(--surface);
+      transform: rotateY(180deg);
     }
 
-    .home-primary::before {
-      content: "↗";
-      position: static;
-      grid-column: 2;
-      grid-row: 1 / span 2;
-      color: #fff;
-      font-size: 1.4rem;
+    .card-rank { font-family: "Archivo Black", sans-serif !important; font-size: .76rem; line-height: 1; }
+    .card-suit { align-self: center; justify-self: center; font-size: 1.3rem; line-height: 1; }
+    .ace-card[data-suit="hearts"] .card-front,
+    .ace-card[data-suit="diamonds"] .card-front { color: var(--primary-dark); }
+
+    .cards-stage.is-shuffling .ace-card:nth-child(1) { animation: shuffle-one 660ms cubic-bezier(.22, .78, .2, 1); }
+    .cards-stage.is-shuffling .ace-card:nth-child(2) { animation: shuffle-two 660ms cubic-bezier(.22, .78, .2, 1) 40ms; }
+    .cards-stage.is-shuffling .ace-card:nth-child(3) { animation: shuffle-three 660ms cubic-bezier(.22, .78, .2, 1) 80ms; }
+    .cards-stage.is-shuffling .ace-card:nth-child(4) { animation: shuffle-four 660ms cubic-bezier(.22, .78, .2, 1) 120ms; }
+    .cards-stage.is-revealed .ace-card:nth-child(1) { transform: translate(-24px, -2px) rotate(-24deg); }
+    .cards-stage.is-revealed .ace-card:nth-child(2) { transform: translate(-8px, -8px) rotate(-8deg); }
+    .cards-stage.is-revealed .ace-card:nth-child(3) { transform: translate(8px, -8px) rotate(8deg); }
+    .cards-stage.is-revealed .ace-card:nth-child(4) { transform: translate(24px, -2px) rotate(24deg); }
+    .ace-card.is-revealed .card-inner { transform: rotateY(180deg); }
+
+    @keyframes voice-arrive {
+      from { transform: translateX(var(--voice-x)) scale(.92); }
+      to { transform: translateX(0) scale(1); }
     }
 
-    .home-primary strong {
-      max-width: none;
-      font-size: .98rem;
-      line-height: 1.1;
-      letter-spacing: -.02em;
+    @keyframes chorus-hit {
+      from { transform: scale(1.16) rotate(-3deg); }
+      to { transform: scale(1) rotate(0); }
     }
 
-    .home-primary span { max-width: none; color: #ffe4e1; font-size: .61rem; }
-    .home-primary:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--primary-dark); }
-
-    .home-shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .home-secondary {
-      min-height: 52px;
-      padding: 9px 12px;
-      border: 1px solid #4a3c5f;
-      border-radius: 13px;
-      color: var(--surface);
-      background: #261a3b;
+    @keyframes party-arrival {
+      0% { transform: translate(48px, -20px) rotate(12deg) scale(.78); }
+      68% { transform: translate(-6px, 2px) rotate(-6deg) scale(1.06); }
+      100% { transform: translate(0, 0) rotate(-3deg) scale(1); }
     }
 
-    .home-secondary:hover,
-    .home-secondary:active { color: var(--ink); background: var(--sun); }
-    .home-secondary strong { font-size: .76rem; }
-    .home-secondary span { font-size: .56rem; }
-
-    .party-wheel.is-spinning .wheel-face { animation: wheel-spin 920ms cubic-bezier(.18, .72, .18, 1) both; }
-    .party-orbit.is-spinning .orbit-die { animation: die-toss 620ms cubic-bezier(.2, .8, .25, 1) both; }
-    .party-orbit.is-spinning .orbit-card-stack { animation: card-fan 540ms cubic-bezier(.2, .8, .25, 1) both; }
-
-    @keyframes wheel-spin {
-      from { transform: rotate(0); }
-      to { transform: rotate(780deg); }
+    @keyframes shuffle-one {
+      0%, 100% { transform: translate(0, 0) rotate(0); }
+      42% { transform: translate(-30px, -7px) rotate(-18deg); }
+      72% { transform: translate(20px, 3px) rotate(12deg); }
     }
 
-    @keyframes die-toss {
-      0% { transform: translate(0, 0) rotate(12deg); }
-      48% { transform: translate(-12px, -22px) rotate(104deg); }
-      100% { transform: translate(0, 0) rotate(192deg); }
+    @keyframes shuffle-two {
+      0%, 100% { transform: translate(0, 0) rotate(0); }
+      38% { transform: translate(27px, -10px) rotate(15deg); }
+      70% { transform: translate(-19px, 4px) rotate(-11deg); }
     }
 
-    @keyframes card-fan {
-      0%, 100% { transform: rotate(-13deg); }
-      48% { transform: translate(8px, -8px) rotate(-3deg); }
+    @keyframes shuffle-three {
+      0%, 100% { transform: translate(0, 0) rotate(0); }
+      36% { transform: translate(-22px, 5px) rotate(-13deg); }
+      68% { transform: translate(29px, -9px) rotate(17deg); }
+    }
+
+    @keyframes shuffle-four {
+      0%, 100% { transform: translate(0, 0) rotate(0); }
+      44% { transform: translate(32px, 1px) rotate(20deg); }
+      74% { transform: translate(-25px, -8px) rotate(-15deg); }
     }
 
     @media (max-width: 390px) {
-      .home-wordmark { font-size: 2.5rem; }
-      .party-orbit { min-height: 232px; }
-      .party-wheel { width: 178px; height: 190px; }
-      .wheel-face { width: 166px; height: 166px; }
-      .orbit-card-stack { left: 2px; transform: scale(.9) rotate(-13deg); }
-      .orbit-die { right: 2px; transform: scale(.9) rotate(12deg); }
+      .chorus-logo { font-size: 3.18rem; }
+      .home-mode { grid-template-columns: minmax(0, 1fr) 84px; }
+      .home-object-action { min-width: 80px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .party-wheel.is-spinning .wheel-face,
-      .party-orbit.is-spinning .orbit-die,
-      .party-orbit.is-spinning .orbit-card-stack { animation: none !important; }
+      .chorus-voice,
+      .chorus-main,
+      .chorus-party { transform: none; }
     }
   </style>
 </head>
@@ -1807,6 +1959,13 @@
     const app = document.getElementById("app");
     const sessionDialog = document.getElementById("session-dialog");
     const confirmDialog = document.getElementById("confirm-dialog");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const homeMotion = {
+      cardsTimer: null,
+      dieTurns: 0,
+      lastCardOrder: "",
+      wheelTurns: 0
+    };
 
     function loadState() {
       try {
@@ -1826,6 +1985,147 @@
       }
     }
 
+    function randomInt(max) {
+      if (!Number.isInteger(max) || max < 1) {
+        throw new RangeError("randomInt requires a positive integer.");
+      }
+      if (!globalThis.crypto || typeof globalThis.crypto.getRandomValues !== "function") {
+        throw new Error("Secure randomness is unavailable in this browser.");
+      }
+
+      const range = 0x100000000;
+      const limit = Math.floor(range / max) * max;
+      const values = new Uint32Array(1);
+      do {
+        globalThis.crypto.getRandomValues(values);
+      } while (values[0] >= limit);
+      return (values[0] % max) + 1;
+    }
+
+    function homeMotionFailure(status, error) {
+      if (status) {
+        status.dataset.state = "error";
+        status.textContent = state.language === "it" ? "Interazione non disponibile" : "Interaction unavailable";
+      }
+      console.error("Home motion interaction failed.", error);
+    }
+
+    function shuffledHomeCards(cards) {
+      const shuffled = [...cards];
+      for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = randomInt(index + 1) - 1;
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+      }
+
+      let order = shuffled.map(card => card.dataset.suit).join(",");
+      if (order === homeMotion.lastCardOrder && shuffled.length > 1) {
+        shuffled.push(shuffled.shift());
+        order = shuffled.map(card => card.dataset.suit).join(",");
+      }
+      homeMotion.lastCardOrder = order;
+      return shuffled;
+    }
+
+    function spinHomeWheel() {
+      const disc = document.querySelector("[data-wheel-disc]");
+      const status = document.querySelector("[data-wheel-status]");
+      try {
+        if (!disc || !status) throw new Error("Home wheel elements are missing.");
+        const segment = randomInt(6) - 1;
+        const labels = state.language === "it"
+          ? ["Scintilla", "Sfida", "Cambio", "Mossa", "Coppia", "Jolly"]
+          : ["Spark", "Challenge", "Switch", "Move", "Pair", "Wild"];
+        homeMotion.wheelTurns += 3;
+        const finalAngle = (homeMotion.wheelTurns * 360) - (segment * 60) - 30;
+        disc.dataset.segment = String(segment + 1);
+        disc.style.transform = `rotate(${finalAngle}deg)`;
+        status.dataset.state = "ok";
+        status.textContent = reducedMotion.matches
+          ? labels[segment]
+          : state.language === "it" ? "La ruota sta girando" : "The wheel is spinning";
+        window.setTimeout(() => {
+          if (status.isConnected) status.textContent = labels[segment];
+        }, reducedMotion.matches ? 0 : 1140);
+      } catch (error) {
+        homeMotionFailure(status, error);
+      }
+    }
+
+    function rollHomeDie() {
+      const cube = document.querySelector("[data-die-cube]");
+      const status = document.querySelector("[data-die-status]");
+      const rotations = {
+        1: [0, 0],
+        2: [-90, 0],
+        3: [0, -90],
+        4: [0, 90],
+        5: [90, 0],
+        6: [0, 180]
+      };
+      try {
+        if (!cube || !status) throw new Error("Home die elements are missing.");
+        const value = randomInt(6);
+        homeMotion.dieTurns += 2;
+        const [faceX, faceY] = rotations[value];
+        const spin = homeMotion.dieTurns * 360;
+        cube.dataset.value = String(value);
+        cube.style.transform = `rotateX(${spin + faceX}deg) rotateY(${spin + faceY}deg)`;
+        status.dataset.state = "ok";
+        const result = state.language === "it" ? `È uscito ${value}` : `Rolled ${value}`;
+        status.textContent = reducedMotion.matches
+          ? result
+          : state.language === "it" ? "Il dado sta girando" : "The die is rolling";
+        window.setTimeout(() => {
+          if (status.isConnected) status.textContent = result;
+        }, reducedMotion.matches ? 0 : 940);
+      } catch (error) {
+        homeMotionFailure(status, error);
+      }
+    }
+
+    function revealHomeAces() {
+      const stage = document.querySelector("[data-cards-stage]");
+      const status = document.querySelector("[data-cards-status]");
+      try {
+        if (!stage || !status) throw new Error("Home card elements are missing.");
+        const cards = [...stage.querySelectorAll(".ace-card")];
+        if (cards.length !== 4) throw new Error("The Home card stack must contain four aces.");
+        if (homeMotion.cardsTimer) {
+          window.clearTimeout(homeMotion.cardsTimer);
+          homeMotion.cardsTimer = null;
+        }
+
+        stage.classList.remove("is-shuffling", "is-revealed");
+        cards.forEach(card => card.classList.remove("is-revealed"));
+        shuffledHomeCards(cards).forEach(card => stage.append(card));
+        void stage.offsetWidth;
+
+        if (reducedMotion.matches) {
+          stage.classList.add("is-revealed");
+          cards.forEach(card => card.classList.add("is-revealed"));
+          status.dataset.state = "ok";
+          status.textContent = state.language === "it" ? "Quattro assi" : "Four aces";
+          return;
+        }
+
+        stage.classList.add("is-shuffling");
+        status.dataset.state = "ok";
+        status.textContent = state.language === "it" ? "Mescolo" : "Shuffling";
+        homeMotion.cardsTimer = window.setTimeout(() => {
+          if (!stage.isConnected || !status.isConnected) return;
+          stage.classList.remove("is-shuffling");
+          stage.classList.add("is-revealed");
+          cards.forEach(card => card.classList.add("is-revealed"));
+          status.textContent = state.language === "it" ? "Quattro assi" : "Four aces";
+          homeMotion.cardsTimer = null;
+        }, 760);
+      } catch (error) {
+        homeMotionFailure(status, error);
+      }
+    }
+
+    window.__ruckusMotion = { randomInt };
+
     function go(screen) {
       state.previousScreen = state.screen;
       state.screen = screen;
@@ -1837,8 +2137,7 @@
     function header(title, options = {}) {
       if (options.home) {
         return `<header class="app-header home-header">
-          <strong class="home-mini-mark">RP</strong>
-          <div class="header-spacer" aria-hidden="true"></div>
+          <strong class="home-call">Make it happen</strong>
           <button class="language-toggle" data-action="language" aria-label="Change language">${state.language === "it" ? "ITA" : "EN"}</button>
         </header>`;
       }
@@ -1873,29 +2172,55 @@
 
     function renderHome() {
       const resume = state.activeSession
-        ? `<button class="home-primary" data-action="resume"><strong>Resume Party</strong><span>2 players - Game ${Math.max(state.currentGame, 1)} in progress</span></button>`
-        : `<button class="home-primary" data-action="start-party"><strong>Start Party</strong><span>Multiple games, standings and a proper finale</span></button>`;
+        ? `<button class="home-mode-route" data-action="resume"><strong>Resume Party</strong><small>2 players - Game ${Math.max(state.currentGame, 1)} in progress</small><span class="home-mode-status" data-wheel-status aria-live="polite">Spin the wheel</span></button>`
+        : `<button class="home-mode-route" data-action="start-party"><strong>Start Party</strong><small>Multiple games, standings and a proper finale</small><span class="home-mode-status" data-wheel-status aria-live="polite">Spin the wheel</span></button>`;
       return header("Ruckus Party", { home: true }) + screen(contentBlock(`
-        <div class="home-intro">
-          <h1 class="home-wordmark"><span>Ruckus</span><span>Party</span></h1>
-          <div class="home-kicker">The next move is yours</div>
-          <p class="screen-copy">Gather the group, pass one phone around and let Ruckus keep the rhythm between games.</p>
+        <div class="chorus-zone">
+          <h1 class="chorus-logo" aria-label="Ruckus Party">
+            <span class="chorus-voice" aria-hidden="true">Ruckus</span>
+            <span class="chorus-voice" aria-hidden="true">Ruckus</span>
+            <span class="chorus-voice" aria-hidden="true">Ruckus</span>
+            <strong class="chorus-main">Ruckus</strong>
+            <b class="chorus-party">Party</b>
+          </h1>
         </div>
-        <div class="party-orbit">
-          <div class="orbit-card-stack" aria-hidden="true"><i></i><i></i><i></i></div>
-          <button class="party-wheel" type="button" data-action="spin-wheel" aria-label="Spin the party wheel">
-            <span class="wheel-pointer" aria-hidden="true"></span>
-            <span class="wheel-face" aria-hidden="true"><i></i></span>
-          </button>
-          <div class="orbit-die" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-          <div class="wheel-status" data-wheel-status aria-live="polite">Tap the wheel for a spark</div>
-        </div>
-        <div class="home-actions">
-          ${resume}
-          <div class="home-shortcuts">
-            <button class="home-secondary" data-action="quick-play"><strong>Quick Play</strong><span>One game</span></button>
-            <button class="home-secondary" data-action="games"><strong>Games</strong><span>Browse all</span></button>
-          </div>
+        <p class="home-promise">One voice calls. The group answers. The night gets louder.</p>
+        <div class="home-mode-stack">
+          <section class="home-mode home-mode-party" aria-label="Party Night">
+            ${resume}
+            <button class="home-object-action" type="button" data-action="spin-wheel" aria-label="Spin the party wheel">
+              <span class="wheel-assembly" aria-hidden="true">
+                <span class="wheel-pointer" data-wheel-pointer></span>
+                <span class="wheel-disc" data-wheel-disc></span>
+              </span>
+            </button>
+          </section>
+          <section class="home-mode home-mode-quick" aria-label="Quick Play">
+            <button class="home-mode-route" data-action="quick-play"><strong>Quick Play</strong><small>One challenge, right away</small><span class="home-mode-status" data-die-status aria-live="polite">Roll the die</span></button>
+            <button class="home-object-action" type="button" data-action="roll-die" aria-label="Roll the die">
+              <span class="die-scene" aria-hidden="true">
+                <span class="die-cube" data-die-cube data-value="1">
+                  <span class="die-face die-front"><i class="pip mc"></i></span>
+                  <span class="die-face die-back"><i class="pip tl"></i><i class="pip ml"></i><i class="pip bl"></i><i class="pip tr"></i><i class="pip mr"></i><i class="pip br"></i></span>
+                  <span class="die-face die-right"><i class="pip tl"></i><i class="pip mc"></i><i class="pip br"></i></span>
+                  <span class="die-face die-left"><i class="pip tl"></i><i class="pip bl"></i><i class="pip tr"></i><i class="pip br"></i></span>
+                  <span class="die-face die-top"><i class="pip tl"></i><i class="pip br"></i></span>
+                  <span class="die-face die-bottom"><i class="pip tl"></i><i class="pip bl"></i><i class="pip mc"></i><i class="pip tr"></i><i class="pip br"></i></span>
+                </span>
+              </span>
+            </button>
+          </section>
+          <section class="home-mode home-mode-games" aria-label="Games">
+            <button class="home-mode-route" data-action="games"><strong>Games</strong><small>Open the catalog</small><span class="home-mode-status" data-cards-status aria-live="polite">Shuffle the cards</span></button>
+            <button class="home-object-action" type="button" data-action="shuffle-cards" aria-label="Shuffle the cards">
+              <span class="cards-stage" data-cards-stage aria-hidden="true">
+                <span class="ace-card" data-rank="A" data-suit="spades"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&spades;</span></span></span></span>
+                <span class="ace-card" data-rank="A" data-suit="hearts"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&hearts;</span></span></span></span>
+                <span class="ace-card" data-rank="A" data-suit="diamonds"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&diams;</span></span></span></span>
+                <span class="ace-card" data-rank="A" data-suit="clubs"><span class="card-inner"><span class="card-back"></span><span class="card-front"><span class="card-rank">A</span><span class="card-suit">&clubs;</span></span></span></span>
+              </span>
+            </button>
+          </section>
         </div>
       `), "", "home-screen");
     }
@@ -2256,7 +2581,14 @@
       "Go back": "Torna indietro",
       "Open session menu": "Apri il menu della sessione",
       "Change language": "Cambia lingua",
+      "Make it happen": "Fallo partire",
       "Start Party": "Avvia Party Night",
+      "One voice calls. The group answers. The night gets louder.": "Una voce chiama. Il gruppo risponde. La serata prende volume.",
+      "Spin the wheel": "Tocca la ruota",
+      "Roll the die": "Lancia il dado",
+      "Shuffle the cards": "Mescola le carte",
+      "One challenge, right away": "Una sfida, subito",
+      "Open the catalog": "Apri il catalogo",
       "The next move is yours": "La prossima mossa è vostra",
       "Gather the group, pass one phone around and let Ruckus keep the rhythm between games.": "Radunate il gruppo, passatevi un solo telefono e lasciate che Ruckus tenga il ritmo tra un gioco e l'altro.",
       "Spin the party wheel": "Gira la ruota della festa",
@@ -2704,26 +3036,9 @@
         menu: () => openDialog(sessionDialog),
         "start-party": () => go("players"),
         resume: () => go(state.currentGame >= 2 ? "physical" : "proposal"),
-        "spin-wheel": () => {
-          const wheel = document.querySelector(".party-wheel");
-          const orbit = document.querySelector(".party-orbit");
-          const status = document.querySelector("[data-wheel-status]");
-          if (!wheel || !orbit || !status) {
-            console.error("Party wheel elements are missing from the Home prototype.");
-            return;
-          }
-          state.wheelSpin += 1;
-          saveState();
-          wheel.classList.remove("is-spinning");
-          orbit.classList.remove("is-spinning");
-          void wheel.offsetWidth;
-          wheel.classList.add("is-spinning");
-          orbit.classList.add("is-spinning");
-          const italianMessages = ["Si parte dal caos.", "Carte, dadi o movimento?", "La serata ha scelto energia."];
-          const englishMessages = ["Let the chaos begin.", "Cards, dice or movement?", "The night picked energy."];
-          const messages = state.language === "it" ? italianMessages : englishMessages;
-          status.textContent = messages[(state.wheelSpin - 1) % messages.length];
-        },
+        "spin-wheel": spinHomeWheel,
+        "roll-die": rollHomeDie,
+        "shuffle-cards": revealHomeAces,
         "quick-play": () => go("quick-play"),
         games: () => go("games"),
         language: () => go("language"),

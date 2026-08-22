@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  viewer-template.html · scocca del visualizzatore di direzioni (skill `mockup`)
+  ─────────────────────────────────────────────────────────────────────────────
+  SCOCCA FISSA, CONTENUTO VARIABILE.
+  La skill sostituisce SOLO il contenuto di <div id="panels"> con i 3/4 pannelli
+  reali. Ogni direzione è un <section class="dir-panel" data-name data-mood data-why>
+  che contiene SOLO il design di anteprima: la barra-titolo (nome+mood) e la riga
+  "perché" sono disegnate automaticamente dallo script qui sotto.
+  I chip in #chips sono generati automaticamente, uno per pannello.
+  NON modificare la scocca o lo script: cambia solo #panels (e <title>).
+-->
+<title>Ruckus Party - direzioni logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171e; --ink-2:#1b1f28; --ink-3:#232936;
+    --line:#323a4a; --bone:#e9e4d8; --bone-dim:#a39e93;
+    --brass:#e0a96d; --brass-deep:#b9824a; --ok:#7fb59a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:radial-gradient(1200px 600px at 80% -10%, #1d2230 0, transparent 60%), var(--ink);
+    color:var(--bone); font-family:"Hanken Grotesk",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:24px 18px 64px}
+
+  header.top{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
+  .eyebrow{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:700}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:clamp(1.4rem,4vw,2rem);margin:.35rem 0 0;letter-spacing:-.015em}
+  .lead{color:var(--bone-dim);font-size:.9rem;margin:.45rem 0 0;max-width:52ch}
+
+  /* chip bar */
+  #chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+  #chips button{
+    font:inherit;font-weight:600;font-size:.84rem;color:var(--bone-dim);
+    background:var(--ink-2);border:1px solid var(--line);border-radius:11px;
+    padding:10px 15px;min-height:44px;cursor:pointer;display:flex;align-items:center;gap:8px;
+    transition:color .15s ease, background .15s ease, border-color .15s ease;
+  }
+  #chips button:hover{color:var(--bone)}
+  #chips button[aria-pressed="true"]{border-color:var(--brass);color:var(--bone);background:var(--ink-3)}
+  #chips button .swatch{width:11px;height:11px;border-radius:4px;background:var(--brass);flex:none}
+
+  /* palco */
+  #stage{position:relative}
+  .dir-panel[hidden]{display:none}
+  .dir-panel{animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .dir-card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .dir-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .dir-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.1rem;line-height:1.15}
+  .dir-mood{font-size:.74rem;color:var(--bone-dim);margin-top:2px}
+  .dir-tag{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 9px;border-radius:99px;white-space:nowrap;background:var(--ink-3);color:var(--bone-dim);border:1px solid var(--line)}
+  .dir-tag[data-role="Attuale"]{background:rgba(224,169,109,.16);color:var(--brass);border-color:var(--brass-deep)}
+  .dir-tag[data-role="Variante +"]{background:rgba(127,181,154,.14);color:var(--ok);border-color:#3f5a4f}
+  .dir-body{padding:20px 18px}
+  .dir-why{display:flex;gap:9px;align-items:flex-start;padding:13px 18px;border-top:1px solid var(--line);background:rgba(255,255,255,.015);font-size:.82rem;color:var(--bone-dim)}
+  .dir-why b{color:var(--bone);font-weight:600}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+
+  /* ───────── stili di esempio dei pannelli (la skill li sostituisce) ───────── */
+  .demo-nav{display:flex;gap:8px;align-items:center;font-size:.7rem;color:var(--bone-dim);margin-bottom:14px}
+  .demo-dot{width:8px;height:8px;border-radius:99px;background:var(--line)}
+  .demo-h{margin:0 0 8px;line-height:1.05}
+  .demo-p{margin:0 0 16px;font-size:.86rem;color:var(--bone-dim)}
+  .demo-btn{font:inherit;font-weight:700;font-size:.82rem;border:0;border-radius:9px;padding:11px 16px;min-height:44px;cursor:pointer;transition:transform .12s ease, filter .12s ease}
+  .demo-btn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+  .t-edit .demo-h{font-family:"Bodoni Moda",serif;font-weight:500;font-size:1.7rem;color:#f1ece1}
+  .t-edit .demo-btn{background:#e9e4d8;color:#181818}
+  .t-retro{background:linear-gradient(180deg,#241a12,#1b1f28);margin:-20px -18px;padding:20px 18px;border-radius:0}
+  .t-retro .demo-h{font-family:"Bodoni Moda",serif;font-style:italic;font-weight:500;font-size:1.7rem;color:#f0c98a}
+  .t-retro .demo-btn{background:#d98b3f;color:#1a1206}
+  .t-tech .demo-h{font-family:"Hanken Grotesk";font-weight:700;letter-spacing:-.02em;font-size:1.6rem;color:#dfe7f2}
+  .t-tech .demo-btn{background:#5b7fb0;color:#0c1118}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Direzioni a confronto</div>
+    <h1 id="mockTitle">Ruckus Party - direzioni logo</h1>
+    <p class="lead">Tocca un nome in alto per cambiare direzione. Ogni tile mostra l'estetica, un'interazione viva e il <b>perché</b>.</p>
+  </header>
+
+  <nav id="chips" role="tablist" aria-label="Direzioni"></nav>
+
+  <main id="stage">
+    <div id="panels">
+
+      <style>
+        .logo-lab {
+          min-height: 430px;
+          margin: -20px -18px;
+          padding: 28px 20px 22px;
+          display: grid;
+          align-content: center;
+          justify-items: center;
+          gap: 28px;
+          overflow: hidden;
+          text-align: center;
+        }
+        .logo-choice {
+          min-width: min(100%, 310px);
+          min-height: 150px;
+          padding: 18px;
+          display: grid;
+          place-items: center;
+          border: 0;
+          color: inherit;
+          background: transparent;
+          cursor: pointer;
+          font-family: "Hanken Grotesk", sans-serif;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .split-mark,
+        .seal-mark,
+        .ticket-mark,
+        .ticket-mark i { font-family: "Hanken Grotesk", sans-serif; }
+        .logo-choice:focus-visible { outline: 3px solid #ffd66b; outline-offset: 6px; }
+        .logo-caption { max-width: 34ch; margin: 0; font-size: .83rem; line-height: 1.55; }
+        .pick-logo {
+          min-width: 164px;
+          min-height: 46px;
+          border: 2px solid currentColor;
+          border-radius: 10px;
+          color: inherit;
+          background: transparent;
+          font: 700 .78rem "Hanken Grotesk", sans-serif;
+          cursor: pointer;
+        }
+
+        .current-lab { color: #f7efd9; background: #0d0818; }
+        .current-lab .logo-caption { color: #cfc4dd; }
+        .current-mark {
+          position: relative;
+          padding: 13px 17px 11px;
+          font-family: "Bricolage Grotesque", sans-serif;
+          font-size: clamp(2.55rem, 11vw, 4rem);
+          font-weight: 700;
+          line-height: .73;
+          letter-spacing: -.075em;
+          text-align: left;
+          text-transform: uppercase;
+          transform: rotate(-2deg);
+        }
+        .current-mark::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          inset: 2px -7px -2px 2px;
+          border: 2px solid #fff;
+          background: #ff4b3e;
+          transform: rotate(1.5deg);
+        }
+        .current-mark span { display: block; }
+        .current-mark span:last-child { font-size: .74em; }
+        .current-lab .logo-choice:active .current-mark { transform: rotate(0deg) scale(.97); }
+
+        .split-lab {
+          color: #f7efd9;
+          background:
+            linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,.045) 48% 49%, transparent 49%),
+            #0d0818;
+        }
+        .split-lab .logo-caption { color: #d8cde5; }
+        .split-mark { position: relative; width: min(100%, 330px); text-align: left; }
+        .split-mark strong {
+          display: block;
+          font-family: "Bricolage Grotesque", sans-serif;
+          font-size: clamp(3.2rem, 14vw, 5.4rem);
+          font-weight: 700;
+          line-height: .82;
+          letter-spacing: -.085em;
+          text-transform: uppercase;
+        }
+        .split-mark strong::after {
+          content: "";
+          display: inline-block;
+          width: .24em;
+          height: .24em;
+          margin-left: .08em;
+          background: #ffc53d;
+          clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%);
+          transform: translateY(-.08em) rotate(9deg);
+        }
+        .split-mark span {
+          position: relative;
+          display: block;
+          width: max-content;
+          margin: 8px 0 0 5px;
+          padding: 5px 11px 4px;
+          color: #0d0818;
+          background: #ff4b3e;
+          font-family: "Hanken Grotesk", sans-serif;
+          font-size: .82rem;
+          font-weight: 700;
+          letter-spacing: .22em;
+          text-transform: uppercase;
+          transform: rotate(-1.5deg);
+        }
+        .split-lab .logo-choice:active .split-mark strong { transform: translateX(8px); }
+        .split-lab .logo-choice:active .split-mark span { transform: translateX(-5px) rotate(0); }
+        .split-mark strong, .split-mark span { transition: transform 180ms cubic-bezier(.22,.8,.22,1); }
+
+        .seal-lab {
+          color: #1b1230;
+          background:
+            radial-gradient(circle at 50% 50%, rgba(255,197,61,.2), transparent 42%),
+            #f7efd9;
+        }
+        .seal-lab .logo-caption { color: #554a67; }
+        .seal-mark {
+          position: relative;
+          width: 196px;
+          height: 196px;
+          display: grid;
+          place-items: center;
+          border: 5px solid #1b1230;
+          border-radius: 50%;
+          background: #ffc53d;
+          box-shadow: 9px 9px 0 #ff4b3e;
+          transform: rotate(-5deg);
+        }
+        .seal-mark::before,
+        .seal-mark::after {
+          content: "";
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          border: 3px solid #1b1230;
+          background: #f7efd9;
+          transform: rotate(45deg);
+        }
+        .seal-mark::before { top: 22px; left: 27px; }
+        .seal-mark::after { right: 27px; bottom: 22px; }
+        .seal-mark strong {
+          font-family: "Bodoni Moda", serif;
+          font-size: 2.45rem;
+          font-weight: 500;
+          font-style: italic;
+          line-height: .78;
+          letter-spacing: -.06em;
+        }
+        .seal-mark strong span { display: block; }
+        .seal-mark small {
+          position: absolute;
+          bottom: 28px;
+          font: 700 .65rem "Hanken Grotesk", sans-serif;
+          letter-spacing: .22em;
+          text-transform: uppercase;
+        }
+        .seal-lab .logo-choice:active .seal-mark { transform: rotate(3deg) scale(.96); }
+        .seal-mark { transition: transform 200ms cubic-bezier(.22,.8,.22,1); }
+
+        .ticket-lab {
+          color: #f7efd9;
+          background:
+            repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 12px),
+            #1b1230;
+        }
+        .ticket-lab .logo-caption { color: #d2c6df; }
+        .ticket-mark {
+          position: relative;
+          width: min(100%, 330px);
+          padding: 19px 20px 17px;
+          border: 3px solid #f7efd9;
+          text-align: left;
+          transform: skewX(-3deg);
+        }
+        .ticket-mark::after {
+          content: "PARTY";
+          position: absolute;
+          right: -16px;
+          bottom: -16px;
+          padding: 8px 13px;
+          color: #0d0818;
+          background: #ffc53d;
+          font: 700 .72rem "Hanken Grotesk", sans-serif;
+          letter-spacing: .24em;
+          transform: skewX(3deg) rotate(-4deg);
+        }
+        .ticket-mark strong {
+          display: block;
+          font-family: "Hanken Grotesk", sans-serif;
+          font-size: clamp(3rem, 14vw, 5rem);
+          font-weight: 700;
+          line-height: .78;
+          letter-spacing: -.08em;
+          text-transform: uppercase;
+        }
+        .ticket-mark i {
+          display: block;
+          width: 54%;
+          height: 6px;
+          margin-top: 13px;
+          background: #ff4b3e;
+          transform-origin: left;
+        }
+        .ticket-lab .logo-choice:active .ticket-mark i { transform: scaleX(1.65); }
+        .ticket-mark i { transition: transform 190ms cubic-bezier(.22,.8,.22,1); }
+      </style>
+
+      <section class="dir-panel" data-name="Blocco attuale" data-mood="Bricolage Grotesque + Hanken - manifesto inclinato" data-why="Conserva la struttura già presente e rende visibile il punto di partenza, ma Ruckus e Party competono ancora troppo." data-role="Attuale">
+        <div class="logo-lab current-lab">
+          <button class="logo-choice" type="button" aria-label="Prova il logo Blocco attuale">
+            <span class="current-mark"><span>Ruckus</span><span>Party</span></span>
+          </button>
+          <p class="logo-caption">La struttura esistente: energica, ma più titolo di schermata che marchio riconoscibile.</p>
+          <button class="pick-logo" data-save>Segna questa</button>
+        </div>
+      </section>
+
+      <section class="dir-panel" data-name="Ruckus Split" data-mood="Bricolage Grotesque + Hanken - poster culturale contemporaneo" data-why="RUCKUS diventa il segno memorabile; Party resta leggibile come firma e la scintilla può vivere anche come icona dell'app." data-role="Variante +" hidden>
+        <div class="logo-lab split-lab">
+          <button class="logo-choice" type="button" aria-label="Prova il logo Ruckus Split">
+            <span class="split-mark"><strong>Ruckus</strong><span>Party</span></span>
+          </button>
+          <p class="logo-caption">Netto, adulto e mobile. La piccola scintilla costruisce un simbolo autonomo senza usare gli oggetti dei giochi.</p>
+          <button class="pick-logo" data-save>Segna questa</button>
+        </div>
+      </section>
+
+      <section class="dir-panel" data-name="Timbro della serata" data-mood="Bodoni Moda + Hanken - sigillo da circolo sociale" data-why="Trasforma il nome in un emblema completo e riconoscibile, con un tono più conviviale e meno aggressivo del blocco attuale." data-role="" hidden>
+        <div class="logo-lab seal-lab">
+          <button class="logo-choice" type="button" aria-label="Prova il logo Timbro della serata">
+            <span class="seal-mark"><strong><span>Ruckus</span><span>Party</span></strong><small>Play together</small></span>
+          </button>
+          <p class="logo-caption">Un badge compatto che funziona bene come icona, ma sposta il tono verso club e gioco da tavolo.</p>
+          <button class="pick-logo" data-save>Segna questa</button>
+        </div>
+      </section>
+
+      <section class="dir-panel" data-name="Biglietto strappato" data-mood="Hanken Grotesk + Bricolage Grotesque - ticket di evento indipendente" data-why="Fa percepire Ruckus Party come una serata a cui entrare, non come un catalogo, mantenendo una costruzione semplice e forte." data-role="" hidden>
+        <div class="logo-lab ticket-lab">
+          <button class="logo-choice" type="button" aria-label="Prova il logo Biglietto strappato">
+            <span class="ticket-mark"><strong>Ruckus</strong><i aria-hidden="true"></i></span>
+          </button>
+          <p class="logo-caption">La firma Party diventa un talloncino. Molto scenico, ma meno adatto a un’icona quadrata dell’app.</p>
+          <button class="pick-logo" data-save>Segna questa</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ── Scocca generica: chip auto-costruiti dai pannelli, uno visibile alla volta ──
+(function(){
+  const panelsBox = document.getElementById('panels');
+  const panels = [...panelsBox.querySelectorAll('.dir-panel')];
+  const chips = document.getElementById('chips');
+
+  // Disegna la chrome (barra nome+mood, riga "perché") dentro ogni pannello dai data-*
+  panels.forEach(p=>{
+    const inner = p.innerHTML;
+    const role = p.dataset.role || '';
+    const tag = role ? `<span class="dir-tag" data-role="${role}">${role}</span>` : `<span class="dir-tag">Direzione</span>`;
+    p.innerHTML = `
+      <div class="dir-card">
+        <div class="dir-head">
+          <div>
+            <div class="dir-name">${p.dataset.name||'Direzione'}</div>
+            <div class="dir-mood">${p.dataset.mood||''}</div>
+          </div>${tag}
+        </div>
+        <div class="dir-body">${inner}</div>
+        ${p.dataset.why ? `<div class="dir-why">✶&nbsp;<span><b>Perché:</b> ${p.dataset.why}</span></div>` : ``}
+      </div>`;
+  });
+
+  function show(i){
+    panels.forEach((p,j)=>p.toggleAttribute('hidden', j!==i));
+    [...chips.children].forEach((c,j)=>c.setAttribute('aria-pressed', j===i));
+  }
+
+  panels.forEach((p,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-pressed', i===0 ? 'true':'false');
+    b.innerHTML = `<span class="swatch"></span>${p.dataset.name || ('Direzione '+(i+1))}`;
+    b.addEventListener('click', ()=>show(i));
+    chips.appendChild(b);
+  });
+
+  show(0);
+
+  // Esempio di interazione "viva ma leggera" con dato finto in localStorage.
+  // (La skill può riusare lo stesso pattern data-save nei pannelli reali.)
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('[data-save]');
+    if(!btn) return;
+    const on = btn.dataset.on === '1';
+    btn.dataset.on = on ? '0':'1';
+    btn.textContent = on ? 'Salva' : 'Salvato ✓';
+    try{ localStorage.setItem('mockup-demo-saved', on ? '0':'1'); }catch(_){}
+  });
+})();
+</script>
+</body>
+</html>
