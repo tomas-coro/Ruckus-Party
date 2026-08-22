@@ -2,9 +2,9 @@
 
 ## Stato attuale
 
-`Phase 1 - Product Definition: completata il 2026-08-22`
+`Phase 2A - UX / information architecture / low-fidelity prototype: completata il 2026-08-22`
 
-Il repository contiene la definizione di prodotto e non contiene ancora implementazione. Le raccomandazioni di Phase 1 sono registrate in `docs/DECISIONS.md` e dovranno essere validate prima di diventare decisioni owner implicite.
+Il repository contiene definizione di prodotto, UX architecture e prototipo low-fidelity, ma nessuna implementazione. Le raccomandazioni di Phase 1 comprese in Phase 2A sono state validate e registrate in `docs/DECISIONS.md`.
 
 ## Phase 1 - Product Definition
 
@@ -48,9 +48,9 @@ Il numero esatto dei giochi iniziali non è deciso in Phase 1. Il catalogo MVP d
 - tornei, social, community e condivisione;
 - branding commerciale, monetizzazione, shop, abbonamenti e achievement complessi.
 
-## Prossimo workstream consigliato
+## Phase 2A - UX / information architecture / low-fidelity prototype
 
-`Phase 2A - UX / information architecture / low-fidelity prototype`
+`Completata il 2026-08-22`
 
 Un solo obiettivo: verificare il percorso mobile da apertura al primo gioco e il ritmo tra risultato, conseguenza e gioco successivo prima di progettare UI definitiva o implementazione.
 
@@ -62,9 +62,9 @@ Output atteso:
 - varianti necessarie per Physical, Virtual e private reveal;
 - prototipo mobile verificato e sottoposto all'approvazione dell'owner.
 
-## Gate prima dell'implementazione
+## Gate UX validato
 
-Non iniziare codice prodotto finché il prossimo workstream non ha validato:
+Phase 2A ha validato:
 
 - quali dati chiedere davvero prima del primo gioco;
 - comprensione di durata, risorse e contenuti attivi;
@@ -72,4 +72,31 @@ Non iniziare codice prodotto finché il prossimo workstream non ha validato:
 - velocità del loop tra due giochi;
 - casi di errore e uscita anticipata.
 
-Branding definitivo, monetizzazione, account, backend, multiplayer online e quantità finale del catalogo non devono entrare nel prossimo workstream.
+Branding definitivo, monetizzazione, account, backend, multiplayer online e quantità finale del catalogo non sono entrati in Phase 2A.
+
+## Deliverable completati in Phase 2A
+
+- Information architecture Session-first approvata dall'owner.
+- Setup Party Night in tre schermate approvato.
+- Core loop con risultato, conseguenza e prossimo gioco separati approvato.
+- Private reveal con pressione continua e alternativa accessibile approvato.
+- Italiano predefinito con inglese selezionabile approvato.
+- Specifica UX validata: `docs/PHASE_2A_UX.md`.
+- Prototipo low-fidelity cliccabile: `prototypes/phase-2a-low-fidelity.html`.
+- QA verificato su flusso principale, stati critici, due lingue, viewport, tap target, modal e reduced motion.
+
+## Prossimo workstream consigliato
+
+`Phase 2B - visual direction / design system / high-fidelity prototype`
+
+Un solo obiettivo: trasformare i flussi approvati in una direzione visiva distintiva e in un prototipo mobile high-fidelity, senza iniziare ancora il codice prodotto.
+
+Output atteso:
+
+- 2-3 direzioni visive realmente diverse, ognuna con mood e riferimento concreto;
+- approvazione owner di una direzione;
+- palette, tipografia, gerarchia, componenti e motion rules;
+- prototipo high-fidelity del percorso da Home al secondo gioco;
+- stati Physical, Virtual, private reveal, errore e finale nella direzione scelta.
+
+Backend, account, multiplayer online e implementazione dell'app restano fuori da Phase 2B.

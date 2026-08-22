@@ -17,6 +17,7 @@ Queste regole valgono per ogni attività nel repository.
 - Quando utile, chiudi con una sola azione eseguibile dall'owner in meno di 2 minuti.
 - Spiega in 1-2 righe il motivo delle raccomandazioni.
 - Dai una raccomandazione netta. Presenta al massimo 2-3 alternative reali.
+- Alla fine di ogni task completata indica sempre il prossimo step consigliato, senza aspettare che l'owner lo chieda. Specifica una sola azione o un solo workstream da avviare; se non serve altro, dichiaralo esplicitamente.
 - Non dire che qualcosa è completato o funzionante senza una verifica concreta.
 - Per gli errori comunica nell'ordine: posizione, causa, correzione.
 

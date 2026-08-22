@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruckus Party - Phase 2A low-fidelity prototype</title>
+  <style>
+    :root {
+      --canvas: oklch(0.955 0 0);
+      --surface: oklch(1 0 0);
+      --surface-2: oklch(0.925 0 0);
+      --ink: oklch(0.18 0.012 20);
+      --muted: oklch(0.43 0.012 20);
+      --line: oklch(0.76 0.008 20);
+      --primary: oklch(0.40 0.13 20);
+      --primary-dark: oklch(0.31 0.11 20);
+      --on-primary: oklch(1 0 0);
+      --danger: oklch(0.43 0.16 25);
+      --focus: oklch(0.58 0.14 250);
+      --radius: 12px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-width: 320px; background: var(--canvas); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: "Hanken Grotesk", "Trebuchet MS", sans-serif;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.modal-open { overflow: hidden; touch-action: none; }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      min-height: 48px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    p, li { text-wrap: pretty; }
+
+    .prototype-shell {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: var(--space-4);
+      display: grid;
+      grid-template-columns: minmax(230px, 300px) minmax(320px, 420px);
+      gap: var(--space-6);
+      align-items: start;
+      justify-content: center;
+    }
+
+    .review-panel {
+      position: sticky;
+      top: var(--space-4);
+      min-width: 0;
+      padding: var(--space-5);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--radius);
+    }
+
+    .review-panel h1 {
+      margin-bottom: var(--space-2);
+      font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+
+    .review-panel p {
+      margin-bottom: var(--space-4);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .route-list {
+      min-width: 0;
+      max-width: 100%;
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .route-button {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .route-button:hover,
+    .route-button[aria-current="true"] {
+      border-color: var(--primary);
+      background: oklch(0.96 0.018 20);
+    }
+
+    .legend {
+      margin-top: var(--space-5);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--line);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .device {
+      width: 100%;
+      min-height: 780px;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 28px;
+      background: var(--surface);
+      box-shadow: 0 8px 0 oklch(0.80 0 0);
+    }
+
+    .device-status {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-4);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    #app {
+      min-height: 750px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-header {
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: 48px 1fr 64px;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .app-header strong {
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .icon-button {
+      min-width: 48px;
+      padding: 0 var(--space-2);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--ink);
+      background: transparent;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .icon-button:hover { background: var(--surface-2); }
+    .header-spacer { width: 48px; height: 48px; }
+
+    .screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 686px;
+    }
+
+    .content {
+      flex: 1;
+      padding: var(--space-5) var(--space-4) var(--space-6);
+    }
+
+    .content.centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .step-label,
+    .context-label {
+      margin-bottom: var(--space-2);
+      color: var(--primary-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .screen-title {
+      margin-bottom: var(--space-2);
+      font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+      font-size: 2rem;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .screen-copy {
+      max-width: 34ch;
+      margin-bottom: var(--space-5);
+      color: var(--muted);
+    }
+
+    .stack { display: grid; gap: var(--space-3); }
+    .stack-lg { display: grid; gap: var(--space-5); }
+
+    .primary-button,
+    .secondary-button,
+    .text-button,
+    .choice,
+    .player-choice {
+      width: 100%;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .primary-button {
+      padding: 12px 16px;
+      border: 2px solid var(--primary);
+      color: var(--on-primary);
+      background: var(--primary);
+    }
+
+    .primary-button:hover,
+    .primary-button:active { background: var(--primary-dark); border-color: var(--primary-dark); }
+
+    .secondary-button {
+      padding: 12px 16px;
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .secondary-button:hover,
+    .secondary-button:active { background: var(--surface-2); }
+
+    .text-button {
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      color: var(--primary-dark);
+      background: transparent;
+    }
+
+    .text-button:hover { background: oklch(0.96 0.018 20); }
+
+    .danger-button { color: var(--danger); border-color: var(--danger); }
+
+    .bottom-actions {
+      position: sticky;
+      bottom: 0;
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .home-primary {
+      min-height: 152px;
+      padding: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      color: var(--on-primary);
+      background: var(--primary);
+      text-align: left;
+    }
+
+    .home-primary strong { font-size: 1.55rem; }
+    .home-primary span { margin-top: var(--space-1); font-weight: 600; }
+
+    .home-secondary {
+      min-height: 104px;
+      padding: var(--space-4);
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .home-secondary strong { display: block; margin-bottom: var(--space-1); font-size: 1.15rem; }
+    .home-secondary span { color: var(--muted); font-size: 0.9rem; }
+
+    .home-link {
+      min-height: 52px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .field-group { display: grid; gap: var(--space-2); }
+    .field-group label { font-weight: 800; font-size: 0.9rem; }
+
+    .text-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .text-input[aria-invalid="true"] { border-color: var(--danger); }
+    .error-copy { margin: 0; color: var(--danger); font-size: 0.82rem; font-weight: 700; }
+
+    .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+
+    .choice {
+      min-height: 72px;
+      padding: 10px;
+      border: 2px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .choice[aria-pressed="true"] {
+      border-color: var(--primary);
+      background: oklch(0.96 0.018 20);
+    }
+
+    .choice small { display: block; margin-top: 2px; color: var(--muted); font-weight: 600; }
+
+    .summary-list,
+    .score-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .summary-list li,
+    .score-list li {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .summary-list span,
+    .score-list span { color: var(--muted); }
+    .summary-list strong,
+    .score-list strong { text-align: right; }
+
+    .info-block {
+      padding: var(--space-4);
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .info-block h3 { margin-bottom: var(--space-2); font-size: 1rem; }
+    .info-block p:last-child { margin-bottom: 0; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .tag {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--surface-2);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .reason {
+      margin: var(--space-4) 0 0;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .big-result {
+      margin: var(--space-5) 0;
+      padding: var(--space-5) var(--space-4);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      text-align: center;
+    }
+
+    .big-result strong {
+      display: block;
+      font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+
+    .big-result span { display: block; margin-top: var(--space-2); color: var(--muted); }
+
+    .progress-track {
+      height: 8px;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      background: var(--surface-2);
+    }
+
+    .progress-track span { display: block; width: 46%; height: 100%; background: var(--primary); }
+
+    .player-choice {
+      min-height: 56px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 2px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .player-choice[aria-pressed="true"] { border-color: var(--primary); background: oklch(0.96 0.018 20); }
+
+    .private-cover {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius);
+      background: repeating-linear-gradient(135deg, var(--surface), var(--surface) 12px, var(--surface-2) 12px, var(--surface-2) 24px);
+      text-align: center;
+    }
+
+    .private-cover strong { font-size: 1.55rem; }
+
+    .reveal-zone {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--surface);
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .secret {
+      margin-top: var(--space-3);
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .hidden-secret { color: oklch(0.68 0 0); }
+
+    .skeleton { display: grid; gap: var(--space-3); }
+    .skeleton span {
+      height: 18px;
+      border-radius: 5px;
+      background: var(--surface-2);
+    }
+    .skeleton span:nth-child(1) { width: 68%; height: 34px; }
+    .skeleton span:nth-child(2) { width: 100%; }
+    .skeleton span:nth-child(3) { width: 84%; }
+
+    dialog {
+      width: min(calc(100% - 32px), 360px);
+      max-height: 80vh;
+      overflow: auto;
+      padding: 0;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    dialog::backdrop { background: oklch(0.12 0 0 / 0.62); }
+    .dialog-content { padding: var(--space-5); }
+    .dialog-content h2 { margin-bottom: var(--space-2); }
+    .dialog-content p { color: var(--muted); }
+
+    .prototype-note {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 760px) {
+      .prototype-shell { grid-template-columns: 1fr; padding: var(--space-2); gap: var(--space-3); }
+      .review-panel { position: static; padding: var(--space-3); }
+      .review-panel h1 { font-size: 1.15rem; }
+      .review-panel p, .legend { display: none; }
+      .route-list {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: var(--space-1);
+        scrollbar-width: thin;
+      }
+      .route-button { min-width: 144px; font-size: 0.78rem; }
+      .device { min-height: 720px; border-radius: 20px; box-shadow: none; }
+      #app { min-height: 690px; }
+      .screen { min-height: 626px; }
+    }
+
+    @media (max-width: 390px) {
+      .prototype-shell { padding: 0; }
+      .review-panel, .device { border-left: 0; border-right: 0; border-radius: 0; }
+      .choice-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="prototype-shell">
+    <aside class="review-panel" aria-label="Percorsi di verifica">
+      <h1>Phase 2A prototype</h1>
+      <p>Wireframe cliccabile. Usa il percorso principale oppure salta direttamente agli stati critici.</p>
+      <div class="route-list">
+        <button class="route-button" data-route="home">1. Home</button>
+        <button class="route-button" data-route="players">2. Party setup</button>
+        <button class="route-button" data-route="proposal">3. First game</button>
+        <button class="route-button" data-route="physical">4. Physical</button>
+        <button class="route-button" data-route="private-pass">5. Private reveal</button>
+        <button class="route-button" data-route="result-entry">6. Result loop</button>
+        <button class="route-button" data-route="no-match">7. No match</button>
+        <button class="route-button" data-route="private-interrupted">8. Interrupted reveal</button>
+        <button class="route-button" data-route="final">9. Session ending</button>
+      </div>
+      <div class="legend">Il rosso scuro indica soltanto l'azione primaria. Palette, font e stile finale sono fuori da Phase 2A.</div>
+    </aside>
+
+    <section class="device" aria-label="Prototipo mobile Ruckus Party">
+      <div class="device-status"><span>9:41</span><span>LOW-FI</span></div>
+      <div id="app" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <dialog id="session-dialog" aria-labelledby="session-dialog-title">
+    <div class="dialog-content">
+      <h2 id="session-dialog-title">Party Night</h2>
+      <div class="stack">
+        <button class="secondary-button" data-dialog-action="standings">Standings</button>
+        <button class="secondary-button" data-dialog-action="history">Session history</button>
+        <button class="secondary-button" data-dialog-action="settings">Session settings</button>
+        <button class="secondary-button danger-button" data-dialog-action="finish">Finish session now</button>
+        <button class="text-button" data-dialog-action="close">Close menu</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-content">
+      <h2 id="confirm-title">Finish Party Night?</h2>
+      <p>Only confirmed results will be included in the final standings.</p>
+      <div class="stack">
+        <button class="primary-button" data-confirm-finish>Finish and see results</button>
+        <button class="secondary-button" data-confirm-cancel>Keep playing</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const STORAGE_KEY = "ruckus-phase-2a-prototype";
+    const defaultState = {
+      screen: "home",
+      previousScreen: null,
+      players: ["Alex", "Marta"],
+      duration: "Standard",
+      resources: ["Phone only"],
+      sensitive: [],
+      activeSession: false,
+      selectedWinner: null,
+      score: { Alex: 1, Marta: 0 },
+      privatePlayer: 0,
+      hasRevealed: false,
+      accessibleReveal: false,
+      secretVisible: false,
+      consequenceAccepted: false,
+      consequenceVersion: 1,
+      replacementCount: 0,
+      language: "it"
+    };
+
+    let state = loadState();
+    const app = document.getElementById("app");
+    const sessionDialog = document.getElementById("session-dialog");
+    const confirmDialog = document.getElementById("confirm-dialog");
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return saved ? { ...defaultState, ...saved } : { ...defaultState };
+      } catch (error) {
+        console.error("Prototype state could not be loaded.", error);
+        return { ...defaultState };
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (error) {
+        console.error("Prototype state could not be saved.", error);
+      }
+    }
+
+    function go(screen) {
+      state.previousScreen = state.screen;
+      state.screen = screen;
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function header(title, options = {}) {
+      const back = options.back
+        ? `<button class="icon-button" data-action="back" aria-label="Go back">Back</button>`
+        : `<div class="header-spacer" aria-hidden="true"></div>`;
+      const menu = options.menu
+        ? `<button class="icon-button" data-action="menu" aria-label="Open session menu">Menu</button>`
+        : `<div class="header-spacer" aria-hidden="true"></div>`;
+      return `<header class="app-header">${back}<strong>${title}</strong>${menu}</header>`;
+    }
+
+    function screen(content, actions = "", classes = "") {
+      return `<section class="screen ${classes}">${content}${actions ? `<footer class="bottom-actions">${actions}</footer>` : ""}</section>`;
+    }
+
+    function primary(label, action, disabled = false) {
+      return `<button class="primary-button" data-action="${action}" ${disabled ? "disabled" : ""}>${label}</button>`;
+    }
+
+    function secondary(label, action, extra = "") {
+      return `<button class="secondary-button ${extra}" data-action="${action}">${label}</button>`;
+    }
+
+    function textButton(label, action) {
+      return `<button class="text-button" data-action="${action}">${label}</button>`;
+    }
+
+    function contentBlock(inner, centered = false) {
+      return `<div class="content ${centered ? "centered" : ""}">${inner}</div>`;
+    }
+
+    function renderHome() {
+      const resume = state.activeSession
+        ? `<button class="home-primary" data-action="resume"><strong>Resume Party</strong><span>2 players - Standard session</span></button>`
+        : `<button class="home-primary" data-action="start-party"><strong>Start Party</strong><span>Multiple games, standings and a proper finale</span></button>`;
+      return header("Ruckus Party") + screen(contentBlock(`
+        <div class="context-label">One phone. Everyone plays.</div>
+        <h1 class="screen-title">Start the fun, keep the night moving.</h1>
+        <p class="screen-copy">Pick the kind of play you want. No account or tutorial required.</p>
+        <div class="stack-lg">
+          ${resume}
+          <button class="home-secondary" data-action="quick-play"><strong>Quick Play</strong><span>One game, no Party Night standings</span></button>
+          <button class="home-link" data-action="games">Browse all games</button>
+          <button class="home-link" data-action="language">Language: ${state.language === "it" ? "Italian" : "English"}</button>
+        </div>
+      `));
+    }
+
+    function renderPlayers() {
+      const validPlayers = state.players.filter(name => name.trim()).length;
+      const fields = state.players.map((name, index) => `
+        <div class="field-group">
+          <label for="player-${index}">Player ${index + 1}</label>
+          <input class="text-input" id="player-${index}" data-player-index="${index}" value="${escapeHtml(name)}" autocomplete="off" aria-invalid="${name.trim() ? "false" : "true"}">
+          ${name.trim() ? "" : `<p class="error-copy">Enter a name to keep this player.</p>`}
+        </div>
+      `).join("");
+      return header("Start Party", { back: true }) + screen(contentBlock(`
+        <div class="step-label">STEP 1 OF 3</div>
+        <h1 class="screen-title">Who's playing?</h1>
+        <p class="screen-copy">Add 2 to 6 people. These names last only for this Party Night.</p>
+        <div class="stack">${fields}</div>
+        ${state.players.length < 6 ? textButton("Add another player", "add-player") : ""}
+      `), primary("Continue", "players-next", validPlayers < 2));
+    }
+
+    function renderSetup() {
+      const durations = [
+        ["Short", "Test copy: 20-30 min"],
+        ["Standard", "Test copy: 45-60 min"],
+        ["Long", "Test copy: 90+ min"],
+        ["Endless", "No time limit"]
+      ];
+      const durationButtons = durations.map(([name, detail]) => `
+        <button class="choice" data-duration="${name}" aria-pressed="${state.duration === name}"><strong>${name}</strong><small>${detail}</small></button>
+      `).join("");
+      const resourceNames = ["Phone only", "French deck", "Italian deck", "Paper and pens"];
+      const resourceButtons = resourceNames.map(name => `
+        <button class="choice" data-resource="${name}" aria-pressed="${state.resources.includes(name)}"><strong>${name}</strong><small>${name === "Phone only" ? "Fastest start" : "Optional material"}</small></button>
+      `).join("");
+      return header("Start Party", { back: true }) + screen(contentBlock(`
+        <div class="step-label">STEP 2 OF 3</div>
+        <h1 class="screen-title">Shape the night.</h1>
+        <p class="screen-copy">Defaults are selected. Change only what matters.</p>
+        <div class="stack-lg">
+          <section><h2>Duration</h2><div class="choice-grid">${durationButtons}</div></section>
+          <section><h2>What's available?</h2><div class="choice-grid">${resourceButtons}</div></section>
+        </div>
+        <p class="prototype-note">Minute ranges are hypotheses for testing comprehension, not approved product values.</p>
+      `), primary("Review Party", "setup-next", state.resources.length === 0));
+    }
+
+    function renderSummary() {
+      const names = state.players.filter(name => name.trim()).join(", ");
+      return header("Start Party", { back: true }) + screen(contentBlock(`
+        <div class="step-label">STEP 3 OF 3</div>
+        <h1 class="screen-title">Ready to start.</h1>
+        <p class="screen-copy">Check the choices that shape every compatible recommendation.</p>
+        <ul class="summary-list">
+          <li><span>Players</span><strong>${escapeHtml(names)}</strong></li>
+          <li><span>Duration</span><strong>${state.duration}</strong></li>
+          <li><span>Materials</span><strong>${escapeHtml(state.resources.join(", "))}</strong></li>
+          <li><span>Content</span><strong>${state.sensitive.length ? `General + ${escapeHtml(state.sensitive.join(", "))}` : "General only"}</strong></li>
+          <li><span>Consequences</span><strong>Playful</strong></li>
+          <li><span>Selection</span><strong>Varied</strong></li>
+        </ul>
+        ${textButton("Customize content and intensity", "customize")}
+      `), primary("Start Party", "begin-session") + secondary("Back to setup", "summary-back"));
+    }
+
+    function renderCustomize() {
+      const options = ["Romantic", "Alcohol", "Bold"];
+      const buttons = options.map(name => `
+        <button class="choice" data-sensitive="${name}" aria-pressed="${state.sensitive.includes(name)}"><strong>${name}</strong><small>Off by default - explicit opt-in</small></button>
+      `).join("");
+      return header("Customize", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Optional filters.</h1>
+        <p class="screen-copy">General content always stays available. Sensitive categories never turn on by themselves.</p>
+        <div class="info-block"><h3>General content</h3><p>Active for this Party Night.</p></div>
+        <div class="stack" style="margin-top:16px">${buttons}</div>
+      `), primary("Save customization", "save-customize"));
+    }
+
+    function renderProposal(next = false) {
+      const title = next ? "Rapid Categories" : (state.replacementCount % 2 ? "Mirror Moves" : "Secret Signals");
+      const description = next ? "Take turns naming items before the timer catches you." : (state.replacementCount % 2 ? "Copy the leader without getting caught." : "Memorize a secret signal, then spot your partner's bluff.");
+      const reason = next ? "A faster social game changes the pace after Secret Signals." : "Works with 2 players, uses only this phone and fits your Standard session.";
+      return header(next ? "Next game" : "Game 1", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">${next ? "Ready when you are" : "Compatible pick"}</div>
+        <h1 class="screen-title">${title}</h1>
+        <p class="screen-copy">${description}</p>
+        <div class="tag-row"><span class="tag">8-12 min</span><span class="tag">Phone only</span><span class="tag">Social</span></div>
+        ${state.consequenceAccepted && next ? `<div class="info-block" style="margin-top:16px"><h3>Active handicap</h3><p>Alex must answer using only three words. Expires after this game.</p></div>` : ""}
+        <p class="reason"><strong>Why this fits:</strong> ${reason}</p>
+      `), primary(next ? "Play next game" : "Play", next ? "play-next" : "prepare-virtual") + secondary("Replace", next ? "replace-next" : "replace") + textButton("Choose game", "games"));
+    }
+
+    function renderVirtualPrep() {
+      return header("Secret Signals", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Full Digital + private roles</div>
+        <h1 class="screen-title">Pass, reveal, remember.</h1>
+        <p class="screen-copy">The phone gives each player one private signal, then guides the shared round.</p>
+        <div class="stack">
+          <div class="info-block"><h3>Goal</h3><p>Spot the false signal before your opponent spots yours.</p></div>
+          <div class="info-block"><h3>Before you start</h3><p>Sit where players cannot read the screen while the phone is passed.</p></div>
+          <div class="info-block"><h3>End condition</h3><p>The first correct accusation ends the round.</p></div>
+        </div>
+      `), primary("Start private setup", "start-private") + secondary("Replace game", "replace"));
+    }
+
+    function renderPhysical() {
+      const hasDeck = state.resources.includes("French deck");
+      return header("Card Tower", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Physical game</div>
+        <h1 class="screen-title">Build under pressure.</h1>
+        <p class="screen-copy">Players build a shared card tower while following one changing restriction.</p>
+        <div class="stack">
+          <div class="info-block"><h3>Materials</h3><p>1 French deck. ${hasDeck ? "Available in this session." : "Not listed in this session."}</p></div>
+          <div class="info-block"><h3>Essential rules</h3><p>On your turn, place one card using one hand. If the tower falls, the previous player wins. Stop after ten successful cards if the tower remains standing.</p></div>
+        </div>
+      `), hasDeck ? primary("Start physical game", "physical-active") : primary("Use virtual alternative", "prepare-virtual") + secondary("Edit materials", "edit-materials") + textButton("Replace game", "replace"));
+    }
+
+    function renderPrivatePass() {
+      const player = state.players[state.privatePlayer] || `Player ${state.privatePlayer + 1}`;
+      return header("Private setup", { menu: true }) + screen(contentBlock(`
+        <div class="private-cover">
+          <div class="context-label">Content hidden</div>
+          <strong>Pass the phone to ${escapeHtml(player)}.</strong>
+          <p>No secret is visible on this screen.</p>
+        </div>
+      `, true), primary(`I am ${escapeHtml(player)}`, "private-ready") + textButton("Wrong person has the phone", "private-interrupted"));
+    }
+
+    function renderPrivateReady() {
+      const player = state.players[state.privatePlayer] || `Player ${state.privatePlayer + 1}`;
+      const revealInstruction = state.accessibleReveal ? "Tap to show or hide your secret." : "Hold the area to reveal. Release to hide.";
+      const secretText = state.secretVisible ? "Your signal is: touch your left ear." : "Secret hidden";
+      return header(`${player}'s secret`, { menu: true }) + screen(contentBlock(`
+        <div class="reveal-zone" data-reveal-zone role="button" tabindex="0" aria-label="${revealInstruction}">
+          <strong>${revealInstruction}</strong>
+          <div class="secret ${state.secretVisible ? "" : "hidden-secret"}">${secretText}</div>
+        </div>
+        ${textButton(state.accessibleReveal ? "Use hold instead" : "Use accessible tap instead", "toggle-reveal-mode")}
+      `), primary("I memorized it", "memorized", !state.hasRevealed));
+    }
+
+    function renderGroupReady() {
+      return header("Secret Signals", { menu: true }) + screen(contentBlock(`
+        <div class="big-result"><strong>Secrets are hidden.</strong><span>The screen is safe for the group.</span></div>
+        <p class="screen-copy">Place the phone where everyone can see it. The round begins after Start.</p>
+      `, true), primary("Start round", "active-game"));
+    }
+
+    function renderActiveGame(physical = false) {
+      return header(physical ? "Card Tower" : "Secret Signals", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Game in progress</div>
+        <h1 class="screen-title">${physical ? "The phone can wait." : "Watch the signals."}</h1>
+        <p class="screen-copy">${physical ? "Play with the deck. Return here when the round ends." : "Tap Finish game after the first correct accusation."}</p>
+        <div class="info-block"><h3>Session status</h3><p>Game 1 - Standard Party Night - 2 players</p></div>
+      `, true), primary("Finish game", "finish-game") + secondary("Cancel game", "cancel-game", "danger-button"));
+    }
+
+    function renderCancelled() {
+      return header("Game cancelled", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">No result recorded</div>
+        <h1 class="screen-title">This game will not affect the standings.</h1>
+        <p class="screen-copy">Choose what should happen next. Ruckus Party will not invent a winner.</p>
+      `, true), primary("Retry game", "active-game") + secondary("Replace game", "replace") + textButton("Return to Party Night", "proposal"));
+    }
+
+    function renderResultEntry(correction = false) {
+      const choices = state.players.filter(name => name.trim()).map(name => `
+        <button class="player-choice" data-winner="${escapeHtml(name)}" aria-pressed="${state.selectedWinner === name}"><span>${escapeHtml(name)}</span><strong>${state.selectedWinner === name ? "Selected" : "Select"}</strong></button>
+      `).join("");
+      return header(correction ? "Correct result" : "Game result", { back: !correction, menu: true }) + screen(contentBlock(`
+        <div class="context-label">${correction ? "Session history" : "Confirm before scoring"}</div>
+        <h1 class="screen-title">Who won?</h1>
+        <p class="screen-copy">Choose one winner for this prototype round. You can change this before confirming.</p>
+        <div class="stack">${choices}</div>
+      `), primary(correction ? "Save correction" : "Confirm result", correction ? "save-correction" : "confirm-result", !state.selectedWinner) + secondary("Cancel", correction ? "history" : "active-game"));
+    }
+
+    function renderResultReveal() {
+      const winner = state.selectedWinner || state.players[0];
+      return header("Result", { menu: true }) + screen(contentBlock(`
+        <div class="big-result"><strong>${escapeHtml(winner)} wins.</strong><span>+1 Party Night point</span></div>
+        <p class="screen-copy">The result is now in session history and the standings have been updated.</p>
+      `, true), primary("See standings", "standings"));
+    }
+
+    function renderStandings() {
+      const names = state.players.filter(name => name.trim());
+      const rows = names.map((name, index) => `<li><span>${index + 1}. ${escapeHtml(name)}</span><strong>${state.score[name] || 0} pt</strong></li>`).join("");
+      return header("Standings", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Party Night progress</div>
+        <h1 class="screen-title">The night is taking shape.</h1>
+        <ul class="score-list">${rows}</ul>
+        <div style="margin-top:24px"><div class="progress-track" aria-label="Indicative session progress"><span></span></div><p class="prototype-note">Progress is indicative. It does not promise a fixed number of games.</p></div>
+      `), primary("Continue", "consequence"));
+    }
+
+    function consequenceText() {
+      return state.consequenceVersion % 2
+        ? "Alex must narrate the next minute like a sports commentator."
+        : "Alex must answer the next question using only three words.";
+    }
+
+    function renderConsequence() {
+      return header("Consequence", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Playful - immediate</div>
+        <h1 class="screen-title">One quick challenge.</h1>
+        <div class="info-block"><h3>For Alex</h3><p>${consequenceText()}</p></div>
+        <p class="reason">This proposal uses only General content and is compatible with your current settings.</p>
+      `, true), primary("Accept", "accept-consequence") + secondary("Replace", "replace-consequence") + textButton("Skip", "skip-consequence"));
+    }
+
+    function renderNoMatch() {
+      return header("No compatible game", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Nothing changed automatically</div>
+        <h1 class="screen-title">Your current filters block every game.</h1>
+        <p class="screen-copy">The combination “French deck only” and “No card games” leaves no compatible option for 2 players.</p>
+        <div class="info-block"><h3>Fastest fix</h3><p>Allow phone-only games while keeping every content filter unchanged.</p></div>
+      `, true), primary("Allow phone-only games", "fix-no-match") + secondary("Edit filters", "customize") + textButton("Finish session now", "open-finish"));
+    }
+
+    function renderPrivateInterrupted() {
+      const player = state.players[state.privatePlayer] || `Player ${state.privatePlayer + 1}`;
+      return header("Private reveal paused", { menu: true }) + screen(contentBlock(`
+        <div class="private-cover">
+          <div class="context-label">Secret hidden</div>
+          <strong>No private content is visible.</strong>
+          <p>Return the phone to ${escapeHtml(player)} before continuing.</p>
+        </div>
+      `, true), primary("Resume from covered screen", "private-pass") + secondary("Restart all private reveals", "restart-private"));
+    }
+
+    function renderQuickPlay() {
+      return header("Quick Play", { back: true }) + screen(contentBlock(`
+        <div class="context-label">One game only</div>
+        <h1 class="screen-title">Play without starting a Party Night.</h1>
+        <p class="screen-copy">No shared standings, session progress or Party Night finale.</p>
+        <div class="stack-lg">
+          <button class="home-primary" data-action="quick-surprise"><strong>Surprise me</strong><span>Get one compatible suggestion</span></button>
+          <button class="home-secondary" data-action="games"><strong>Choose game</strong><span>Browse requirements before playing</span></button>
+        </div>
+      `));
+    }
+
+    function renderGames() {
+      const games = [
+        ["Secret Signals", "2-6 players - Phone only - Private reveal"],
+        ["Rapid Categories", "2-6 players - Phone only - Social"],
+        ["Card Tower", "2-4 players - French deck - Physical"]
+      ];
+      return header("Games", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Find one game.</h1>
+        <p class="screen-copy">Catalog entries show requirements before opening Quick Play.</p>
+        <div class="stack">${games.map(([name, meta]) => `<button class="home-secondary" data-action="game-detail" data-game="${name}"><strong>${name}</strong><span>${meta}</span></button>`).join("")}</div>
+      `));
+    }
+
+    function renderGameDetail() {
+      return header("Game detail", { back: true }) + screen(contentBlock(`
+        <div class="context-label">Catalog entry</div>
+        <h1 class="screen-title">Secret Signals</h1>
+        <p class="screen-copy">A short bluff game with one private signal per player.</p>
+        <ul class="summary-list">
+          <li><span>Players</span><strong>2-6</strong></li>
+          <li><span>Duration</span><strong>8-12 min</strong></li>
+          <li><span>Materials</span><strong>Phone only</strong></li>
+          <li><span>Digital support</span><strong>Full Digital</strong></li>
+        </ul>
+      `), primary("Play in Quick Play", "quick-surprise") + secondary("Back to Games", "games"));
+    }
+
+    function renderHistory() {
+      return header("Session history", { back: true, menu: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Confirmed games.</h1>
+        <div class="info-block"><h3>Secret Signals</h3><p>Winner: ${escapeHtml(state.selectedWinner || "Alex")} - +1 point</p>${textButton("Correct result", "correct-result")}</div>
+      `));
+    }
+
+    function renderSettings() {
+      return header("Session settings", { back: true, menu: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Current choices.</h1>
+        <p class="screen-copy">Changing these settings affects future recommendations, never confirmed results.</p>
+        <ul class="summary-list">
+          <li><span>Duration</span><strong>${state.duration}</strong></li>
+          <li><span>Materials</span><strong>${escapeHtml(state.resources.join(", "))}</strong></li>
+          <li><span>Content</span><strong>General only</strong></li>
+          <li><span>Consequences</span><strong>Playful</strong></li>
+          <li><span>Language</span><strong>${state.language === "it" ? "Italian" : "English"}</strong></li>
+        </ul>
+        ${textButton("Change language", "language")}
+      `), primary("Save settings", "proposal"));
+    }
+
+    function renderLanguage() {
+      return header("Language", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Choose the game language.</h1>
+        <p class="screen-copy">Italian is the default. You can change this choice at any time.</p>
+        <div class="stack">
+          <button class="choice" data-action="set-language-it" aria-pressed="${state.language === "it"}"><strong>Italian</strong><small>Default language</small></button>
+          <button class="choice" data-action="set-language-en" aria-pressed="${state.language === "en"}"><strong>English</strong><small>Full interface and game instructions</small></button>
+        </div>
+      `), primary("Keep this language", "language-back"));
+    }
+
+    function renderLoading() {
+      return header("Finding a game", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Checking compatibility</div>
+        <div class="skeleton" aria-label="Loading compatible game"><span></span><span></span><span></span></div>
+        <p class="prototype-note">Loading preserves space and does not show an incompatible fallback.</p>
+      `, true), secondary("Show result", "proposal"));
+    }
+
+    function renderError() {
+      return header("Session unavailable", { back: true }) + screen(contentBlock(`
+        <div class="context-label">Session data could not load</div>
+        <h1 class="screen-title">Your Party Night is still stored locally.</h1>
+        <p class="screen-copy">Retry before starting a new session. No result or setting has been changed.</p>
+      `, true), primary("Retry", "resume") + secondary("Return Home", "home"));
+    }
+
+    function renderFinal() {
+      const winner = state.selectedWinner || "Alex";
+      return header("Party Night complete") + screen(contentBlock(`
+        <div class="context-label">Final standings</div>
+        <div class="big-result"><strong>${escapeHtml(winner)} is the champion.</strong><span>1 win across 1 completed game</span></div>
+        <ul class="score-list"><li><span>1. ${escapeHtml(winner)}</span><strong>1 pt</strong></li><li><span>2. ${escapeHtml(winner === "Alex" ? "Marta" : "Alex")}</span><strong>0 pt</strong></li></ul>
+        <div class="info-block" style="margin-top:24px"><h3>Night recap</h3><p>Secret Signals completed. No cancelled game affected the standings.</p></div>
+      `), primary("Start another Party Night", "new-party") + secondary("Return Home", "end-home"));
+    }
+
+    const ITALIAN = {
+      "Back": "Indietro",
+      "Menu": "Menu",
+      "Go back": "Torna indietro",
+      "Open session menu": "Apri il menu della sessione",
+      "Start Party": "Avvia Party Night",
+      "Start the fun, keep the night moving.": "Inizia a giocare, al ritmo della serata pensiamo noi.",
+      "Pick the kind of play you want. No account or tutorial required.": "Scegli come vuoi giocare. Non servono account o tutorial.",
+      "Multiple games, standings and a proper finale": "Più giochi, classifica e un vero finale",
+      "Quick Play": "Partita veloce",
+      "One game, no Party Night standings": "Una partita, senza classifica Party Night",
+      "Browse all games": "Esplora tutti i giochi",
+      "Resume Party": "Riprendi Party Night",
+      "2 players - Standard session": "2 giocatori - sessione Standard",
+      "Language: Italian": "Lingua: Italiano",
+      "Language: English": "Lingua: Inglese",
+      "Who's playing?": "Chi gioca?",
+      "Add 2 to 6 people. These names last only for this Party Night.": "Aggiungi da 2 a 6 persone. I nomi valgono solo per questa Party Night.",
+      "Add another player": "Aggiungi un altro giocatore",
+      "Enter a name to keep this player.": "Inserisci un nome per mantenere questo giocatore.",
+      "Continue": "Continua",
+      "Shape the night.": "Prepara la serata.",
+      "Defaults are selected. Change only what matters.": "I valori consigliati sono già selezionati. Cambia solo ciò che conta.",
+      "Duration": "Durata",
+      "Short": "Breve",
+      "Standard": "Standard",
+      "Long": "Lunga",
+      "Endless": "Senza fine",
+      "Test copy: 20-30 min": "Test copy: 20-30 min",
+      "Test copy: 45-60 min": "Test copy: 45-60 min",
+      "Test copy: 90+ min": "Test copy: 90+ min",
+      "No time limit": "Nessun limite di tempo",
+      "What's available?": "Cosa avete a disposizione?",
+      "Phone only": "Solo telefono",
+      "French deck": "Mazzo francese",
+      "Italian deck": "Mazzo italiano",
+      "Paper and pens": "Carta e penne",
+      "Fastest start": "Avvio più rapido",
+      "Optional material": "Materiale opzionale",
+      "Minute ranges are hypotheses for testing comprehension, not approved product values.": "Gli intervalli in minuti servono a testare la comprensione e non sono ancora valori di prodotto approvati.",
+      "Review Party": "Controlla Party Night",
+      "Ready to start.": "Pronti a iniziare.",
+      "Check the choices that shape every compatible recommendation.": "Controlla le scelte che determinano ogni proposta compatibile.",
+      "Players": "Giocatori",
+      "Materials": "Materiali",
+      "Content": "Contenuti",
+      "General only": "Solo generali",
+      "Consequences": "Conseguenze",
+      "Playful": "Giocose",
+      "Selection": "Selezione",
+      "Varied": "Varia",
+      "Customize content and intensity": "Personalizza contenuti e intensità",
+      "Back to setup": "Torna alla configurazione",
+      "Customize": "Personalizza",
+      "Optional filters.": "Filtri opzionali.",
+      "General content always stays available. Sensitive categories never turn on by themselves.": "I contenuti generali restano sempre disponibili. Le categorie sensibili non si attivano mai da sole.",
+      "General content": "Contenuti generali",
+      "Active for this Party Night.": "Attivi per questa Party Night.",
+      "Romantic": "Romantici",
+      "Alcohol": "Alcolici",
+      "Bold": "Audaci",
+      "Off by default - explicit opt-in": "Disattivati - richiedono consenso esplicito",
+      "Save customization": "Salva personalizzazione",
+      "Game 1": "Gioco 1",
+      "Next game": "Prossimo gioco",
+      "Compatible pick": "Proposta compatibile",
+      "Ready when you are": "Pronti quando volete",
+      "Secret Signals": "Segnali segreti",
+      "Mirror Moves": "Mosse a specchio",
+      "Rapid Categories": "Categorie lampo",
+      "Card Tower": "Torre di carte",
+      "Memorize a secret signal, then spot your partner's bluff.": "Memorizza un segnale segreto e scopri il bluff dell'altra persona.",
+      "Copy the leader without getting caught.": "Imita chi guida senza farti scoprire.",
+      "Take turns naming items before the timer catches you.": "Nominate a turno elementi della categoria prima che scada il tempo.",
+      "8-12 min": "8-12 min",
+      "Social": "Sociale",
+      "Active handicap": "Handicap attivo",
+      "Alex must answer using only three words. Expires after this game.": "Alex deve rispondere usando solo tre parole. Scade dopo questo gioco.",
+      "Why this fits:": "Perché è adatto:",
+      "Works with 2 players, uses only this phone and fits your Standard session.": "Funziona con 2 giocatori, usa solo questo telefono ed è adatto alla sessione Standard.",
+      "A faster social game changes the pace after Secret Signals.": "Un gioco sociale più rapido cambia ritmo dopo Segnali segreti.",
+      "Play": "Gioca",
+      "Play next game": "Gioca il prossimo",
+      "Replace": "Cambia",
+      "Choose game": "Scegli gioco",
+      "Full Digital + private roles": "Tutto sul telefono + ruoli segreti",
+      "Pass, reveal, remember.": "Passa, rivela, memorizza.",
+      "The phone gives each player one private signal, then guides the shared round.": "Il telefono assegna un segnale privato a ogni giocatore, poi guida il round condiviso.",
+      "Goal": "Obiettivo",
+      "Spot the false signal before your opponent spots yours.": "Scopri il segnale falso prima che l'avversario scopra il tuo.",
+      "Before you start": "Prima di iniziare",
+      "Sit where players cannot read the screen while the phone is passed.": "Sedetevi in modo che gli altri non possano leggere lo schermo durante il passaggio del telefono.",
+      "End condition": "Condizione di fine",
+      "The first correct accusation ends the round.": "La prima accusa corretta conclude il round.",
+      "Start private setup": "Avvia assegnazione segreta",
+      "Replace game": "Cambia gioco",
+      "Physical game": "Gioco fisico",
+      "Build under pressure.": "Costruite sotto pressione.",
+      "Players build a shared card tower while following one changing restriction.": "I giocatori costruiscono insieme una torre di carte rispettando un vincolo che cambia.",
+      "1 French deck. Available in this session.": "1 mazzo francese. Disponibile in questa sessione.",
+      "1 French deck. Not listed in this session.": "1 mazzo francese. Non indicato tra i materiali della sessione.",
+      "Essential rules": "Regole essenziali",
+      "On your turn, place one card using one hand. If the tower falls, the previous player wins. Stop after ten successful cards if the tower remains standing.": "Al tuo turno, posiziona una carta usando una mano. Se la torre cade, vince il giocatore precedente. Se resta in piedi, fermatevi dopo dieci carte posizionate.",
+      "Start physical game": "Avvia gioco fisico",
+      "Use virtual alternative": "Usa la variante virtuale",
+      "Edit materials": "Modifica materiali",
+      "Private setup": "Assegnazione segreta",
+      "Content hidden": "Contenuto nascosto",
+      "No secret is visible on this screen.": "Nessun segreto è visibile in questa schermata.",
+      "Wrong person has the phone": "Il telefono è alla persona sbagliata",
+      "Hold the area to reveal. Release to hide.": "Tieni premuta l'area per rivelare. Rilascia per nascondere.",
+      "Tap to show or hide your secret.": "Tocca per mostrare o nascondere il segreto.",
+      "Secret hidden": "Segreto nascosto",
+      "Your signal is: touch your left ear.": "Il tuo segnale è: tocca l'orecchio sinistro.",
+      "Use accessible tap instead": "Usa la modalità accessibile con tocco",
+      "Use hold instead": "Usa la pressione continua",
+      "I memorized it": "L'ho memorizzato",
+      "Secrets are hidden.": "I segreti sono nascosti.",
+      "The screen is safe for the group.": "Ora lo schermo è sicuro per il gruppo.",
+      "Place the phone where everyone can see it. The round begins after Start.": "Metti il telefono dove tutti possono vederlo. Il round inizia dopo Avvia.",
+      "Start round": "Avvia round",
+      "Game in progress": "Partita in corso",
+      "The phone can wait.": "Ora il telefono può aspettare.",
+      "Watch the signals.": "Osservate i segnali.",
+      "Play with the deck. Return here when the round ends.": "Giocate con il mazzo. Tornate qui quando il round finisce.",
+      "Tap Finish game after the first correct accusation.": "Tocca Termina gioco dopo la prima accusa corretta.",
+      "Session status": "Stato sessione",
+      "Game 1 - Standard Party Night - 2 players": "Gioco 1 - Party Night Standard - 2 giocatori",
+      "Finish game": "Termina gioco",
+      "Cancel game": "Annulla gioco",
+      "Game cancelled": "Gioco annullato",
+      "No result recorded": "Nessun risultato registrato",
+      "This game will not affect the standings.": "Questo gioco non modifica la classifica.",
+      "Choose what should happen next. Ruckus Party will not invent a winner.": "Scegli cosa fare adesso. Ruckus Party non inventerà un vincitore.",
+      "Retry game": "Riprova il gioco",
+      "Return to Party Night": "Torna alla Party Night",
+      "Game result": "Risultato del gioco",
+      "Correct result": "Correggi risultato",
+      "Confirm before scoring": "Conferma prima del punteggio",
+      "Who won?": "Chi ha vinto?",
+      "Choose one winner for this prototype round. You can change this before confirming.": "Scegli un vincitore per questo round del prototipo. Puoi cambiarlo prima di confermare.",
+      "Selected": "Selezionato",
+      "Select": "Seleziona",
+      "Confirm result": "Conferma risultato",
+      "Save correction": "Salva correzione",
+      "Cancel": "Annulla",
+      "Result": "Risultato",
+      "+1 Party Night point": "+1 punto Party Night",
+      "The result is now in session history and the standings have been updated.": "Il risultato è nella cronologia e la classifica è stata aggiornata.",
+      "See standings": "Vedi classifica",
+      "Party Night progress": "Avanzamento Party Night",
+      "The night is taking shape.": "La serata prende forma.",
+      "Progress is indicative. It does not promise a fixed number of games.": "L'avanzamento è indicativo e non promette un numero fisso di giochi.",
+      "Consequence": "Conseguenza",
+      "Playful - immediate": "Giocosa - immediata",
+      "One quick challenge.": "Una sfida veloce.",
+      "For Alex": "Per Alex",
+      "Alex must narrate the next minute like a sports commentator.": "Alex deve raccontare il prossimo minuto come un telecronista sportivo.",
+      "Alex must answer the next question using only three words.": "Alex deve rispondere alla prossima domanda usando solo tre parole.",
+      "This proposal uses only General content and is compatible with your current settings.": "Questa proposta usa solo contenuti generali ed è compatibile con le impostazioni attive.",
+      "Accept": "Accetta",
+      "Skip": "Salta",
+      "No compatible game": "Nessun gioco compatibile",
+      "Nothing changed automatically": "Nessuna modifica automatica",
+      "Your current filters block every game.": "I filtri attivi bloccano tutti i giochi.",
+      "The combination “French deck only” and “No card games” leaves no compatible option for 2 players.": "La combinazione “Solo mazzo francese” e “Nessun gioco di carte” non lascia opzioni compatibili per 2 giocatori.",
+      "Fastest fix": "Correzione più rapida",
+      "Allow phone-only games while keeping every content filter unchanged.": "Consenti i giochi solo telefono senza modificare i filtri dei contenuti.",
+      "Allow phone-only games": "Consenti giochi solo telefono",
+      "Edit filters": "Modifica filtri",
+      "Finish session now": "Termina sessione adesso",
+      "Private reveal paused": "Rivelazione privata in pausa",
+      "No private content is visible.": "Nessun contenuto privato è visibile.",
+      "Resume from covered screen": "Riprendi dalla schermata coperta",
+      "Restart all private reveals": "Riavvia tutte le rivelazioni private",
+      "One game only": "Una sola partita",
+      "Play without starting a Party Night.": "Gioca senza avviare una Party Night.",
+      "No shared standings, session progress or Party Night finale.": "Niente classifica condivisa, avanzamento o finale Party Night.",
+      "Surprise me": "Sorprendimi",
+      "Get one compatible suggestion": "Ricevi una proposta compatibile",
+      "Browse requirements before playing": "Controlla i requisiti prima di giocare",
+      "Find one game.": "Trova un gioco.",
+      "Catalog entries show requirements before opening Quick Play.": "Il catalogo mostra i requisiti prima di aprire la Partita veloce.",
+      "2-6 players - Phone only - Private reveal": "2-6 giocatori - Solo telefono - Rivelazione privata",
+      "2-6 players - Phone only - Social": "2-6 giocatori - Solo telefono - Sociale",
+      "2-4 players - French deck - Physical": "2-4 giocatori - Mazzo francese - Fisico",
+      "Game detail": "Dettaglio gioco",
+      "Catalog entry": "Voce del catalogo",
+      "A short bluff game with one private signal per player.": "Un breve gioco di bluff con un segnale privato per giocatore.",
+      "Digital support": "Supporto digitale",
+      "Full Digital": "Tutto sul telefono",
+      "Play in Quick Play": "Gioca in Partita veloce",
+      "Back to Games": "Torna ai Giochi",
+      "Session history": "Cronologia sessione",
+      "Confirmed games.": "Giochi confermati.",
+      "Session settings": "Impostazioni sessione",
+      "Current choices.": "Scelte attive.",
+      "Changing these settings affects future recommendations, never confirmed results.": "Le modifiche influenzano solo le proposte future, mai i risultati confermati.",
+      "Language": "Lingua",
+      "Italian": "Italiano",
+      "English": "Inglese",
+      "Change language": "Cambia lingua",
+      "Save settings": "Salva impostazioni",
+      "Choose the game language.": "Scegli la lingua del gioco.",
+      "Italian is the default. You can change this choice at any time.": "L'italiano è la lingua predefinita. Puoi cambiare questa scelta in qualsiasi momento.",
+      "Default language": "Lingua predefinita",
+      "Full interface and game instructions": "Interfaccia e istruzioni complete",
+      "Keep this language": "Mantieni questa lingua",
+      "Finding a game": "Ricerca gioco",
+      "Checking compatibility": "Controllo compatibilità",
+      "Loading compatible game": "Caricamento gioco compatibile",
+      "Loading preserves space and does not show an incompatible fallback.": "Il caricamento mantiene lo spazio e non mostra alternative incompatibili.",
+      "Show result": "Mostra proposta",
+      "Session unavailable": "Sessione non disponibile",
+      "Session data could not load": "Impossibile caricare i dati della sessione",
+      "Your Party Night is still stored locally.": "La Party Night è ancora salvata in locale.",
+      "Retry before starting a new session. No result or setting has been changed.": "Riprova prima di iniziare una nuova sessione. Nessun risultato o impostazione è stato modificato.",
+      "Retry": "Riprova",
+      "Return Home": "Torna alla Home",
+      "Party Night complete": "Party Night conclusa",
+      "Final standings": "Classifica finale",
+      "1 win across 1 completed game": "1 vittoria in 1 gioco completato",
+      "Night recap": "Riepilogo della serata",
+      "Secret Signals completed. No cancelled game affected the standings.": "Segnali segreti completato. Nessun gioco annullato ha modificato la classifica.",
+      "Start another Party Night": "Avvia un'altra Party Night",
+      "Party Night": "Party Night",
+      "Close menu": "Chiudi menu",
+      "Finish Party Night?": "Terminare la Party Night?",
+      "Only confirmed results will be included in the final standings.": "Solo i risultati confermati saranno inclusi nella classifica finale.",
+      "Finish and see results": "Termina e mostra i risultati",
+      "Keep playing": "Continua a giocare"
+    };
+
+    const ENGLISH = Object.fromEntries(Object.entries(ITALIAN).map(([english, italian]) => [italian, english]));
+
+    function translateDynamic(text, language) {
+      const toItalian = [
+        [/^Player (\d+)$/, "Giocatore $1"],
+        [/^Pass the phone to (.+)\.$/, "Passa il telefono a $1."],
+        [/^I am (.+)$/, "Sono $1"],
+        [/^(.+)'s secret$/, "Segreto di $1"],
+        [/^(.+) wins\.$/, "$1 vince."],
+        [/^(.+) is the champion\.$/, "$1 è il campione."],
+        [/^Winner: (.+) - \+1 point$/, "Vincitore: $1 - +1 punto"],
+        [/^Return the phone to (.+) before continuing\.$/, "Restituisci il telefono a $1 prima di continuare."],
+        [/^(\d+) players$/, "$1 giocatori"],
+        [/^(\d+) pt$/, "$1 pt"]
+      ];
+      const toEnglish = [
+        [/^Giocatore (\d+)$/, "Player $1"],
+        [/^Passa il telefono a (.+)\.$/, "Pass the phone to $1."],
+        [/^Sono (.+)$/, "I am $1"],
+        [/^Segreto di (.+)$/, "$1's secret"],
+        [/^(.+) vince\.$/, "$1 wins."],
+        [/^(.+) è il campione\.$/, "$1 is the champion."],
+        [/^Vincitore: (.+) - \+1 punto$/, "Winner: $1 - +1 point"],
+        [/^Restituisci il telefono a (.+) prima di continuare\.$/, "Return the phone to $1 before continuing."],
+        [/^(\d+) giocatori$/, "$1 players"]
+      ];
+      const patterns = language === "it" ? toItalian : toEnglish;
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+
+    function translateText(raw, language) {
+      const trimmed = raw.trim();
+      if (!trimmed) return raw;
+      const dictionary = language === "it" ? ITALIAN : ENGLISH;
+      const translated = dictionary[trimmed] || translateDynamic(trimmed, language);
+      return raw.replace(trimmed, translated);
+    }
+
+    function localize(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => { node.nodeValue = translateText(node.nodeValue, state.language); });
+      root.querySelectorAll("[aria-label], [title], [placeholder]").forEach(element => {
+        ["aria-label", "title", "placeholder"].forEach(attribute => {
+          if (element.hasAttribute(attribute)) {
+            element.setAttribute(attribute, translateText(element.getAttribute(attribute), state.language));
+          }
+        });
+      });
+    }
+
+    function render() {
+      const views = {
+        home: renderHome,
+        players: renderPlayers,
+        setup: renderSetup,
+        summary: renderSummary,
+        customize: renderCustomize,
+        proposal: () => renderProposal(false),
+        "next-proposal": () => renderProposal(true),
+        "virtual-prep": renderVirtualPrep,
+        physical: renderPhysical,
+        "private-pass": renderPrivatePass,
+        "private-ready": renderPrivateReady,
+        "group-ready": renderGroupReady,
+        "active-game": () => renderActiveGame(false),
+        "physical-active": () => renderActiveGame(true),
+        cancelled: renderCancelled,
+        "result-entry": () => renderResultEntry(false),
+        correction: () => renderResultEntry(true),
+        "result-reveal": renderResultReveal,
+        standings: renderStandings,
+        consequence: renderConsequence,
+        "no-match": renderNoMatch,
+        "private-interrupted": renderPrivateInterrupted,
+        "quick-play": renderQuickPlay,
+        games: renderGames,
+        "game-detail": renderGameDetail,
+        history: renderHistory,
+        settings: renderSettings,
+        language: renderLanguage,
+        loading: renderLoading,
+        error: renderError,
+        final: renderFinal
+      };
+      const view = views[state.screen] || renderHome;
+      app.innerHTML = view();
+      document.documentElement.lang = state.language;
+      localize(app);
+      localize(sessionDialog);
+      localize(confirmDialog);
+      document.querySelectorAll("[data-route]").forEach(button => {
+        button.setAttribute("aria-current", button.dataset.route === state.screen ? "true" : "false");
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"
+      })[character]);
+    }
+
+    function openDialog(dialog) {
+      document.body.classList.add("modal-open");
+      dialog.showModal();
+    }
+
+    function closeDialog(dialog) {
+      dialog.close();
+      document.body.classList.remove("modal-open");
+    }
+
+    document.addEventListener("click", event => {
+      const route = event.target.closest("[data-route]");
+      if (route) {
+        go(route.dataset.route);
+        return;
+      }
+
+      const duration = event.target.closest("[data-duration]");
+      if (duration) {
+        state.duration = duration.dataset.duration;
+        saveState();
+        render();
+        return;
+      }
+
+      const resource = event.target.closest("[data-resource]");
+      if (resource) {
+        const name = resource.dataset.resource;
+        state.resources = state.resources.includes(name)
+          ? state.resources.filter(item => item !== name)
+          : [...state.resources, name];
+        saveState();
+        render();
+        return;
+      }
+
+      const sensitive = event.target.closest("[data-sensitive]");
+      if (sensitive) {
+        const name = sensitive.dataset.sensitive;
+        state.sensitive = state.sensitive.includes(name)
+          ? state.sensitive.filter(item => item !== name)
+          : [...state.sensitive, name];
+        saveState();
+        render();
+        return;
+      }
+
+      const winner = event.target.closest("[data-winner]");
+      if (winner) {
+        state.selectedWinner = winner.dataset.winner;
+        saveState();
+        render();
+        return;
+      }
+
+      const action = event.target.closest("[data-action]");
+      if (!action) return;
+      handleAction(action.dataset.action);
+    });
+
+    document.addEventListener("input", event => {
+      if (!event.target.matches("[data-player-index]")) return;
+      state.players[Number(event.target.dataset.playerIndex)] = event.target.value;
+      saveState();
+      const valid = state.players.filter(name => name.trim()).length >= 2;
+      const continueButton = document.querySelector('[data-action="players-next"]');
+      if (continueButton) continueButton.disabled = !valid;
+      event.target.setAttribute("aria-invalid", event.target.value.trim() ? "false" : "true");
+    });
+
+    function handleAction(action) {
+      const actions = {
+        back: () => go(state.previousScreen || "home"),
+        menu: () => openDialog(sessionDialog),
+        "start-party": () => go("players"),
+        resume: () => go("proposal"),
+        "quick-play": () => go("quick-play"),
+        games: () => go("games"),
+        language: () => go("language"),
+        "set-language-it": () => { state.language = "it"; saveState(); render(); },
+        "set-language-en": () => { state.language = "en"; saveState(); render(); },
+        "language-back": () => go(state.previousScreen === "settings" ? "settings" : "home"),
+        "add-player": () => { if (state.players.length < 6) state.players.push(""); saveState(); render(); },
+        "players-next": () => go("setup"),
+        "setup-next": () => go("summary"),
+        "summary-back": () => go("setup"),
+        customize: () => go("customize"),
+        "save-customize": () => go("summary"),
+        "begin-session": () => { state.activeSession = true; saveState(); go("loading"); },
+        proposal: () => go("proposal"),
+        replace: () => { state.replacementCount += 1; saveState(); go("proposal"); },
+        "replace-next": () => { state.replacementCount += 1; saveState(); go("next-proposal"); },
+        "prepare-virtual": () => go("virtual-prep"),
+        "start-private": () => { state.privatePlayer = 0; state.hasRevealed = false; state.secretVisible = false; saveState(); go("private-pass"); },
+        "private-ready": () => go("private-ready"),
+        "private-pass": () => go("private-pass"),
+        "toggle-reveal-mode": () => { state.accessibleReveal = !state.accessibleReveal; state.secretVisible = false; saveState(); render(); },
+        memorized: () => {
+          state.secretVisible = false;
+          state.hasRevealed = false;
+          if (state.privatePlayer < state.players.filter(name => name.trim()).length - 1) {
+            state.privatePlayer += 1;
+            saveState();
+            go("private-pass");
+          } else {
+            saveState();
+            go("group-ready");
+          }
+        },
+        "active-game": () => go("active-game"),
+        "physical-active": () => go("physical-active"),
+        "finish-game": () => { state.selectedWinner = null; saveState(); go("result-entry"); },
+        "cancel-game": () => go("cancelled"),
+        "confirm-result": () => {
+          const winner = state.selectedWinner;
+          state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, name === winner ? 1 : 0]));
+          saveState();
+          go("result-reveal");
+        },
+        standings: () => go("standings"),
+        consequence: () => go("consequence"),
+        "accept-consequence": () => { state.consequenceAccepted = true; saveState(); go("next-proposal"); },
+        "replace-consequence": () => { state.consequenceVersion += 1; saveState(); render(); },
+        "skip-consequence": () => { state.consequenceAccepted = false; saveState(); go("next-proposal"); },
+        "play-next": () => go("virtual-prep"),
+        "edit-materials": () => go("setup"),
+        "private-interrupted": () => go("private-interrupted"),
+        "restart-private": () => { state.privatePlayer = 0; state.hasRevealed = false; saveState(); go("private-pass"); },
+        "fix-no-match": () => { if (!state.resources.includes("Phone only")) state.resources.push("Phone only"); saveState(); go("proposal"); },
+        "open-finish": () => openDialog(confirmDialog),
+        "quick-surprise": () => go("proposal"),
+        "game-detail": () => go("game-detail"),
+        "correct-result": () => { state.selectedWinner = state.selectedWinner || "Alex"; saveState(); go("correction"); },
+        "save-correction": () => {
+          const winner = state.selectedWinner;
+          state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, name === winner ? 1 : 0]));
+          saveState();
+          go("history");
+        },
+        "new-party": () => { state = { ...defaultState, screen: "players" }; saveState(); render(); },
+        "end-home": () => { state.activeSession = false; saveState(); go("home"); },
+        home: () => go("home")
+      };
+      if (actions[action]) actions[action]();
+    }
+
+    document.addEventListener("pointerdown", event => {
+      const zone = event.target.closest("[data-reveal-zone]");
+      if (!zone || state.accessibleReveal) return;
+      state.secretVisible = true;
+      state.hasRevealed = true;
+      saveState();
+      render();
+    });
+
+    document.addEventListener("pointerup", event => {
+      if (!event.target.closest("[data-reveal-zone]") || state.accessibleReveal) return;
+      state.secretVisible = false;
+      saveState();
+      render();
+    });
+
+    document.addEventListener("keydown", event => {
+      const zone = event.target.closest("[data-reveal-zone]");
+      if (!zone || !["Enter", " "].includes(event.key)) return;
+      event.preventDefault();
+      if (state.accessibleReveal) {
+        state.secretVisible = !state.secretVisible;
+      } else {
+        state.secretVisible = true;
+      }
+      state.hasRevealed = true;
+      saveState();
+      render();
+    });
+
+    document.addEventListener("keyup", event => {
+      if (state.accessibleReveal || !["Enter", " "].includes(event.key)) return;
+      state.secretVisible = false;
+      saveState();
+      render();
+    });
+
+    sessionDialog.addEventListener("click", event => {
+      const button = event.target.closest("[data-dialog-action]");
+      if (!button) return;
+      const action = button.dataset.dialogAction;
+      closeDialog(sessionDialog);
+      if (action === "standings") go("standings");
+      if (action === "history") go("history");
+      if (action === "settings") go("settings");
+      if (action === "finish") openDialog(confirmDialog);
+    });
+
+    document.querySelector("[data-confirm-finish]").addEventListener("click", () => {
+      closeDialog(confirmDialog);
+      go("final");
+    });
+
+    document.querySelector("[data-confirm-cancel]").addEventListener("click", () => closeDialog(confirmDialog));
+
+    [sessionDialog, confirmDialog].forEach(dialog => {
+      dialog.addEventListener("cancel", () => document.body.classList.remove("modal-open"));
+      dialog.addEventListener("close", () => document.body.classList.remove("modal-open"));
+    });
+
+    app.addEventListener("click", event => {
+      const zone = event.target.closest("[data-reveal-zone]");
+      if (!zone || !state.accessibleReveal) return;
+      state.secretVisible = !state.secretVisible;
+      state.hasRevealed = true;
+      saveState();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

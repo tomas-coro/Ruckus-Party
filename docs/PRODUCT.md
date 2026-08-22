@@ -2,7 +2,7 @@
 
 ## Stato
 
-`Phase 1 - Product Definition: completata il 2026-08-22`
+`Phase 2A - UX architecture e prototipo low-fidelity: completata il 2026-08-22`
 
 Le scelte durevoli e il loro grado di approvazione sono registrati in `docs/DECISIONS.md`. Le raccomandazioni di Phase 1 costituiscono la baseline da verificare nel prossimo workstream, non decisioni owner implicite.
 
@@ -174,6 +174,12 @@ Il catalogo può comprendere contenuti generali, romantici, alcolici, audaci e a
 - restano sostituibili o ignorabili durante la sessione.
 
 L'app può suggerire preset in base al tipo di serata, ma ogni suggerimento deve mostrare cosa abilita e restare modificabile.
+
+## Lingue della V1
+
+L'italiano è la lingua predefinita. L'inglese è selezionabile dalla Home e dalle impostazioni della sessione. Il cambio lingua riguarda l'intera esperienza, incluse interfaccia, istruzioni dei giochi, errori e contenuti, senza modificare lo stato della Party Night.
+
+Rilevamento automatico della lingua, account e sincronizzazione delle preferenze non sono richiesti per la V1.
 
 ## MVP
 

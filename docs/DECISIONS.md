@@ -114,3 +114,59 @@ Ogni decisione importante indica problema, raccomandazione, motivi, tradeoff e s
 ## Decisioni owner aperte
 
 Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D-005 - D-012 restano verificabili e reversibili nel prossimo workstream.
+
+## Decisioni confermate in Phase 2A
+
+### D-013 - Struttura del setup Party Night
+
+- Problem: raccogliere i dati indispensabili senza mostrare un'unica schermata densa o un wizard lungo.
+- Recommendation: usare tre schermate rapide: giocatori; durata e materiali; riepilogo con `Customize` opzionale e `Start Party`.
+- Why: ogni schermata ha un compito chiaro, resta utilizzabile con una mano e rende visibili i default prima dell'avvio.
+- Tradeoff: il setup richiede più transizioni rispetto a un unico form scorrevole.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22.
+- Owner answer: usare la soluzione ritenuta migliore e più coerente per la V1.
+
+### D-014 - Ritmo tra due giochi
+
+- Problem: mantenere leggibili risultato, conseguenza e proposta successiva senza creare una schermata sovraccarica.
+- Recommendation: usare tre momenti full-screen distinti: risultato e punteggio; conseguenza opzionale; prossimo gioco.
+- Why: ogni passaggio conserva una sola azione primaria ed è comprensibile mentre il telefono passa tra più persone.
+- Tradeoff: il loop include più schermate e deve essere verificato per evitare lentezza percepita.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22.
+- Owner answer: confermati i tre momenti distinti.
+
+### D-015 - Interazione del private reveal
+
+- Problem: impedire che un segreto resti visibile durante il passaggio del telefono senza escludere utenti con difficoltà motorie.
+- Recommendation: usare una pressione continua che nasconde il contenuto al rilascio, con alternativa accessibile a due tocchi nello stesso flusso.
+- Why: la pressione riduce le esposizioni accidentali; l'alternativa evita di rendere il gesto un requisito esclusivo.
+- Tradeoff: il flusso richiede di spiegare due modalità senza aumentare il carico cognitivo.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22.
+- Owner answer: confermata pressione continua con alternativa accessibile.
+
+### D-016 - Information architecture Session-first
+
+- Problem: distinguere Home, catalogo e sessione senza far percepire Ruckus Party come una raccolta statica di giochi.
+- Recommendation: usare la Home come hub, rendere `Start Party` dominante e trattare una Party Night attiva come percorso dedicato senza bottom navigation globale.
+- Why: mantiene la promessa della serata guidata e limita le distrazioni durante il core loop.
+- Tradeoff: catalogo e funzioni secondarie richiedono un ritorno esplicito alla Home o il menu sessione.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22.
+- Owner answer: confermato l'approccio Session-first.
+
+### D-017 - Gestione del core loop e dell'uscita
+
+- Problem: rendere coerenti Physical, Virtual, annullamento, punteggio e fine anticipata.
+- Recommendation: separare preparazione e gioco, non creare risultati per partite annullate, confermare soltanto l'uscita anticipata e produrre sempre un riepilogo coerente con i risultati registrati.
+- Why: evita dati inventati e conferme ridondanti, mantenendo recuperabili gli errori.
+- Tradeoff: il prototipo deve coprire più rami e stati trasversali.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22.
+- Owner answer: confermato il core loop proposto.
+
+### D-018 - Lingua della V1
+
+- Problem: stabilire la lingua predefinita senza limitare l'accessibilità del prodotto a chi preferisce l'inglese.
+- Recommendation: usare l'italiano come lingua predefinita e offrire l'inglese dalla Home e dalle impostazioni della sessione, applicandolo all'intera esperienza senza perdere lo stato corrente.
+- Why: corrisponde al pubblico iniziale indicato dall'owner e mantiene disponibile una seconda lingua completa con un controllo semplice.
+- Tradeoff: ogni testo di interfaccia, gioco, errore e contenuto deve essere mantenuto in entrambe le lingue.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22.
+- Owner answer: gioco in italiano con possibilità di impostare l'inglese; il resto della direzione Phase 2A è approvato.

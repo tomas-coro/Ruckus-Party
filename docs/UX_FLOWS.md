@@ -2,7 +2,7 @@
 
 ## Stato
 
-`Phase 1 - flussi di prodotto completati; nessuna schermata definitiva`
+`Phase 2A - flussi e prototipo low-fidelity validati; nessuna UI definitiva`
 
 I flussi descrivono ciò che l'utente comprende, decide e riceve. Layout, componenti e animazioni appartengono al prossimo workstream.
 
@@ -20,6 +20,8 @@ I flussi descrivono ciò che l'utente comprende, decide e riceve. Layout, compon
 2. **Fa** una scelta senza creare un account, accettare un tutorial lungo o configurare preferenze permanenti.
 3. **Riceve** il contesto necessario dentro il flusso scelto, soltanto quando serve.
 4. **Esce** verso Party Night, Quick Play o catalogo. Tornando alla Home non perde una sessione attiva senza conferma.
+
+L'italiano è attivo al primo avvio. La Home permette di passare all'inglese; la stessa scelta resta disponibile nelle impostazioni della sessione e non azzera i dati già inseriti.
 
 ## Start Party Night
 
