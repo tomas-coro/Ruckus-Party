@@ -170,3 +170,14 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Tradeoff: ogni testo di interfaccia, gioco, errore e contenuto deve essere mantenuto in entrambe le lingue.
 - Status: `Recommended`, confermata dall'owner il 2026-08-22.
 - Owner answer: gioco in italiano con possibilità di impostare l'inglese; il resto della direzione Phase 2A è approvato.
+
+## Decisioni confermate in Phase 2B
+
+### D-019 - Direzione visiva della V1
+
+- Problem: dare a Ruckus Party un'identità riconoscibile, adulta e inclusiva senza ricorrere a codici infantili, da nightlife o da UI SaaS generica.
+- Recommendation: adottare `Manifesto Sociale` come base visiva affinata della V1. Usare Montserrat come unica famiglia, Aubergine per l'atmosfera, Coral per l'azione, Gold per caso e selezione, Teal per Physical e conferme, Ivory per istruzioni. Rendere ruota, dado e carte la firma scenica della Home, con schermate operative più calme.
+- Why: presenta la Party Night come un evento condiviso e giocoso, rende la Home meno aziendale e più suggestiva, mantiene immediata la gerarchia mobile e non restringe il prodotto a carte o a una singola meccanica.
+- Tradeoff: la Home più teatrale richiede disciplina per non competere con `Start Party`; gli oggetti di gioco devono ricomparire soltanto quando hanno un ruolo e la palette deve mantenere associazioni funzionali stabili.
+- Status: `Recommended`, confermata dall'owner il 2026-08-22 come base migliorabile.
+- Owner answer: proseguire con `Manifesto Sociale`; approvati ruota centrale animabile, dado e carte scenici, Home più suggestiva, interni più calmi, Montserrat unica e palette funzionale proposta.

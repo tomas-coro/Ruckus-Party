@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  viewer-template.html · scocca del visualizzatore di direzioni (skill `mockup`)
+  ─────────────────────────────────────────────────────────────────────────────
+  SCOCCA FISSA, CONTENUTO VARIABILE.
+  La skill sostituisce SOLO il contenuto di <div id="panels"> con i 3/4 pannelli
+  reali. Ogni direzione è un <section class="dir-panel" data-name data-mood data-why>
+  che contiene SOLO il design di anteprima: la barra-titolo (nome+mood) e la riga
+  "perché" sono disegnate automaticamente dallo script qui sotto.
+  I chip in #chips sono generati automaticamente, uno per pannello.
+  NON modificare la scocca o lo script: cambia solo #panels (e <title>).
+-->
+<title>Ruckus Party · Direzioni visive Phase 2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171e; --ink-2:#1b1f28; --ink-3:#232936;
+    --line:#323a4a; --bone:#e9e4d8; --bone-dim:#a39e93;
+    --brass:#e0a96d; --brass-deep:#b9824a; --ok:#7fb59a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:radial-gradient(1200px 600px at 80% -10%, #1d2230 0, transparent 60%), var(--ink);
+    color:var(--bone); font-family:"Hanken Grotesk",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:24px 18px 64px}
+
+  header.top{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
+  .eyebrow{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:700}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:clamp(1.4rem,4vw,2rem);margin:.35rem 0 0;letter-spacing:-.015em}
+  .lead{color:var(--bone-dim);font-size:.9rem;margin:.45rem 0 0;max-width:52ch}
+
+  /* chip bar */
+  #chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+  #chips button{
+    font:inherit;font-weight:600;font-size:.84rem;color:var(--bone-dim);
+    background:var(--ink-2);border:1px solid var(--line);border-radius:11px;
+    padding:10px 15px;min-height:44px;cursor:pointer;display:flex;align-items:center;gap:8px;
+    transition:color .15s ease, background .15s ease, border-color .15s ease;
+  }
+  #chips button:hover{color:var(--bone)}
+  #chips button[aria-pressed="true"]{border-color:var(--brass);color:var(--bone);background:var(--ink-3)}
+  #chips button .swatch{width:11px;height:11px;border-radius:4px;background:var(--brass);flex:none}
+
+  /* palco */
+  #stage{position:relative}
+  .dir-panel[hidden]{display:none}
+  .dir-panel{animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .dir-card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .dir-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .dir-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.1rem;line-height:1.15}
+  .dir-mood{font-size:.74rem;color:var(--bone-dim);margin-top:2px}
+  .dir-tag{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 9px;border-radius:99px;white-space:nowrap;background:var(--ink-3);color:var(--bone-dim);border:1px solid var(--line)}
+  .dir-tag[data-role="Attuale"]{background:rgba(224,169,109,.16);color:var(--brass);border-color:var(--brass-deep)}
+  .dir-tag[data-role="Variante +"]{background:rgba(127,181,154,.14);color:var(--ok);border-color:#3f5a4f}
+  .dir-body{padding:20px 18px}
+  .dir-why{display:flex;gap:9px;align-items:flex-start;padding:13px 18px;border-top:1px solid var(--line);background:rgba(255,255,255,.015);font-size:.82rem;color:var(--bone-dim)}
+  .dir-why b{color:var(--bone);font-weight:600}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+
+  /* ───────── stili di esempio dei pannelli (la skill li sostituisce) ───────── */
+  .demo-nav{display:flex;gap:8px;align-items:center;font-size:.7rem;color:var(--bone-dim);margin-bottom:14px}
+  .demo-dot{width:8px;height:8px;border-radius:99px;background:var(--line)}
+  .demo-h{margin:0 0 8px;line-height:1.05}
+  .demo-p{margin:0 0 16px;font-size:.86rem;color:var(--bone-dim)}
+  .demo-btn{font:inherit;font-weight:700;font-size:.82rem;border:0;border-radius:9px;padding:11px 16px;min-height:44px;cursor:pointer;transition:transform .12s ease, filter .12s ease}
+  .demo-btn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+  .t-edit .demo-h{font-family:"Bodoni Moda",serif;font-weight:500;font-size:1.7rem;color:#f1ece1}
+  .t-edit .demo-btn{background:#e9e4d8;color:#181818}
+  .t-retro{background:linear-gradient(180deg,#241a12,#1b1f28);margin:-20px -18px;padding:20px 18px;border-radius:0}
+  .t-retro .demo-h{font-family:"Bodoni Moda",serif;font-style:italic;font-weight:500;font-size:1.7rem;color:#f0c98a}
+  .t-retro .demo-btn{background:#d98b3f;color:#1a1206}
+  .t-tech .demo-h{font-family:"Hanken Grotesk";font-weight:700;letter-spacing:-.02em;font-size:1.6rem;color:#dfe7f2}
+  .t-tech .demo-btn{background:#5b7fb0;color:#0c1118}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Direzioni a confronto</div>
+    <h1 id="mockTitle">Ruckus Party · Phase 2B</h1>
+    <p class="lead">Tocca un nome in alto per cambiare direzione. Ogni tile mostra l'estetica, un'interazione viva e il <b>perché</b>.</p>
+  </header>
+
+  <nav id="chips" role="tablist" aria-label="Direzioni"></nav>
+
+  <main id="stage">
+    <div id="panels">
+
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..125,400..900&family=Manrope:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600;700;800;900&family=Barlow:wght@400;500;600;700&family=Syne:wght@500;600;700;800&family=Karla:wght@400;500;600;700&display=swap');
+
+        .rp-directions{display:grid;justify-items:center;gap:16px}
+        .rp-phone{position:relative;width:min(100%,390px);min-height:700px;overflow:hidden;border-radius:28px;border:1px solid rgba(15,18,22,.18);isolation:isolate}
+        .rp-phone button{font:inherit;cursor:pointer;min-height:48px}
+        .rp-phone button:focus-visible,.pick-direction:focus-visible{outline:3px solid #fff;outline-offset:3px}
+        .rp-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px}
+        .rp-lang{border:0;background:transparent;font-weight:800;letter-spacing:.04em;padding:12px 4px;white-space:nowrap;flex:none}
+        .rp-primary{width:100%;border:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;font-weight:800}
+        .rp-primary svg{width:22px;height:22px;flex:none}
+        .rp-secondary{border:0;background:transparent;display:flex;align-items:center;gap:10px;font-weight:700;padding:10px 0}
+        .rp-secondary svg{width:20px;height:20px;flex:none}
+        .pick-direction{min-height:48px;border:1px solid rgba(233,228,216,.3);border-radius:10px;background:#232936;color:#e9e4d8;padding:0 18px;font:700 .86rem "Hanken Grotesk",sans-serif}
+
+        /* A · Manifesto Sociale */
+        .manifesto{font-family:"Manrope",sans-serif;background:#fff;color:#151515;padding:18px 20px 22px}
+        .manifesto::before{content:"";position:absolute;z-index:-1;width:190px;height:190px;border-radius:50%;background:#f3b628;right:-88px;top:96px}
+        .manifesto .brand{font-family:"Anybody",sans-serif;font-size:1.02rem;font-weight:900;letter-spacing:-.05em}
+        .manifesto .rp-lang{color:#151515}
+        .manifesto .edition{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:.69rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+        .manifesto .edition::before{content:"";width:30px;height:3px;background:#951f3f}
+        .manifesto h2{font-family:"Anybody",sans-serif;font-stretch:condensed;font-size:clamp(3.55rem,14vw,4.65rem);line-height:.82;letter-spacing:-.075em;margin:18px 0 17px;max-width:320px;text-wrap:balance}
+        .manifesto h2 em{font-style:normal;color:#951f3f}
+        .manifesto .intro{font-size:.95rem;line-height:1.55;max-width:29ch;margin:0 0 24px;text-wrap:pretty}
+        .manifesto .session-strip{background:#151515;color:#fff;margin:0 -20px;padding:14px 20px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:14px}
+        .manifesto .session-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.13em;color:#d5d0c9;font-weight:700}
+        .manifesto .session-title{font-family:"Anybody",sans-serif;font-size:1.22rem;font-weight:800;margin-top:2px}
+        .manifesto .session-count{font-family:"Anybody",sans-serif;color:#f3b628;font-size:1.7rem;font-weight:900;line-height:1}
+        .manifesto .session-count small{display:block;font:600 .62rem "Manrope",sans-serif;color:#d5d0c9;text-transform:uppercase;letter-spacing:.08em}
+        .manifesto .rp-primary{height:58px;margin-top:16px;background:#951f3f;color:#fff;border-radius:3px;box-shadow:5px 5px 0 #151515}
+        .manifesto .rp-primary:active{transform:translate(3px,3px);box-shadow:2px 2px 0 #151515}
+        .manifesto .routes{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #cfcac2;margin-top:27px;padding-top:8px}
+        .manifesto .rp-secondary{color:#151515;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+
+        /* B · Sala Giochi Civile */
+        .scoreclub{font-family:"Barlow",sans-serif;background:#eef0e9;color:#162429;padding:16px 18px 20px;border-color:#162429}
+        .scoreclub::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.2;background-image:linear-gradient(#527177 1px,transparent 1px),linear-gradient(90deg,#527177 1px,transparent 1px);background-size:24px 24px}
+        .scoreclub .brand{font-family:"Barlow Condensed",sans-serif;font-weight:900;letter-spacing:.08em;font-size:1.05rem;border:2px solid #162429;padding:4px 8px;transform:rotate(-1deg)}
+        .scoreclub .rp-lang{color:#162429}
+        .scoreclub .roundline{display:flex;justify-content:space-between;align-items:center;margin-top:20px;border-bottom:3px solid #162429;padding-bottom:7px;font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+        .scoreclub h2{font-family:"Barlow Condensed",sans-serif;font-size:4.15rem;line-height:.83;text-transform:uppercase;letter-spacing:-.045em;margin:18px 0 8px;max-width:320px;text-wrap:balance}
+        .scoreclub h2 span{color:#235e83}
+        .scoreclub .intro{font-size:.98rem;font-weight:500;line-height:1.45;max-width:31ch;margin:0 0 18px;text-wrap:pretty}
+        .scoreclub .score-ticket{background:#fff;border:2px solid #162429;display:grid;grid-template-columns:1.3fr .7fr;margin:17px 0 14px;box-shadow:4px 4px 0 #df5b36}
+        .scoreclub .ticket-main{padding:13px 14px;border-right:2px dashed #162429}
+        .scoreclub .ticket-kicker{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-size:.73rem;letter-spacing:.1em;font-weight:700;color:#527177}
+        .scoreclub .ticket-name{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-size:1.45rem;line-height:1;font-weight:800;margin-top:3px}
+        .scoreclub .ticket-stat{display:grid;place-content:center;text-align:center;font-family:"Barlow Condensed",sans-serif;font-size:2.3rem;font-weight:900;color:#235e83}
+        .scoreclub .ticket-stat small{font:700 .63rem "Barlow",sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#527177}
+        .scoreclub .rp-primary{height:58px;background:#235e83;color:#fff;border:2px solid #162429;border-radius:0;box-shadow:4px 4px 0 #162429;text-transform:uppercase;font-family:"Barlow Condensed",sans-serif;font-size:1.13rem;letter-spacing:.05em}
+        .scoreclub .rp-primary:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #162429}
+        .scoreclub .routes{display:grid;grid-template-columns:1fr 1fr;margin-top:23px;border-top:2px solid #162429;border-bottom:2px solid #162429}
+        .scoreclub .rp-secondary{justify-content:center;color:#162429;padding:11px 4px;border-right:2px solid #162429;text-transform:uppercase;font-family:"Barlow Condensed",sans-serif;letter-spacing:.04em}
+        .scoreclub .rp-secondary:last-child{border-right:0}
+
+        /* C · Cartoline in Movimento */
+        .postcards{font-family:"Karla",sans-serif;background:#f0e4c9;color:#1e2530;padding:17px 19px 21px;border-color:#1e2530}
+        .postcards::before,.postcards::after{content:"";position:absolute;z-index:-1;transform:rotate(10deg)}
+        .postcards::before{width:180px;height:150px;background:#7db9c7;right:-58px;top:92px;border-radius:46% 54% 58% 42% / 40% 36% 64% 60%}
+        .postcards::after{width:135px;height:116px;background:#e34f32;left:-56px;bottom:115px;border-radius:58% 42% 35% 65% / 48% 60% 40% 52%}
+        .postcards .brand{font-family:"Syne",sans-serif;font-size:1.04rem;font-weight:800;letter-spacing:.02em}
+        .postcards .brand span{display:inline-block;background:#1e2530;color:#f0e4c9;padding:3px 5px;transform:rotate(-3deg)}
+        .postcards .rp-lang{color:#1e2530}
+        .postcards .stamp{display:inline-block;margin-top:21px;border:1px solid #1e2530;padding:6px 9px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;transform:rotate(-2deg);background:#f0e4c9}
+        .postcards h2{font-family:"Syne",sans-serif;font-size:3.35rem;line-height:.89;letter-spacing:-.055em;margin:18px 0 13px;max-width:330px;text-wrap:balance}
+        .postcards h2 span{position:relative;display:inline-block;color:#e34f32}
+        .postcards .intro{font-size:1rem;line-height:1.48;font-weight:500;max-width:29ch;margin:0 0 21px;text-wrap:pretty}
+        .postcards .players{display:flex;align-items:center;gap:0;margin:7px 0 17px}
+        .postcards .player{width:48px;height:48px;border:2px solid #1e2530;border-radius:50%;display:grid;place-content:center;background:#f6c34f;font-family:"Syne",sans-serif;font-weight:800;margin-left:-7px}
+        .postcards .player:first-child{margin-left:0;background:#7db9c7}
+        .postcards .player:nth-child(3){background:#f0e4c9}
+        .postcards .players p{font-size:.73rem;line-height:1.2;font-weight:700;margin:0 0 0 12px;text-transform:uppercase;letter-spacing:.04em}
+        .postcards .rp-primary{height:60px;background:#1e2530;color:#fff;border:2px solid #1e2530;border-radius:18px 5px 18px 5px;box-shadow:5px 5px 0 #f6c34f}
+        .postcards .rp-primary:active{transform:rotate(-1deg) translate(2px,2px);box-shadow:3px 3px 0 #f6c34f}
+        .postcards .routes{display:flex;justify-content:space-between;gap:15px;margin-top:26px}
+        .postcards .rp-secondary{color:#1e2530;border-bottom:2px solid #1e2530}
+
+        .direction-choice{display:flex;justify-content:center}
+        @media (max-width:560px){
+          .rp-phone{min-height:660px;border-radius:20px}
+          .manifesto h2{font-size:3.4rem}
+          .scoreclub h2{font-size:3.75rem}
+          .postcards h2{font-size:3.05rem}
+        }
+        @media (prefers-reduced-motion:reduce){
+          .rp-phone button{transform:none!important}
+        }
+      </style>
+
+      <section class="dir-panel" data-name="Manifesto Sociale" data-mood="Manifesti culturali italiani · energico, adulto, diretto" data-why="Trasforma la Home in un invito alla serata: gerarchia immediata, carattere forte e calore sociale senza codici da nightlife o da gioco infantile." data-role="Consigliata">
+        <div class="rp-directions">
+          <article class="rp-phone manifesto" aria-label="Anteprima Home Manifesto Sociale">
+            <div class="rp-topbar"><div class="brand">RUCKUS!</div><button class="rp-lang" type="button" aria-label="Cambia lingua">IT / EN</button></div>
+            <div class="edition">Stessa stanza, zero attese</div>
+            <h2>La serata <em>parte qui.</em></h2>
+            <p class="intro">Scegli chi gioca. Al resto pensa Ruckus Party, un gioco dopo l'altro.</p>
+            <div class="session-strip">
+              <div><div class="session-label">Ultima sessione</div><div class="session-title">Party Night</div></div>
+              <div class="session-count">4<small>giocatori</small></div>
+            </div>
+            <button class="rp-primary" type="button" onclick="this.querySelector('.cta-label').textContent='Party Night pronta';this.setAttribute('aria-pressed','true');try{localStorage.setItem('rp-manifesto-state','ready')}catch(e){}">
+              <span class="cta-label">Avvia Party Night</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M14 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
+            </button>
+            <div class="routes">
+              <button class="rp-secondary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z" stroke="currentColor" stroke-width="2"/></svg>Quick Play</button>
+              <button class="rp-secondary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h6v6H4V5Zm10 0h6v6h-6V5ZM4 15h6v4H4v-4Zm10 0h6v4h-6v-4Z" stroke="currentColor" stroke-width="2"/></svg>Giochi</button>
+            </div>
+          </article>
+          <div class="direction-choice"><button class="pick-direction" type="button" data-save>Scegli questa direzione</button></div>
+        </div>
+      </section>
+
+      <section class="dir-panel" data-name="Sala Giochi Civile" data-mood="Fogli punteggio e circoli sociali · ordinato, competitivo, analogico" data-why="Rende il sistema leggibile e tattile come un tabellone da tavolo. È molto funzionale, ma comunica più competizione e meno spontaneità della direzione consigliata." data-role="Alternativa" hidden>
+        <div class="rp-directions">
+          <article class="rp-phone scoreclub" aria-label="Anteprima Home Sala Giochi Civile">
+            <div class="rp-topbar"><div class="brand">RUCKUS PARTY</div><button class="rp-lang" type="button" aria-label="Cambia lingua">IT / EN</button></div>
+            <div class="roundline"><span>Serata n. 01</span><span>Sabato</span></div>
+            <h2>Metti tutti <span>in gioco.</span></h2>
+            <p class="intro">Una sessione, un solo telefono e il prossimo gioco sempre pronto.</p>
+            <div class="score-ticket">
+              <div class="ticket-main"><div class="ticket-kicker">Sessione salvata</div><div class="ticket-name">Party Night</div></div>
+              <div class="ticket-stat">4<small>giocatori</small></div>
+            </div>
+            <button class="rp-primary" type="button" onclick="this.querySelector('.cta-label').textContent='Sessione pronta';this.setAttribute('aria-pressed','true');try{localStorage.setItem('rp-score-state','ready')}catch(e){}">
+              <span class="cta-label">Avvia Party Night</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M14 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
+            </button>
+            <div class="routes">
+              <button class="rp-secondary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z" stroke="currentColor" stroke-width="2"/></svg>Quick Play</button>
+              <button class="rp-secondary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h6v6H4V5Zm10 0h6v6h-6V5ZM4 15h6v4H4v-4Zm10 0h6v4h-6v-4Z" stroke="currentColor" stroke-width="2"/></svg>Giochi</button>
+            </div>
+          </article>
+          <div class="direction-choice"><button class="pick-direction" type="button" data-save>Scegli questa direzione</button></div>
+        </div>
+      </section>
+
+      <section class="dir-panel" data-name="Cartoline in Movimento" data-mood="Inviti risograph e ritagli di carta · conviviale, caldo, espressivo" data-why="Fa percepire subito persone e varietà grazie a forme che si ricompongono. È la più accogliente, con il rischio di sembrare meno adulta se spinta troppo." data-role="Alternativa" hidden>
+        <div class="rp-directions">
+          <article class="rp-phone postcards" aria-label="Anteprima Home Cartoline in Movimento">
+            <div class="rp-topbar"><div class="brand"><span>R</span> RUCKUS PARTY</div><button class="rp-lang" type="button" aria-label="Cambia lingua">IT / EN</button></div>
+            <div class="stamp">Invito aperto · 20:42</div>
+            <h2>Passa il telefono. <span>Parte il caos.</span></h2>
+            <p class="intro">Giochi rapidi per coppie, amici e gruppi, tutti nella stessa stanza.</p>
+            <div class="players" aria-label="Quattro giocatori">
+              <div class="player">T</div><div class="player">M</div><div class="player">L</div><div class="player">+1</div>
+              <p>Party Night<br>è ancora qui</p>
+            </div>
+            <button class="rp-primary" type="button" onclick="this.querySelector('.cta-label').textContent='Party Night pronta';this.setAttribute('aria-pressed','true');try{localStorage.setItem('rp-postcard-state','ready')}catch(e){}">
+              <span class="cta-label">Avvia Party Night</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M14 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
+            </button>
+            <div class="routes">
+              <button class="rp-secondary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z" stroke="currentColor" stroke-width="2"/></svg>Quick Play</button>
+              <button class="rp-secondary" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h6v6H4V5Zm10 0h6v6h-6V5ZM4 15h6v4H4v-4Zm10 0h6v4h-6v-4Z" stroke="currentColor" stroke-width="2"/></svg>Giochi</button>
+            </div>
+          </article>
+          <div class="direction-choice"><button class="pick-direction" type="button" data-save>Scegli questa direzione</button></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ── Scocca generica: chip auto-costruiti dai pannelli, uno visibile alla volta ──
+(function(){
+  const panelsBox = document.getElementById('panels');
+  const panels = [...panelsBox.querySelectorAll('.dir-panel')];
+  const chips = document.getElementById('chips');
+
+  // Disegna la chrome (barra nome+mood, riga "perché") dentro ogni pannello dai data-*
+  panels.forEach(p=>{
+    const inner = p.innerHTML;
+    const role = p.dataset.role || '';
+    const tag = role ? `<span class="dir-tag" data-role="${role}">${role}</span>` : `<span class="dir-tag">Direzione</span>`;
+    p.innerHTML = `
+      <div class="dir-card">
+        <div class="dir-head">
+          <div>
+            <div class="dir-name">${p.dataset.name||'Direzione'}</div>
+            <div class="dir-mood">${p.dataset.mood||''}</div>
+          </div>${tag}
+        </div>
+        <div class="dir-body">${inner}</div>
+        ${p.dataset.why ? `<div class="dir-why">✶&nbsp;<span><b>Perché:</b> ${p.dataset.why}</span></div>` : ``}
+      </div>`;
+  });
+
+  function show(i){
+    panels.forEach((p,j)=>p.toggleAttribute('hidden', j!==i));
+    [...chips.children].forEach((c,j)=>c.setAttribute('aria-pressed', j===i));
+  }
+
+  panels.forEach((p,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-pressed', i===0 ? 'true':'false');
+    b.innerHTML = `<span class="swatch"></span>${p.dataset.name || ('Direzione '+(i+1))}`;
+    b.addEventListener('click', ()=>show(i));
+    chips.appendChild(b);
+  });
+
+  show(0);
+
+  // Esempio di interazione "viva ma leggera" con dato finto in localStorage.
+  // (La skill può riusare lo stesso pattern data-save nei pannelli reali.)
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('[data-save]');
+    if(!btn) return;
+    const on = btn.dataset.on === '1';
+    btn.dataset.on = on ? '0':'1';
+    btn.textContent = on ? 'Salva' : 'Salvato ✓';
+    try{ localStorage.setItem('mockup-demo-saved', on ? '0':'1'); }catch(_){}
+  });
+})();
+</script>
+</body>
+</html>

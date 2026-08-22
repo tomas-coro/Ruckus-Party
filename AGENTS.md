@@ -120,34 +120,17 @@ La fonte di verità durevole è il repository:
 
 Alla fine di ogni workstream aggiorna documentazione, decisioni, TODO, limitazioni e test. Controlla `git diff` e `git status`.
 
-## Vincolo attuale - Phase 1
+## Vincolo attuale - Phase 2B
 
-Phase 1 è esclusivamente Product Definition. Non scrivere codice, non modificare `src/`, non creare prototipi, non installare dipendenze e non iniziare Phase 2.
+Phase 2B è esclusivamente visual direction, design system e prototipo high-fidelity. Non scrivere codice prodotto, non modificare `src/`, non implementare backend, account, multiplayer online o persistence reale e non installare dipendenze.
 
-Durante Phase 1:
+Durante Phase 2B:
 
-- agisci come product architect;
-- analizza criticamente le ipotesi, senza aggiungere passaggi per completezza software;
-- privilegia l'avvio rapido del divertimento;
-- raccogli al massimo 5 decisioni importanti dell'owner per volta;
-- per ogni domanda indica raccomandazione, motivo e al massimo 2 alternative reali;
-- non interrompere il lavoro per dettagli minori con un default chiaramente preferibile.
+- usa i flussi e le decisioni approvate in Phase 2A senza riprogettare il prodotto;
+- crea e confronta 2-3 direzioni visive prima di selezionarne una;
+- ottieni approvazione owner sulla direzione prima del prototipo high-fidelity;
+- copri Home, setup, due giochi, Physical, Virtual, private reveal, errore e finale;
+- usa soltanto dati finti e stato locale al prototipo;
+- esegui QA visivo, responsive, interattivo, bilingue e reduced motion prima della consegna.
 
-Prima di chiudere Phase 1 aggiorna tutti i documenti, registra le decisioni, esegui la revisione critica descritta in `docs/PRODUCT.md`, controlla `git diff` e `git status`, poi fermati. Non fare commit o push.
-
-Il report conclusivo deve usare queste sezioni, nel seguente ordine.
-
-Prima parte:
-
-1. `Phase 1 completata`
-2. `Core product recommendation`, massimo 10 righe
-3. `Decisioni consigliate`, massimo 5
-4. `Decisioni che richiedono me`, massimo 5 e con raccomandazione
-5. `MVP proposto`
-
-Seconda parte:
-
-1. `Fuori dall'MVP`
-2. `File modificati`
-3. `Criticità trovate`
-4. `Prossimo step consigliato`, un solo workstream e senza implementarlo
+Prima di chiudere Phase 2B aggiorna design system, decisioni, roadmap, limitazioni e controlli eseguiti. Controlla `git diff` e `git status`, poi fermati al gate di approvazione. Non fare commit o push senza richiesta esplicita.

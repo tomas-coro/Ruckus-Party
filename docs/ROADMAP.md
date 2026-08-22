@@ -2,9 +2,9 @@
 
 ## Stato attuale
 
-`Phase 2A - UX / information architecture / low-fidelity prototype: completata il 2026-08-22`
+`Phase 2B - visual direction / design system / high-fidelity prototype: in corso`
 
-Il repository contiene definizione di prodotto, UX architecture e prototipo low-fidelity, ma nessuna implementazione. Le raccomandazioni di Phase 1 comprese in Phase 2A sono state validate e registrate in `docs/DECISIONS.md`.
+Il repository contiene definizione di prodotto, UX architecture, prototipo low-fidelity, direzione visiva selezionata e candidato high-fidelity rivisto, ma nessuna implementazione prodotto. `Manifesto Sociale` è approvata e affinata con ruota, dado, carte, Montserrat e palette funzionale; il prototipo high-fidelity attende il gate finale dell'owner.
 
 ## Phase 1 - Product Definition
 
@@ -85,9 +85,9 @@ Branding definitivo, monetizzazione, account, backend, multiplayer online e quan
 - Prototipo low-fidelity cliccabile: `prototypes/phase-2a-low-fidelity.html`.
 - QA verificato su flusso principale, stati critici, due lingue, viewport, tap target, modal e reduced motion.
 
-## Prossimo workstream consigliato
+## Phase 2B - visual direction / design system / high-fidelity prototype
 
-`Phase 2B - visual direction / design system / high-fidelity prototype`
+`In corso - gate high-fidelity in attesa di approvazione owner`
 
 Un solo obiettivo: trasformare i flussi approvati in una direzione visiva distintiva e in un prototipo mobile high-fidelity, senza iniziare ancora il codice prodotto.
 
@@ -100,3 +100,15 @@ Output atteso:
 - stati Physical, Virtual, private reveal, errore e finale nella direzione scelta.
 
 Backend, account, multiplayer online e implementazione dell'app restano fuori da Phase 2B.
+
+## Deliverable prodotti in Phase 2B
+
+- Tre direzioni visive confrontabili: `mockups/01-phase-2b-direzioni.html`.
+- `Manifesto Sociale` selezionata e affinata con Home teatrale, interni più calmi, Montserrat unica e palette funzionale.
+- Design system e limiti: `docs/PHASE_2B_DESIGN.md`.
+- Prototipo high-fidelity: `prototypes/phase-2b-high-fidelity.html`.
+- QA completato su flusso, viewport, tap target, lingue, modali e reduced motion.
+
+## Gate Phase 2B ancora aperto
+
+L'owner deve approvare o richiedere correzioni sul prototipo high-fidelity. Solo dopo il gate si può dichiarare conclusa Phase 2B e definire il workstream successivo senza implementarlo automaticamente.

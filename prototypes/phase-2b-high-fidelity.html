@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruckus Party - Phase 2B high-fidelity prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --canvas: oklch(0.955 0 0);
+      --surface: oklch(1 0 0);
+      --surface-2: oklch(0.925 0 0);
+      --ink: oklch(0.18 0.012 20);
+      --muted: oklch(0.43 0.012 20);
+      --line: oklch(0.76 0.008 20);
+      --primary: oklch(0.40 0.13 20);
+      --primary-dark: oklch(0.31 0.11 20);
+      --on-primary: oklch(1 0 0);
+      --danger: oklch(0.43 0.16 25);
+      --focus: oklch(0.58 0.14 250);
+      --radius: 12px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-width: 320px; background: var(--canvas); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: "Montserrat", sans-serif;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.modal-open { overflow: hidden; touch-action: none; }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      min-height: 48px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    p, li { text-wrap: pretty; }
+
+    .prototype-shell {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: var(--space-4);
+      display: grid;
+      grid-template-columns: minmax(230px, 300px) minmax(320px, 420px);
+      gap: var(--space-6);
+      align-items: start;
+      justify-content: center;
+    }
+
+    .review-panel {
+      position: sticky;
+      top: var(--space-4);
+      min-width: 0;
+      padding: var(--space-5);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--radius);
+    }
+
+    .review-panel h1 {
+      margin-bottom: var(--space-2);
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+
+    .review-panel p {
+      margin-bottom: var(--space-4);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .route-list {
+      min-width: 0;
+      max-width: 100%;
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .route-button {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .route-button:hover,
+    .route-button[aria-current="true"] {
+      border-color: var(--primary);
+      background: oklch(0.96 0.018 20);
+    }
+
+    .legend {
+      margin-top: var(--space-5);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--line);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .device {
+      width: 100%;
+      min-height: 780px;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 28px;
+      background: var(--surface);
+      box-shadow: 0 8px 0 oklch(0.80 0 0);
+    }
+
+    .device-status {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-4);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    #app {
+      min-height: 750px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-header {
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: 48px 1fr 64px;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .app-header strong {
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .icon-button {
+      min-width: 48px;
+      padding: 0 var(--space-2);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--ink);
+      background: transparent;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .icon-button:hover { background: var(--surface-2); }
+    .header-spacer { width: 48px; height: 48px; }
+
+    .screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 686px;
+    }
+
+    .content {
+      flex: 1;
+      padding: var(--space-5) var(--space-4) var(--space-6);
+    }
+
+    .content.centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .step-label,
+    .context-label {
+      margin-bottom: var(--space-2);
+      color: var(--primary-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .screen-title {
+      margin-bottom: var(--space-2);
+      font-family: "Montserrat", sans-serif;
+      font-size: 2rem;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .screen-copy {
+      max-width: 34ch;
+      margin-bottom: var(--space-5);
+      color: var(--muted);
+    }
+
+    .stack { display: grid; gap: var(--space-3); }
+    .stack-lg { display: grid; gap: var(--space-5); }
+
+    .primary-button,
+    .secondary-button,
+    .text-button,
+    .choice,
+    .player-choice {
+      width: 100%;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .primary-button {
+      padding: 12px 16px;
+      border: 2px solid var(--primary);
+      color: var(--on-primary);
+      background: var(--primary);
+    }
+
+    .primary-button:hover,
+    .primary-button:active { background: var(--primary-dark); border-color: var(--primary-dark); }
+
+    .secondary-button {
+      padding: 12px 16px;
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .secondary-button:hover,
+    .secondary-button:active { background: var(--surface-2); }
+
+    .text-button {
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      color: var(--primary-dark);
+      background: transparent;
+    }
+
+    .text-button:hover { background: oklch(0.96 0.018 20); }
+
+    .danger-button { color: var(--danger); border-color: var(--danger); }
+
+    .bottom-actions {
+      position: sticky;
+      bottom: 0;
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .home-primary {
+      min-height: 152px;
+      padding: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      color: var(--on-primary);
+      background: var(--primary);
+      text-align: left;
+    }
+
+    .home-primary strong { font-size: 1.55rem; }
+    .home-primary span { margin-top: var(--space-1); font-weight: 600; }
+
+    .home-secondary {
+      min-height: 104px;
+      padding: var(--space-4);
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .home-secondary strong { display: block; margin-bottom: var(--space-1); font-size: 1.15rem; }
+    .home-secondary span { color: var(--muted); font-size: 0.9rem; }
+
+    .home-link {
+      min-height: 52px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .field-group { display: grid; gap: var(--space-2); }
+    .field-group label { font-weight: 800; font-size: 0.9rem; }
+
+    .text-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .text-input[aria-invalid="true"] { border-color: var(--danger); }
+    .error-copy { margin: 0; color: var(--danger); font-size: 0.82rem; font-weight: 700; }
+
+    .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+
+    .choice {
+      min-height: 72px;
+      padding: 10px;
+      border: 2px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .choice[aria-pressed="true"] {
+      border-color: var(--primary);
+      background: oklch(0.96 0.018 20);
+    }
+
+    .choice small { display: block; margin-top: 2px; color: var(--muted); font-weight: 600; }
+
+    .summary-list,
+    .score-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .summary-list li,
+    .score-list li {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .summary-list span,
+    .score-list span { color: var(--muted); }
+    .summary-list strong,
+    .score-list strong { text-align: right; }
+
+    .info-block {
+      padding: var(--space-4);
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .info-block h3 { margin-bottom: var(--space-2); font-size: 1rem; }
+    .info-block p:last-child { margin-bottom: 0; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .tag {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--surface-2);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .reason {
+      margin: var(--space-4) 0 0;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .big-result {
+      margin: var(--space-5) 0;
+      padding: var(--space-5) var(--space-4);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      text-align: center;
+    }
+
+    .big-result strong {
+      display: block;
+      font-family: "Montserrat", sans-serif;
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+
+    .big-result span { display: block; margin-top: var(--space-2); color: var(--muted); }
+
+    .progress-track {
+      height: 8px;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      background: var(--surface-2);
+    }
+
+    .progress-track span { display: block; width: 46%; height: 100%; background: var(--primary); }
+
+    .player-choice {
+      min-height: 56px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 2px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .player-choice[aria-pressed="true"] { border-color: var(--primary); background: oklch(0.96 0.018 20); }
+
+    .private-cover {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius);
+      background: repeating-linear-gradient(135deg, var(--surface), var(--surface) 12px, var(--surface-2) 12px, var(--surface-2) 24px);
+      text-align: center;
+    }
+
+    .private-cover strong { font-size: 1.55rem; }
+
+    .reveal-zone {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--surface);
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .secret {
+      margin-top: var(--space-3);
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .hidden-secret { color: oklch(0.68 0 0); }
+
+    .skeleton { display: grid; gap: var(--space-3); }
+    .skeleton span {
+      height: 18px;
+      border-radius: 5px;
+      background: var(--surface-2);
+    }
+    .skeleton span:nth-child(1) { width: 68%; height: 34px; }
+    .skeleton span:nth-child(2) { width: 100%; }
+    .skeleton span:nth-child(3) { width: 84%; }
+
+    dialog {
+      width: min(calc(100% - 32px), 360px);
+      max-height: 80vh;
+      overflow: auto;
+      padding: 0;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    dialog::backdrop { background: oklch(0.12 0 0 / 0.62); }
+    .dialog-content { padding: var(--space-5); }
+    .dialog-content h2 { margin-bottom: var(--space-2); }
+    .dialog-content p { color: var(--muted); }
+
+    .prototype-note {
+      margin-top: var(--space-3);
+      padding: var(--space-3);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 760px) {
+      .prototype-shell { grid-template-columns: 1fr; padding: var(--space-2); gap: var(--space-3); }
+      .review-panel { position: static; padding: var(--space-3); }
+      .review-panel h1 { font-size: 1.15rem; }
+      .review-panel p, .legend { display: none; }
+      .route-list {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: var(--space-1);
+        scrollbar-width: thin;
+      }
+      .route-button { min-width: 144px; font-size: 0.78rem; }
+      .device { min-height: 720px; border-radius: 20px; box-shadow: none; }
+      #app { min-height: 690px; }
+      .screen { min-height: 626px; }
+    }
+
+    @media (max-width: 390px) {
+      .prototype-shell { padding: 0; }
+      .review-panel, .device { border-left: 0; border-right: 0; border-radius: 0; }
+      .choice-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+  <style>
+    :root {
+      --canvas: #151515;
+      --surface: #fffdf9;
+      --surface-2: #eeeae2;
+      --ink: #151515;
+      --muted: #625e58;
+      --line: #c9c3ba;
+      --primary: #951f3f;
+      --primary-dark: #71152f;
+      --on-primary: #ffffff;
+      --sun: #f3b628;
+      --blue: #1b5d86;
+      --success: #286452;
+      --danger: #a62c31;
+      --focus: #165dff;
+      --radius: 4px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+    }
+
+    html { background: var(--canvas); }
+
+    body {
+      position: relative;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 10%, rgba(149, 31, 63, .24), transparent 28rem),
+        radial-gradient(circle at 90% 85%, rgba(243, 182, 40, .12), transparent 25rem),
+        var(--canvas);
+      font-family: "Montserrat", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    button, input { font-family: "Montserrat", sans-serif; }
+    h1, h2, h3 { font-family: "Montserrat", sans-serif; }
+    h1, h2, h3, p { text-wrap: pretty; }
+    h1, h2, h3 { text-wrap: balance; }
+
+    button:focus-visible,
+    input:focus-visible,
+    [role="button"]:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .prototype-shell {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 1180px);
+      padding: 32px 20px 72px;
+      grid-template-columns: minmax(250px, 300px) minmax(320px, 410px);
+      gap: 48px;
+    }
+
+    .review-panel {
+      top: 32px;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid #3d3a37;
+      border-radius: 6px;
+      color: #fffdf9;
+      background: #1d1d1d;
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, .32);
+    }
+
+    .review-panel::before {
+      content: "PHASE 2B / MANIFESTO SOCIALE";
+      display: block;
+      padding: 13px 18px;
+      color: var(--sun);
+      background: var(--primary);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+    }
+
+    .review-panel h1 {
+      margin: 0;
+      padding: 20px 18px 6px;
+      color: #fffdf9;
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.65rem;
+      line-height: .95;
+      letter-spacing: -.045em;
+    }
+
+    .review-panel p {
+      margin: 0;
+      padding: 0 18px 18px;
+      color: #aaa49b;
+      font-size: .84rem;
+      line-height: 1.55;
+    }
+
+    .route-list { gap: 0; border-top: 1px solid #3d3a37; }
+
+    .route-button {
+      position: relative;
+      min-height: 48px;
+      padding: 11px 42px 11px 18px;
+      border: 0;
+      border-bottom: 1px solid #3d3a37;
+      border-radius: 0;
+      color: #d5d0c9;
+      background: #1d1d1d;
+      font-size: .8rem;
+      letter-spacing: .01em;
+    }
+
+    .route-button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 18px;
+      width: 7px;
+      height: 7px;
+      border-top: 2px solid currentColor;
+      border-right: 2px solid currentColor;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .route-button:hover,
+    .route-button[aria-current="true"] {
+      border-color: #3d3a37;
+      color: #151515;
+      background: var(--sun);
+    }
+
+    .legend {
+      margin: 0;
+      padding: 16px 18px 18px;
+      border: 0;
+      color: #aaa49b;
+      font-size: .74rem;
+      line-height: 1.5;
+    }
+
+    .device {
+      position: relative;
+      min-height: 790px;
+      overflow: hidden;
+      border: 3px solid #090909;
+      border-radius: 32px;
+      background: var(--surface);
+      box-shadow: 11px 11px 0 var(--sun), 18px 18px 0 rgba(0, 0, 0, .28);
+    }
+
+    .device-status {
+      height: 30px;
+      padding: 0 18px;
+      border: 0;
+      color: #d5d0c9;
+      background: #151515;
+      font-size: .64rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    #app { min-height: 760px; background: var(--surface); }
+
+    .app-header {
+      position: relative;
+      min-height: 66px;
+      grid-template-columns: 64px 1fr 64px;
+      padding: 6px 12px;
+      border: 0;
+      background: var(--surface);
+    }
+
+    .app-header::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      bottom: 0;
+      left: 16px;
+      height: 1px;
+      background: var(--ink);
+    }
+
+    .app-header strong {
+      font-family: "Montserrat", sans-serif;
+      font-size: .92rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+    }
+
+    .icon-button {
+      min-width: 52px;
+      padding: 0 4px;
+      border: 0;
+      border-radius: 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: .72rem;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 5px;
+    }
+
+    .icon-button:hover,
+    .icon-button:active { color: var(--primary); background: transparent; }
+
+    .screen {
+      min-height: 694px;
+      background: var(--surface);
+      animation: screen-in 240ms cubic-bezier(.2, .75, .25, 1) both;
+    }
+
+    @keyframes screen-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .content { position: relative; padding: 28px 20px 38px; }
+
+    .step-label,
+    .context-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 13px;
+      color: var(--primary);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .step-label::before,
+    .context-label::before {
+      content: "";
+      width: 27px;
+      height: 3px;
+      flex: none;
+      background: currentColor;
+    }
+
+    .screen-title {
+      max-width: 335px;
+      margin-bottom: 13px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 2.65rem;
+      font-weight: 800;
+      font-stretch: condensed;
+      line-height: .88;
+      letter-spacing: -.065em;
+    }
+
+    .screen-copy {
+      max-width: 32ch;
+      margin-bottom: 25px;
+      color: #4f4c47;
+      font-size: .94rem;
+      line-height: 1.55;
+    }
+
+    .stack { gap: 12px; }
+    .stack-lg { gap: 20px; }
+
+    .primary-button,
+    .secondary-button,
+    .text-button,
+    .choice,
+    .player-choice {
+      border-radius: 3px;
+      font-weight: 800;
+    }
+
+    .primary-button {
+      min-height: 56px;
+      padding: 12px 17px;
+      border: 2px solid var(--ink);
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .primary-button:hover { background: var(--primary-dark); border-color: var(--ink); }
+    .primary-button:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+
+    .secondary-button {
+      min-height: 52px;
+      padding: 12px 16px;
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .secondary-button:hover,
+    .secondary-button:active { color: #fff; background: var(--ink); }
+
+    .text-button {
+      min-height: 48px;
+      padding: 10px 4px;
+      border: 0;
+      border-radius: 0;
+      color: var(--ink);
+      background: transparent;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 5px;
+    }
+
+    .text-button:hover { color: var(--primary); background: transparent; }
+    .danger-button { color: var(--danger); border-color: var(--danger); }
+
+    .bottom-actions {
+      z-index: 3;
+      gap: 10px;
+      padding: 14px 18px calc(17px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--ink);
+      background: rgba(255, 253, 249, .97);
+    }
+
+    .home-screen .content { overflow: hidden; padding-top: 25px; }
+    .home-screen .content::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 88px;
+      right: -72px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: var(--sun);
+    }
+
+    .home-screen .content > * { position: relative; z-index: 1; }
+    .home-screen .screen-title { max-width: 300px; font-size: 3.65rem; line-height: .82; }
+    .home-screen .screen-copy { max-width: 28ch; }
+
+    .home-primary {
+      position: relative;
+      min-height: 146px;
+      padding: 20px;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 3px;
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 5px 5px 0 var(--ink);
+    }
+
+    .home-primary::before {
+      content: "01";
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      color: var(--sun);
+      font-family: "Montserrat", sans-serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .home-primary strong {
+      max-width: 240px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 1.75rem;
+      line-height: .95;
+      letter-spacing: -.04em;
+    }
+
+    .home-primary span { max-width: 27ch; color: #f3dfe5; font-size: .78rem; line-height: 1.4; }
+    .home-primary:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--ink); }
+
+    .home-secondary {
+      min-height: 92px;
+      padding: 15px 16px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      color: var(--ink);
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .home-secondary:hover,
+    .home-secondary:active { color: #fff; background: var(--ink); }
+    .home-secondary strong { font-family: "Montserrat", sans-serif; font-size: 1.18rem; }
+    .home-secondary span { color: inherit; opacity: .7; }
+
+    .home-link {
+      min-height: 50px;
+      border: 0;
+      border-bottom: 2px solid var(--ink);
+      color: var(--ink);
+      background: transparent;
+      font-weight: 800;
+    }
+
+    .field-group label { color: var(--muted); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+
+    .text-input {
+      min-height: 52px;
+      border: 2px solid var(--ink);
+      border-radius: 2px;
+      color: var(--ink);
+      background: #fff;
+      font-weight: 700;
+    }
+
+    .text-input:focus { background: #fff9e6; }
+
+    .choice-grid { gap: 10px; }
+
+    .choice {
+      min-height: 78px;
+      padding: 11px 12px;
+      border: 2px solid var(--line);
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .choice[aria-pressed="true"],
+    .player-choice[aria-pressed="true"] {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: #f7d875;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .summary-list,
+    .score-list { border-top: 2px solid var(--ink); }
+
+    .summary-list li,
+    .score-list li { min-height: 55px; border-bottom: 1px solid var(--ink); }
+
+    .summary-list span,
+    .score-list span { color: var(--muted); font-size: .82rem; }
+
+    .info-block {
+      position: relative;
+      padding: 17px;
+      border: 2px solid var(--ink);
+      border-radius: 2px;
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--surface-2);
+    }
+
+    .info-block h3 {
+      margin-bottom: 6px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 1rem;
+      letter-spacing: -.02em;
+    }
+
+    .info-block p { color: #4f4c47; font-size: .9rem; line-height: 1.5; }
+
+    .tag-row { gap: 7px; }
+    .tag {
+      min-height: 30px;
+      border: 1px solid var(--ink);
+      border-radius: 2px;
+      color: var(--ink);
+      background: transparent;
+      font-size: .68rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .reason { border-top: 2px solid var(--ink); color: var(--muted); font-size: .84rem; line-height: 1.55; }
+
+    .proposal-screen .screen-title { font-size: 3.2rem; }
+    .proposal-screen .tag:first-child { color: #fff; background: var(--ink); }
+
+    .big-result {
+      position: relative;
+      margin: 12px 0 26px;
+      padding: 34px 18px;
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      background: var(--sun);
+      text-align: left;
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .big-result strong {
+      max-width: 285px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 2.8rem;
+      line-height: .86;
+      letter-spacing: -.055em;
+    }
+
+    .big-result span { color: #40391f; font-weight: 700; }
+
+    .progress-track { height: 11px; border: 2px solid var(--ink); border-radius: 0; }
+    .progress-track span { background: var(--primary); }
+
+    .player-choice {
+      min-height: 60px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: #fff;
+    }
+
+    .private-cover,
+    .reveal-zone {
+      min-height: 340px;
+      border: 3px solid var(--ink);
+      border-radius: 3px;
+    }
+
+    .private-cover {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-2);
+    }
+
+    .private-cover::before {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: var(--sun);
+      right: -80px;
+      bottom: -90px;
+    }
+
+    .private-cover > * { position: relative; z-index: 1; }
+
+    .reveal-zone {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .reveal-zone::before {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: var(--primary);
+      right: -100px;
+      top: -95px;
+    }
+
+    .reveal-zone > * { position: relative; z-index: 1; }
+    .reveal-zone strong { max-width: 21ch; }
+    .secret { max-width: 270px; font-family: "Montserrat", sans-serif; font-size: 1.65rem; line-height: 1.05; }
+    .hidden-secret { color: #aaa49b; }
+
+    .skeleton span { border-radius: 0; background: var(--surface-2); }
+    .skeleton span:first-child { background: #d4cec4; }
+
+    dialog {
+      border: 3px solid var(--ink);
+      border-radius: 3px;
+      color: var(--ink);
+      background: var(--surface);
+      box-shadow: 8px 8px 0 var(--sun);
+    }
+
+    dialog::backdrop { background: rgba(10, 10, 10, .78); }
+    .dialog-content h2 { font-family: "Montserrat", sans-serif; font-size: 2rem; line-height: .95; }
+
+    .prototype-note {
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      color: var(--muted);
+      background: var(--surface-2);
+    }
+
+    .error-screen .content { border-top: 12px solid var(--danger); }
+    .final-screen .big-result { color: #fff; background: var(--primary); }
+    .final-screen .big-result span { color: #f3dfe5; }
+    .physical-screen .info-block:first-of-type { border-left: 9px solid var(--blue); }
+
+    @media (max-width: 760px) {
+      .prototype-shell { grid-template-columns: minmax(0, 1fr); padding: 8px; gap: 12px; }
+      .review-panel { position: static; border-radius: 4px; box-shadow: none; }
+      .review-panel::before { padding: 10px 12px; }
+      .review-panel h1 { padding: 13px 12px 4px; font-size: 1.2rem; }
+      .route-list { display: flex; padding: 0 10px 10px; border: 0; }
+      .route-button { min-width: 142px; border: 1px solid #3d3a37; }
+      .route-button::after { display: none; }
+      .device { min-height: 728px; border-radius: 24px; box-shadow: none; }
+      #app { min-height: 698px; }
+      .screen { min-height: 632px; }
+    }
+
+    @media (max-width: 390px) {
+      .prototype-shell { padding: 0; }
+      .review-panel, .device { border-radius: 0; }
+      .review-panel { border-left: 0; border-right: 0; }
+      .device { border-left: 0; border-right: 0; }
+      .screen-title { font-size: 2.35rem; }
+      .home-screen .screen-title { font-size: 3.25rem; }
+      .choice-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <style>
+    /* Phase 2B refinement: playful dial system approved after reference review. */
+    :root {
+      --canvas: #0d0818;
+      --surface: #f7efd9;
+      --surface-2: #eadfc5;
+      --ink: #1b1230;
+      --muted: #675a78;
+      --line: #b9a8c7;
+      --primary: #ff4b3e;
+      --primary-dark: #d93a2e;
+      --on-primary: #ffffff;
+      --sun: #ffc53d;
+      --blue: #1f6f5c;
+      --success: #1f6f5c;
+      --danger: #b72f3c;
+      --focus: #ffd66b;
+    }
+
+    body,
+    body *,
+    body *::before,
+    body *::after {
+      font-family: "Montserrat", sans-serif !important;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 8% 12%, rgba(255, 75, 62, .16), transparent 25rem),
+        radial-gradient(circle at 88% 86%, rgba(255, 197, 61, .10), transparent 23rem),
+        var(--canvas);
+    }
+
+    .review-panel {
+      border-color: #3c3050;
+      color: var(--surface);
+      background: #160e27;
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, .28);
+    }
+
+    .review-panel::before { color: var(--ink); background: var(--sun); }
+    .review-panel h1 { color: var(--surface); }
+    .review-panel p, .legend { color: #b9aec9; }
+    .route-list { border-color: #3c3050; }
+
+    .route-button {
+      border-color: #3c3050;
+      color: #d8cee6;
+      background: #160e27;
+    }
+
+    .route-button:hover,
+    .route-button[aria-current="true"] {
+      border-color: #3c3050;
+      color: #fff;
+      background: var(--primary);
+    }
+
+    .device {
+      border-color: #07040c;
+      background: var(--surface);
+      box-shadow: 10px 10px 0 var(--primary), 17px 17px 0 rgba(0, 0, 0, .28);
+    }
+
+    .device-status { color: #d8cee6; background: var(--canvas); }
+    #app { background: var(--surface); }
+
+    .app-header {
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .app-header::after { right: 18px; left: 18px; background: rgba(27, 18, 48, .35); }
+    .app-header strong { font-size: .78rem; letter-spacing: .035em; }
+
+    .icon-button {
+      color: var(--ink);
+      text-decoration-color: var(--primary);
+      text-underline-offset: 4px;
+    }
+
+    .screen { color: var(--ink); background: var(--surface); }
+    .content { padding: 27px 21px 38px; }
+
+    .step-label,
+    .context-label {
+      gap: 8px;
+      color: var(--primary-dark);
+      font-size: .64rem;
+      letter-spacing: .13em;
+    }
+
+    .step-label::before,
+    .context-label::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sun);
+    }
+
+    .screen-title {
+      max-width: 330px;
+      font-size: 2.18rem;
+      font-weight: 900;
+      font-stretch: normal;
+      line-height: 1.02;
+      letter-spacing: -.05em;
+    }
+
+    .screen-copy { color: #5e526e; font-size: .91rem; }
+
+    .primary-button {
+      min-height: 56px;
+      border: 0;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 5px 0 var(--primary-dark);
+    }
+
+    .primary-button:hover { border: 0; background: #ff5c50; }
+    .primary-button:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--primary-dark); }
+
+    .secondary-button {
+      min-height: 52px;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .secondary-button:hover,
+    .secondary-button:active { color: var(--surface); background: var(--ink); }
+
+    .text-button {
+      color: var(--ink);
+      text-decoration-color: var(--primary);
+    }
+
+    .bottom-actions {
+      border-top-color: rgba(27, 18, 48, .25);
+      background: rgba(247, 239, 217, .98);
+    }
+
+    .choice {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .34);
+    }
+
+    .choice[aria-pressed="true"],
+    .player-choice[aria-pressed="true"] {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--sun);
+      box-shadow: 0 4px 0 var(--ink);
+    }
+
+    .text-input {
+      border-color: var(--ink);
+      border-radius: 12px;
+      color: var(--ink);
+      background: #fffaf0;
+    }
+
+    .info-block {
+      border: 1.5px solid var(--ink);
+      border-radius: 14px;
+      background: #fff8e7;
+      box-shadow: 0 4px 0 rgba(27, 18, 48, .14);
+    }
+
+    .info-block p { color: #5e526e; }
+    .summary-list, .score-list { border-top-color: var(--ink); }
+    .summary-list li, .score-list li { border-bottom-color: rgba(27, 18, 48, .35); }
+
+    .tag {
+      border-color: var(--ink);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .28);
+    }
+
+    .proposal-screen .tag:first-child { color: #fff; background: var(--ink); }
+    .proposal-screen .screen-title { font-size: 2.55rem; }
+    .reason { border-color: rgba(27, 18, 48, .35); }
+
+    .big-result {
+      border: 0;
+      border-radius: 18px;
+      background: var(--sun);
+      box-shadow: 0 7px 0 var(--ink);
+    }
+
+    .big-result strong { font-size: 2.45rem; line-height: .98; }
+    .progress-track { border-color: var(--ink); border-radius: 999px; }
+    .progress-track span { background: var(--primary); }
+
+    .player-choice {
+      border-color: var(--ink);
+      border-radius: 13px;
+      background: #fff8e7;
+    }
+
+    .private-cover,
+    .reveal-zone { border-radius: 20px; }
+    .private-cover { background: var(--surface-2); }
+    .private-cover::before { background: var(--sun); }
+    .reveal-zone { border-color: var(--canvas); background: var(--ink); }
+    .reveal-zone::before { background: var(--primary); }
+    .secret { font-size: 1.55rem; line-height: 1.08; }
+
+    dialog {
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: 0 8px 0 var(--sun);
+    }
+
+    .error-screen .content { border-top-color: var(--danger); }
+    .final-screen .big-result { color: #fff; background: var(--primary); }
+    .physical-screen .context-label { color: var(--blue); }
+    .physical-screen .info-block:first-of-type { border-left-color: var(--blue); }
+
+    /* Home: suggestive, tactile and intentionally less structured. */
+    .home-header {
+      min-height: 54px;
+      grid-template-columns: 52px 1fr 58px;
+      color: var(--surface);
+      background: var(--ink);
+    }
+
+    .home-header::after { display: none; }
+
+    .home-mini-mark {
+      width: 34px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--primary);
+      font-size: .72rem !important;
+      letter-spacing: -.04em !important;
+      transform: rotate(-4deg);
+    }
+
+    .language-toggle {
+      min-width: 48px;
+      min-height: 44px;
+      border: 1px solid rgba(247, 239, 217, .3);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--sun);
+      font-size: .67rem;
+      font-weight: 900;
+    }
+
+    .home-screen { color: var(--surface); background: var(--ink); }
+
+    .home-screen .content {
+      overflow: hidden;
+      padding: 4px 20px 18px;
+      background:
+        radial-gradient(circle at 10% 38%, rgba(255, 75, 62, .13), transparent 12rem),
+        var(--ink);
+    }
+
+    .home-screen .content::after { display: none; }
+    .home-screen .content > * { position: relative; z-index: 1; }
+
+    .home-intro { position: relative; z-index: 3; }
+
+    .home-wordmark {
+      position: relative;
+      width: max-content;
+      margin: 3px 0 7px;
+      padding: 8px 11px 7px;
+      color: #fff;
+      font-size: 2.72rem;
+      font-weight: 900;
+      line-height: .74;
+      letter-spacing: -.075em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+    }
+
+    .home-wordmark::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 1px -5px -1px 1px;
+      border: 2px solid #fff;
+      background: var(--primary);
+      transform: rotate(1.5deg);
+    }
+
+    .home-wordmark span { display: block; }
+
+    .home-kicker {
+      margin-bottom: 9px;
+      color: var(--sun);
+      font-size: .62rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .home-intro .screen-copy {
+      max-width: 34ch;
+      margin-bottom: 0;
+      color: #cfc4dd;
+      font-size: .77rem;
+      line-height: 1.48;
+    }
+
+    .party-orbit {
+      position: relative;
+      min-height: 250px;
+      display: grid;
+      place-items: center;
+      margin: -4px 0 1px;
+      isolation: isolate;
+    }
+
+    .party-wheel {
+      position: relative;
+      z-index: 3;
+      width: 190px;
+      height: 205px;
+      min-height: 190px;
+      padding: 14px 0 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .wheel-face {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      display: block;
+      margin: 0 auto;
+      border: 5px solid var(--surface);
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--primary) 0 60deg,
+        var(--surface) 60deg 120deg,
+        var(--sun) 120deg 180deg,
+        var(--surface) 180deg 240deg,
+        var(--blue) 240deg 300deg,
+        var(--surface) 300deg 360deg
+      );
+      box-shadow: 0 10px 26px rgba(0, 0, 0, .35);
+    }
+
+    .wheel-face i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 32px;
+      height: 32px;
+      border: 5px solid var(--surface);
+      border-radius: 50%;
+      background: var(--ink);
+      transform: translate(-50%, -50%);
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      z-index: 4;
+      top: 1px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-right: 11px solid transparent;
+      border-left: 11px solid transparent;
+      border-top: 19px solid var(--sun);
+      filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .4));
+      transform: translateX(-50%);
+    }
+
+    .wheel-status {
+      position: absolute;
+      z-index: 5;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      color: #d7cce5;
+      font-size: .63rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-align: center;
+    }
+
+    .orbit-card-stack {
+      position: absolute;
+      z-index: 2;
+      top: 47px;
+      left: 7px;
+      width: 66px;
+      height: 88px;
+      transform: rotate(-13deg);
+    }
+
+    .orbit-card-stack i {
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--ink);
+      border-radius: 9px;
+      background: var(--surface);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, .32);
+    }
+
+    .orbit-card-stack i::before {
+      content: "R";
+      position: absolute;
+      top: 8px;
+      left: 9px;
+      color: var(--ink);
+      font-size: .72rem;
+      font-weight: 900;
+    }
+
+    .orbit-card-stack i:nth-child(1) { background: var(--blue); transform: translate(-13px, 8px) rotate(-11deg); }
+    .orbit-card-stack i:nth-child(2) { background: var(--sun); transform: translate(-6px, 3px) rotate(-5deg); }
+    .orbit-card-stack i:nth-child(3) { background: var(--surface); }
+
+    .orbit-die {
+      position: absolute;
+      z-index: 4;
+      right: 8px;
+      bottom: 52px;
+      width: 62px;
+      height: 62px;
+      border: 3px solid var(--ink);
+      border-radius: 15px;
+      background: var(--primary);
+      box-shadow: 0 7px 14px rgba(0, 0, 0, .34);
+      transform: rotate(12deg);
+    }
+
+    .orbit-die i {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .orbit-die i:nth-child(1) { top: 11px; left: 11px; }
+    .orbit-die i:nth-child(2) { top: 11px; right: 11px; }
+    .orbit-die i:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .orbit-die i:nth-child(4) { right: 11px; bottom: 11px; }
+    .orbit-die i:nth-child(5) { bottom: 11px; left: 11px; }
+
+    .home-actions { display: grid; gap: 12px; }
+
+    .home-primary {
+      min-height: 58px;
+      padding: 11px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      border: 0;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 5px 0 var(--primary-dark);
+    }
+
+    .home-primary::before {
+      content: "↗";
+      position: static;
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      color: #fff;
+      font-size: 1.4rem;
+    }
+
+    .home-primary strong {
+      max-width: none;
+      font-size: .98rem;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+    }
+
+    .home-primary span { max-width: none; color: #ffe4e1; font-size: .61rem; }
+    .home-primary:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--primary-dark); }
+
+    .home-shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .home-secondary {
+      min-height: 52px;
+      padding: 9px 12px;
+      border: 1px solid #4a3c5f;
+      border-radius: 13px;
+      color: var(--surface);
+      background: #261a3b;
+    }
+
+    .home-secondary:hover,
+    .home-secondary:active { color: var(--ink); background: var(--sun); }
+    .home-secondary strong { font-size: .76rem; }
+    .home-secondary span { font-size: .56rem; }
+
+    .party-wheel.is-spinning .wheel-face { animation: wheel-spin 920ms cubic-bezier(.18, .72, .18, 1) both; }
+    .party-orbit.is-spinning .orbit-die { animation: die-toss 620ms cubic-bezier(.2, .8, .25, 1) both; }
+    .party-orbit.is-spinning .orbit-card-stack { animation: card-fan 540ms cubic-bezier(.2, .8, .25, 1) both; }
+
+    @keyframes wheel-spin {
+      from { transform: rotate(0); }
+      to { transform: rotate(780deg); }
+    }
+
+    @keyframes die-toss {
+      0% { transform: translate(0, 0) rotate(12deg); }
+      48% { transform: translate(-12px, -22px) rotate(104deg); }
+      100% { transform: translate(0, 0) rotate(192deg); }
+    }
+
+    @keyframes card-fan {
+      0%, 100% { transform: rotate(-13deg); }
+      48% { transform: translate(8px, -8px) rotate(-3deg); }
+    }
+
+    @media (max-width: 390px) {
+      .home-wordmark { font-size: 2.5rem; }
+      .party-orbit { min-height: 232px; }
+      .party-wheel { width: 178px; height: 190px; }
+      .wheel-face { width: 166px; height: 166px; }
+      .orbit-card-stack { left: 2px; transform: scale(.9) rotate(-13deg); }
+      .orbit-die { right: 2px; transform: scale(.9) rotate(12deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .party-wheel.is-spinning .wheel-face,
+      .party-orbit.is-spinning .orbit-die,
+      .party-orbit.is-spinning .orbit-card-stack { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="prototype-shell">
+    <aside class="review-panel" aria-label="Percorsi di verifica">
+      <h1>Ruckus Party high-fi</h1>
+      <p>Percorri la Party Night completa oppure apri direttamente uno stato critico da verificare.</p>
+      <div class="route-list">
+        <button class="route-button" data-route="home">1. Home</button>
+        <button class="route-button" data-route="players">2. Party setup</button>
+        <button class="route-button" data-route="proposal">3. Gioco Virtual</button>
+        <button class="route-button" data-route="private-pass">4. Private reveal</button>
+        <button class="route-button" data-route="result-entry">5. Risultato</button>
+        <button class="route-button" data-route="next-proposal">6. Secondo gioco</button>
+        <button class="route-button" data-route="physical">7. Gioco Physical</button>
+        <button class="route-button" data-route="no-match">8. Nessun gioco</button>
+        <button class="route-button" data-route="error">9. Errore recuperabile</button>
+        <button class="route-button" data-route="final">10. Finale</button>
+      </div>
+      <div class="legend">Prototipo locale con dati finti. Il percorso non invia dati e non usa alcun backend.</div>
+    </aside>
+
+    <section class="device" aria-label="Prototipo mobile Ruckus Party">
+      <div class="device-status"><span>9:41</span><span>Phase 2B / Hi-Fi</span></div>
+      <div id="app" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <dialog id="session-dialog" aria-labelledby="session-dialog-title">
+    <div class="dialog-content">
+      <h2 id="session-dialog-title">Party Night</h2>
+      <div class="stack">
+        <button class="secondary-button" data-dialog-action="standings">Standings</button>
+        <button class="secondary-button" data-dialog-action="history">Session history</button>
+        <button class="secondary-button" data-dialog-action="settings">Session settings</button>
+        <button class="secondary-button danger-button" data-dialog-action="finish">Finish session now</button>
+        <button class="text-button" data-dialog-action="close">Close menu</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-content">
+      <h2 id="confirm-title">Finish Party Night?</h2>
+      <p>Only confirmed results will be included in the final standings.</p>
+      <div class="stack">
+        <button class="primary-button" data-confirm-finish>Finish and see results</button>
+        <button class="secondary-button" data-confirm-cancel>Keep playing</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const STORAGE_KEY = "ruckus-phase-2b-prototype";
+    const defaultState = {
+      screen: "home",
+      previousScreen: null,
+      players: ["Alex", "Marta"],
+      duration: "Standard",
+      resources: ["Phone only"],
+      sensitive: [],
+      activeSession: false,
+      selectedWinner: null,
+      score: { Alex: 0, Marta: 0 },
+      currentGame: 1,
+      completedGames: 0,
+      privatePlayer: 0,
+      hasRevealed: false,
+      accessibleReveal: false,
+      secretVisible: false,
+      consequenceAccepted: false,
+      consequenceVersion: 1,
+      replacementCount: 0,
+      wheelSpin: 0,
+      language: "it"
+    };
+
+    let state = loadState();
+    const app = document.getElementById("app");
+    const sessionDialog = document.getElementById("session-dialog");
+    const confirmDialog = document.getElementById("confirm-dialog");
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return saved ? { ...defaultState, ...saved } : { ...defaultState };
+      } catch (error) {
+        console.error("Prototype state could not be loaded.", error);
+        return { ...defaultState };
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (error) {
+        console.error("Prototype state could not be saved.", error);
+      }
+    }
+
+    function go(screen) {
+      state.previousScreen = state.screen;
+      state.screen = screen;
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function header(title, options = {}) {
+      if (options.home) {
+        return `<header class="app-header home-header">
+          <strong class="home-mini-mark">RP</strong>
+          <div class="header-spacer" aria-hidden="true"></div>
+          <button class="language-toggle" data-action="language" aria-label="Change language">${state.language === "it" ? "ITA" : "EN"}</button>
+        </header>`;
+      }
+      const back = options.back
+        ? `<button class="icon-button" data-action="back" aria-label="Go back">Back</button>`
+        : `<div class="header-spacer" aria-hidden="true"></div>`;
+      const menu = options.menu
+        ? `<button class="icon-button" data-action="menu" aria-label="Open session menu">Menu</button>`
+        : `<div class="header-spacer" aria-hidden="true"></div>`;
+      return `<header class="app-header">${back}<strong>${title}</strong>${menu}</header>`;
+    }
+
+    function screen(content, actions = "", classes = "") {
+      return `<section class="screen ${classes}">${content}${actions ? `<footer class="bottom-actions">${actions}</footer>` : ""}</section>`;
+    }
+
+    function primary(label, action, disabled = false) {
+      return `<button class="primary-button" data-action="${action}" ${disabled ? "disabled" : ""}>${label}</button>`;
+    }
+
+    function secondary(label, action, extra = "") {
+      return `<button class="secondary-button ${extra}" data-action="${action}">${label}</button>`;
+    }
+
+    function textButton(label, action) {
+      return `<button class="text-button" data-action="${action}">${label}</button>`;
+    }
+
+    function contentBlock(inner, centered = false) {
+      return `<div class="content ${centered ? "centered" : ""}">${inner}</div>`;
+    }
+
+    function renderHome() {
+      const resume = state.activeSession
+        ? `<button class="home-primary" data-action="resume"><strong>Resume Party</strong><span>2 players - Game ${Math.max(state.currentGame, 1)} in progress</span></button>`
+        : `<button class="home-primary" data-action="start-party"><strong>Start Party</strong><span>Multiple games, standings and a proper finale</span></button>`;
+      return header("Ruckus Party", { home: true }) + screen(contentBlock(`
+        <div class="home-intro">
+          <h1 class="home-wordmark"><span>Ruckus</span><span>Party</span></h1>
+          <div class="home-kicker">The next move is yours</div>
+          <p class="screen-copy">Gather the group, pass one phone around and let Ruckus keep the rhythm between games.</p>
+        </div>
+        <div class="party-orbit">
+          <div class="orbit-card-stack" aria-hidden="true"><i></i><i></i><i></i></div>
+          <button class="party-wheel" type="button" data-action="spin-wheel" aria-label="Spin the party wheel">
+            <span class="wheel-pointer" aria-hidden="true"></span>
+            <span class="wheel-face" aria-hidden="true"><i></i></span>
+          </button>
+          <div class="orbit-die" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="wheel-status" data-wheel-status aria-live="polite">Tap the wheel for a spark</div>
+        </div>
+        <div class="home-actions">
+          ${resume}
+          <div class="home-shortcuts">
+            <button class="home-secondary" data-action="quick-play"><strong>Quick Play</strong><span>One game</span></button>
+            <button class="home-secondary" data-action="games"><strong>Games</strong><span>Browse all</span></button>
+          </div>
+        </div>
+      `), "", "home-screen");
+    }
+
+    function renderPlayers() {
+      const validPlayers = state.players.filter(name => name.trim()).length;
+      const fields = state.players.map((name, index) => `
+        <div class="field-group">
+          <label for="player-${index}">Player ${index + 1}</label>
+          <input class="text-input" id="player-${index}" data-player-index="${index}" value="${escapeHtml(name)}" autocomplete="off" aria-invalid="${name.trim() ? "false" : "true"}">
+          ${name.trim() ? "" : `<p class="error-copy">Enter a name to keep this player.</p>`}
+        </div>
+      `).join("");
+      return header("Start Party", { back: true }) + screen(contentBlock(`
+        <div class="step-label">STEP 1 OF 3</div>
+        <h1 class="screen-title">Who's playing?</h1>
+        <p class="screen-copy">Add 2 to 6 people. These names last only for this Party Night.</p>
+        <div class="stack">${fields}</div>
+        ${state.players.length < 6 ? textButton("Add another player", "add-player") : ""}
+      `), primary("Continue", "players-next", validPlayers < 2));
+    }
+
+    function renderSetup() {
+      const durations = [
+        ["Short", "Test copy: 20-30 min"],
+        ["Standard", "Test copy: 45-60 min"],
+        ["Long", "Test copy: 90+ min"],
+        ["Endless", "No time limit"]
+      ];
+      const durationButtons = durations.map(([name, detail]) => `
+        <button class="choice" data-duration="${name}" aria-pressed="${state.duration === name}"><strong>${name}</strong><small>${detail}</small></button>
+      `).join("");
+      const resourceNames = ["Phone only", "French deck", "Italian deck", "Paper and pens"];
+      const resourceButtons = resourceNames.map(name => `
+        <button class="choice" data-resource="${name}" aria-pressed="${state.resources.includes(name)}"><strong>${name}</strong><small>${name === "Phone only" ? "Fastest start" : "Optional material"}</small></button>
+      `).join("");
+      return header("Start Party", { back: true }) + screen(contentBlock(`
+        <div class="step-label">STEP 2 OF 3</div>
+        <h1 class="screen-title">Shape the night.</h1>
+        <p class="screen-copy">Defaults are selected. Change only what matters.</p>
+        <div class="stack-lg">
+          <section><h2>Duration</h2><div class="choice-grid">${durationButtons}</div></section>
+          <section><h2>What's available?</h2><div class="choice-grid">${resourceButtons}</div></section>
+        </div>
+        <p class="prototype-note">Minute ranges are hypotheses for testing comprehension, not approved product values.</p>
+      `), primary("Review Party", "setup-next", state.resources.length === 0));
+    }
+
+    function renderSummary() {
+      const names = state.players.filter(name => name.trim()).join(", ");
+      return header("Start Party", { back: true }) + screen(contentBlock(`
+        <div class="step-label">STEP 3 OF 3</div>
+        <h1 class="screen-title">Ready to start.</h1>
+        <p class="screen-copy">Check the choices that shape every compatible recommendation.</p>
+        <ul class="summary-list">
+          <li><span>Players</span><strong>${escapeHtml(names)}</strong></li>
+          <li><span>Duration</span><strong>${state.duration}</strong></li>
+          <li><span>Materials</span><strong>${escapeHtml(state.resources.join(", "))}</strong></li>
+          <li><span>Content</span><strong>${state.sensitive.length ? `General + ${escapeHtml(state.sensitive.join(", "))}` : "General only"}</strong></li>
+          <li><span>Consequences</span><strong>Playful</strong></li>
+          <li><span>Selection</span><strong>Varied</strong></li>
+        </ul>
+        ${textButton("Customize content and intensity", "customize")}
+      `), primary("Start Party", "begin-session") + secondary("Back to setup", "summary-back"));
+    }
+
+    function renderCustomize() {
+      const options = ["Romantic", "Alcohol", "Bold"];
+      const buttons = options.map(name => `
+        <button class="choice" data-sensitive="${name}" aria-pressed="${state.sensitive.includes(name)}"><strong>${name}</strong><small>Off by default - explicit opt-in</small></button>
+      `).join("");
+      return header("Customize", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Optional filters.</h1>
+        <p class="screen-copy">General content always stays available. Sensitive categories never turn on by themselves.</p>
+        <div class="info-block"><h3>General content</h3><p>Active for this Party Night.</p></div>
+        <div class="stack" style="margin-top:16px">${buttons}</div>
+      `), primary("Save customization", "save-customize"));
+    }
+
+    function renderProposal(next = false) {
+      const title = next ? "Mirror Moves" : (state.replacementCount % 2 ? "Rapid Categories" : "Secret Signals");
+      const description = next ? "Copy the leader's movements, freeze on the signal and catch the first mistake." : (state.replacementCount % 2 ? "Take turns naming items before the timer catches you." : "Memorize a secret signal, then spot your partner's bluff.");
+      const reason = next ? "A physical round changes the rhythm after a phone-led bluff game and needs no extra materials." : "Works with 2 players, uses only this phone and fits your Standard session.";
+      const tags = next
+        ? `<span class="tag">5-8 min</span><span class="tag">No materials</span><span class="tag">Physical</span>`
+        : `<span class="tag">8-12 min</span><span class="tag">Phone only</span><span class="tag">Virtual</span>`;
+      return header(next ? "Next game" : "Game 1", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">${next ? "Ready when you are" : "Compatible pick"}</div>
+        <h1 class="screen-title">${title}</h1>
+        <p class="screen-copy">${description}</p>
+        <div class="tag-row">${tags}</div>
+        ${state.consequenceAccepted && next ? `<div class="info-block" style="margin-top:16px"><h3>Active handicap</h3><p>Alex must answer using only three words. Expires after this game.</p></div>` : ""}
+        <p class="reason"><strong>Why this fits:</strong> ${reason}</p>
+      `), primary(next ? "Play next game" : "Play", next ? "play-next" : "prepare-virtual") + secondary("Replace", next ? "replace-next" : "replace") + textButton("Choose game", "games"), "proposal-screen");
+    }
+
+    function renderVirtualPrep() {
+      return header("Secret Signals", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Full Digital + private roles</div>
+        <h1 class="screen-title">Pass, reveal, remember.</h1>
+        <p class="screen-copy">The phone gives each player one private signal, then guides the shared round.</p>
+        <div class="stack">
+          <div class="info-block"><h3>Goal</h3><p>Spot the false signal before your opponent spots yours.</p></div>
+          <div class="info-block"><h3>Before you start</h3><p>Sit where players cannot read the screen while the phone is passed.</p></div>
+          <div class="info-block"><h3>End condition</h3><p>The first correct accusation ends the round.</p></div>
+        </div>
+      `), primary("Start private setup", "start-private") + secondary("Replace game", "replace"), "virtual-screen");
+    }
+
+    function renderPhysical() {
+      return header("Mirror Moves", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Physical game</div>
+        <h1 class="screen-title">Follow. Freeze. Fool them.</h1>
+        <p class="screen-copy">One player leads the movement. Everyone else mirrors them until the phone calls freeze.</p>
+        <div class="stack">
+          <div class="info-block"><h3>Materials</h3><p>No extra materials. Clear enough space for everyone to move safely.</p></div>
+          <div class="info-block"><h3>Essential rules</h3><p>The leader starts a repeating movement. Copy it exactly. On every freeze signal, the first person still moving loses the round.</p></div>
+          <div class="info-block"><h3>Phone role</h3><p>Assisted timer and freeze signals. The actual game happens in the room.</p></div>
+        </div>
+      `), primary("Start physical game", "physical-active") + textButton("Replace game", "replace-next"), "physical-screen");
+    }
+
+    function renderPrivatePass() {
+      const player = state.players[state.privatePlayer] || `Player ${state.privatePlayer + 1}`;
+      return header("Private setup", { menu: true }) + screen(contentBlock(`
+        <div class="private-cover">
+          <div class="context-label">Content hidden</div>
+          <strong>Pass the phone to ${escapeHtml(player)}.</strong>
+          <p>No secret is visible on this screen.</p>
+        </div>
+      `, true), primary(`I am ${escapeHtml(player)}`, "private-ready") + textButton("Wrong person has the phone", "private-interrupted"));
+    }
+
+    function renderPrivateReady() {
+      const player = state.players[state.privatePlayer] || `Player ${state.privatePlayer + 1}`;
+      const revealInstruction = state.accessibleReveal ? "Tap to show or hide your secret." : "Hold the area to reveal. Release to hide.";
+      const secretText = state.secretVisible ? "Your signal is: touch your left ear." : "Secret hidden";
+      return header(`${player}'s secret`, { menu: true }) + screen(contentBlock(`
+        <div class="reveal-zone" data-reveal-zone role="button" tabindex="0" aria-label="${revealInstruction}">
+          <strong>${revealInstruction}</strong>
+          <div class="secret ${state.secretVisible ? "" : "hidden-secret"}">${secretText}</div>
+        </div>
+        ${textButton(state.accessibleReveal ? "Use hold instead" : "Use accessible tap instead", "toggle-reveal-mode")}
+      `), primary("I memorized it", "memorized", !state.hasRevealed));
+    }
+
+    function renderGroupReady() {
+      return header("Secret Signals", { menu: true }) + screen(contentBlock(`
+        <div class="big-result"><strong>Secrets are hidden.</strong><span>The screen is safe for the group.</span></div>
+        <p class="screen-copy">Place the phone where everyone can see it. The round begins after Start.</p>
+      `, true), primary("Start round", "active-game"));
+    }
+
+    function renderActiveGame(physical = false) {
+      return header(physical ? "Mirror Moves" : "Secret Signals", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Game in progress</div>
+        <h1 class="screen-title">${physical ? "Eyes up. Follow the leader." : "Watch the signals."}</h1>
+        <p class="screen-copy">${physical ? "The phone handles the freeze signals. Tap Finish game when only one player remains." : "Tap Finish game after the first correct accusation."}</p>
+        <div class="info-block"><h3>Session status</h3><p>Game ${state.currentGame} - Standard Party Night - 2 players</p></div>
+      `, true), primary("Finish game", "finish-game") + secondary("Cancel game", "cancel-game", "danger-button"), physical ? "physical-active-screen" : "virtual-active-screen");
+    }
+
+    function renderCancelled() {
+      return header("Game cancelled", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">No result recorded</div>
+        <h1 class="screen-title">This game will not affect the standings.</h1>
+        <p class="screen-copy">Choose what should happen next. Ruckus Party will not invent a winner.</p>
+      `, true), primary("Retry game", "active-game") + secondary("Replace game", "replace") + textButton("Return to Party Night", "proposal"));
+    }
+
+    function renderResultEntry(correction = false) {
+      const choices = state.players.filter(name => name.trim()).map(name => `
+        <button class="player-choice" data-winner="${escapeHtml(name)}" aria-pressed="${state.selectedWinner === name}"><span>${escapeHtml(name)}</span><strong>${state.selectedWinner === name ? "Selected" : "Select"}</strong></button>
+      `).join("");
+      return header(correction ? "Correct result" : "Game result", { back: !correction, menu: true }) + screen(contentBlock(`
+        <div class="context-label">${correction ? "Session history" : "Confirm before scoring"}</div>
+        <h1 class="screen-title">Who won?</h1>
+        <p class="screen-copy">Choose one winner for this prototype round. You can change this before confirming.</p>
+        <div class="stack">${choices}</div>
+      `), primary(correction ? "Save correction" : "Confirm result", correction ? "save-correction" : "confirm-result", !state.selectedWinner) + secondary("Cancel", correction ? "history" : "active-game"));
+    }
+
+    function renderResultReveal() {
+      const winner = state.selectedWinner || state.players[0];
+      return header("Result", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Game ${state.currentGame} complete</div>
+        <div class="big-result"><strong>${escapeHtml(winner)} wins.</strong><span>+1 Party Night point</span></div>
+        <p class="screen-copy">The result is now in session history and the standings have been updated.</p>
+      `, true), primary("See standings", "standings"), "result-screen");
+    }
+
+    function renderStandings() {
+      const names = state.players.filter(name => name.trim()).sort((a, b) => (state.score[b] || 0) - (state.score[a] || 0));
+      const rows = names.map((name, index) => `<li><span>${index + 1}. ${escapeHtml(name)}</span><strong>${state.score[name] || 0} pt</strong></li>`).join("");
+      const progress = state.completedGames >= 2 ? 100 : 46;
+      const nextAction = state.completedGames >= 2
+        ? primary("See the finale", "final")
+        : primary("Continue", "consequence");
+      return header("Standings", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Party Night progress</div>
+        <h1 class="screen-title">The night is taking shape.</h1>
+        <ul class="score-list">${rows}</ul>
+        <div style="margin-top:24px"><div class="progress-track" aria-label="Indicative session progress"><span style="width:${progress}%"></span></div><p class="prototype-note">Progress is indicative. It does not promise a fixed number of games.</p></div>
+      `), nextAction, "standings-screen");
+    }
+
+    function consequenceText() {
+      return state.consequenceVersion % 2
+        ? "Alex must narrate the next minute like a sports commentator."
+        : "Alex must answer the next question using only three words.";
+    }
+
+    function renderConsequence() {
+      return header("Consequence", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Playful - immediate</div>
+        <h1 class="screen-title">One quick challenge.</h1>
+        <div class="info-block"><h3>For Alex</h3><p>${consequenceText()}</p></div>
+        <p class="reason">This proposal uses only General content and is compatible with your current settings.</p>
+      `, true), primary("Accept", "accept-consequence") + secondary("Replace", "replace-consequence") + textButton("Skip", "skip-consequence"));
+    }
+
+    function renderNoMatch() {
+      return header("No compatible game", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Nothing changed automatically</div>
+        <h1 class="screen-title">Your current filters block every game.</h1>
+        <p class="screen-copy">The combination “French deck only” and “No card games” leaves no compatible option for 2 players.</p>
+        <div class="info-block"><h3>Fastest fix</h3><p>Allow phone-only games while keeping every content filter unchanged.</p></div>
+      `, true), primary("Allow phone-only games", "fix-no-match") + secondary("Edit filters", "customize") + textButton("Finish session now", "open-finish"));
+    }
+
+    function renderPrivateInterrupted() {
+      const player = state.players[state.privatePlayer] || `Player ${state.privatePlayer + 1}`;
+      return header("Private reveal paused", { menu: true }) + screen(contentBlock(`
+        <div class="private-cover">
+          <div class="context-label">Secret hidden</div>
+          <strong>No private content is visible.</strong>
+          <p>Return the phone to ${escapeHtml(player)} before continuing.</p>
+        </div>
+      `, true), primary("Resume from covered screen", "private-pass") + secondary("Restart all private reveals", "restart-private"));
+    }
+
+    function renderQuickPlay() {
+      return header("Quick Play", { back: true }) + screen(contentBlock(`
+        <div class="context-label">One game only</div>
+        <h1 class="screen-title">Play without starting a Party Night.</h1>
+        <p class="screen-copy">No shared standings, session progress or Party Night finale.</p>
+        <div class="stack-lg">
+          <button class="home-primary" data-action="quick-surprise"><strong>Surprise me</strong><span>Get one compatible suggestion</span></button>
+          <button class="home-secondary" data-action="games"><strong>Choose game</strong><span>Browse requirements before playing</span></button>
+        </div>
+      `));
+    }
+
+    function renderGames() {
+      const games = [
+        ["Secret Signals", "2-6 players - Phone only - Private reveal"],
+        ["Rapid Categories", "2-6 players - Phone only - Social"],
+        ["Card Tower", "2-4 players - French deck - Physical"]
+      ];
+      return header("Games", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Find one game.</h1>
+        <p class="screen-copy">Catalog entries show requirements before opening Quick Play.</p>
+        <div class="stack">${games.map(([name, meta]) => `<button class="home-secondary" data-action="game-detail" data-game="${name}"><strong>${name}</strong><span>${meta}</span></button>`).join("")}</div>
+      `));
+    }
+
+    function renderGameDetail() {
+      return header("Game detail", { back: true }) + screen(contentBlock(`
+        <div class="context-label">Catalog entry</div>
+        <h1 class="screen-title">Secret Signals</h1>
+        <p class="screen-copy">A short bluff game with one private signal per player.</p>
+        <ul class="summary-list">
+          <li><span>Players</span><strong>2-6</strong></li>
+          <li><span>Duration</span><strong>8-12 min</strong></li>
+          <li><span>Materials</span><strong>Phone only</strong></li>
+          <li><span>Digital support</span><strong>Full Digital</strong></li>
+        </ul>
+      `), primary("Play in Quick Play", "quick-surprise") + secondary("Back to Games", "games"));
+    }
+
+    function renderHistory() {
+      return header("Session history", { back: true, menu: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Confirmed games.</h1>
+        <div class="info-block"><h3>Secret Signals</h3><p>Winner: ${escapeHtml(state.selectedWinner || "Alex")} - +1 point</p>${textButton("Correct result", "correct-result")}</div>
+      `));
+    }
+
+    function renderSettings() {
+      return header("Session settings", { back: true, menu: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Current choices.</h1>
+        <p class="screen-copy">Changing these settings affects future recommendations, never confirmed results.</p>
+        <ul class="summary-list">
+          <li><span>Duration</span><strong>${state.duration}</strong></li>
+          <li><span>Materials</span><strong>${escapeHtml(state.resources.join(", "))}</strong></li>
+          <li><span>Content</span><strong>General only</strong></li>
+          <li><span>Consequences</span><strong>Playful</strong></li>
+          <li><span>Language</span><strong>${state.language === "it" ? "Italian" : "English"}</strong></li>
+        </ul>
+        ${textButton("Change language", "language")}
+      `), primary("Save settings", "proposal"));
+    }
+
+    function renderLanguage() {
+      return header("Language", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Choose the game language.</h1>
+        <p class="screen-copy">Italian is the default. You can change this choice at any time.</p>
+        <div class="stack">
+          <button class="choice" data-action="set-language-it" aria-pressed="${state.language === "it"}"><strong>Italian</strong><small>Default language</small></button>
+          <button class="choice" data-action="set-language-en" aria-pressed="${state.language === "en"}"><strong>English</strong><small>Full interface and game instructions</small></button>
+        </div>
+      `), primary("Keep this language", "language-back"));
+    }
+
+    function renderLoading() {
+      return header("Finding a game", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Checking compatibility</div>
+        <div class="skeleton" aria-label="Loading compatible game"><span></span><span></span><span></span></div>
+        <p class="prototype-note">Loading preserves space and does not show an incompatible fallback.</p>
+      `, true), secondary("Show result", "proposal"));
+    }
+
+    function renderError() {
+      return header("Session unavailable", { back: true }) + screen(contentBlock(`
+        <div class="context-label">Session data could not load</div>
+        <h1 class="screen-title">Your Party Night is still stored locally.</h1>
+        <p class="screen-copy">Retry before starting a new session. No result or setting has been changed.</p>
+      `, true), primary("Retry", "resume") + secondary("Return Home", "home"), "error-screen");
+    }
+
+    function renderFinal() {
+      const names = state.players.filter(name => name.trim());
+      const ranking = [...names].sort((a, b) => (state.score[b] || 0) - (state.score[a] || 0));
+      const bestScore = Math.max(...ranking.map(name => state.score[name] || 0), 0);
+      const leaders = ranking.filter(name => (state.score[name] || 0) === bestScore);
+      const gamesDone = Math.max(state.completedGames, 2);
+      const leaderNames = state.language === "it" ? leaders.join(" e ") : leaders.join(" and ");
+      const champion = state.language === "it"
+        ? (leaders.length > 1 ? `${leaderNames} sono campioni.` : `${leaderNames} è il campione.`)
+        : (leaders.length > 1 ? `${leaderNames} are champions.` : `${leaderNames} is the champion.`);
+      const resultMeta = state.language === "it"
+        ? (leaders.length > 1 ? `${bestScore} vittoria ciascuno in ${gamesDone} giochi completati` : `${bestScore} vittorie in ${gamesDone} giochi completati`)
+        : (leaders.length > 1 ? `${bestScore} win each across ${gamesDone} completed games` : `${bestScore} wins across ${gamesDone} completed games`);
+      const rows = ranking.map((name, index) => `<li><span>${index + 1}. ${escapeHtml(name)}</span><strong>${state.score[name] || 0} pt</strong></li>`).join("");
+      const recap = state.language === "it"
+        ? "Segnali segreti e Specchio umano completati. Nessun gioco annullato ha modificato la classifica."
+        : "Secret Signals and Mirror Moves completed. No cancelled game affected the standings.";
+      return header("Party Night complete") + screen(contentBlock(`
+        <div class="context-label">Final standings</div>
+        <div class="big-result"><strong>${escapeHtml(champion)}</strong><span>${escapeHtml(resultMeta)}</span></div>
+        <ul class="score-list">${rows}</ul>
+        <div class="info-block" style="margin-top:24px"><h3>Night recap</h3><p>${escapeHtml(recap)}</p></div>
+      `), primary("Start another Party Night", "new-party") + secondary("Return Home", "end-home"), "final-screen");
+    }
+
+    const ITALIAN = {
+      "Back": "Indietro",
+      "Menu": "Menu",
+      "Go back": "Torna indietro",
+      "Open session menu": "Apri il menu della sessione",
+      "Change language": "Cambia lingua",
+      "Start Party": "Avvia Party Night",
+      "The next move is yours": "La prossima mossa è vostra",
+      "Gather the group, pass one phone around and let Ruckus keep the rhythm between games.": "Radunate il gruppo, passatevi un solo telefono e lasciate che Ruckus tenga il ritmo tra un gioco e l'altro.",
+      "Spin the party wheel": "Gira la ruota della festa",
+      "Tap the wheel for a spark": "Tocca la ruota per accendere la serata",
+      "Games": "Giochi",
+      "Browse all": "Esplora tutti",
+      "One game": "Una partita",
+      "One room. One phone. Everyone plays.": "Una stanza. Un telefono. Giocano tutti.",
+      "The night starts here.": "La serata parte qui.",
+      "Choose who is playing. Ruckus Party keeps one game flowing into the next.": "Scegli chi gioca. Ruckus Party tiene il ritmo, un gioco dopo l'altro.",
+      "Start the fun, keep the night moving.": "Inizia a giocare, al ritmo della serata pensiamo noi.",
+      "Pick the kind of play you want. No account or tutorial required.": "Scegli come vuoi giocare. Non servono account o tutorial.",
+      "Multiple games, standings and a proper finale": "Più giochi, classifica e un vero finale",
+      "Quick Play": "Partita veloce",
+      "One game, no Party Night standings": "Una partita, senza classifica Party Night",
+      "Browse all games": "Esplora tutti i giochi",
+      "Resume Party": "Riprendi Party Night",
+      "2 players - Standard session": "2 giocatori - sessione Standard",
+      "Language: Italian": "Lingua: Italiano",
+      "Language: English": "Lingua: Inglese",
+      "Who's playing?": "Chi gioca?",
+      "Add 2 to 6 people. These names last only for this Party Night.": "Aggiungi da 2 a 6 persone. I nomi valgono solo per questa Party Night.",
+      "Add another player": "Aggiungi un altro giocatore",
+      "Enter a name to keep this player.": "Inserisci un nome per mantenere questo giocatore.",
+      "Continue": "Continua",
+      "Shape the night.": "Prepara la serata.",
+      "Defaults are selected. Change only what matters.": "I valori consigliati sono già selezionati. Cambia solo ciò che conta.",
+      "Duration": "Durata",
+      "Short": "Breve",
+      "Standard": "Standard",
+      "Long": "Lunga",
+      "Endless": "Senza fine",
+      "Test copy: 20-30 min": "Test copy: 20-30 min",
+      "Test copy: 45-60 min": "Test copy: 45-60 min",
+      "Test copy: 90+ min": "Test copy: 90+ min",
+      "No time limit": "Nessun limite di tempo",
+      "What's available?": "Cosa avete a disposizione?",
+      "Phone only": "Solo telefono",
+      "French deck": "Mazzo francese",
+      "Italian deck": "Mazzo italiano",
+      "Paper and pens": "Carta e penne",
+      "Fastest start": "Avvio più rapido",
+      "Optional material": "Materiale opzionale",
+      "Minute ranges are hypotheses for testing comprehension, not approved product values.": "Gli intervalli in minuti servono a testare la comprensione e non sono ancora valori di prodotto approvati.",
+      "Review Party": "Controlla Party Night",
+      "Ready to start.": "Pronti a iniziare.",
+      "Check the choices that shape every compatible recommendation.": "Controlla le scelte che determinano ogni proposta compatibile.",
+      "Players": "Giocatori",
+      "Materials": "Materiali",
+      "Content": "Contenuti",
+      "General only": "Solo generali",
+      "Consequences": "Conseguenze",
+      "Playful": "Giocose",
+      "Selection": "Selezione",
+      "Varied": "Varia",
+      "Customize content and intensity": "Personalizza contenuti e intensità",
+      "Back to setup": "Torna alla configurazione",
+      "Customize": "Personalizza",
+      "Optional filters.": "Filtri opzionali.",
+      "General content always stays available. Sensitive categories never turn on by themselves.": "I contenuti generali restano sempre disponibili. Le categorie sensibili non si attivano mai da sole.",
+      "General content": "Contenuti generali",
+      "Active for this Party Night.": "Attivi per questa Party Night.",
+      "Romantic": "Romantici",
+      "Alcohol": "Alcolici",
+      "Bold": "Audaci",
+      "Off by default - explicit opt-in": "Disattivati - richiedono consenso esplicito",
+      "Save customization": "Salva personalizzazione",
+      "Game 1": "Gioco 1",
+      "Next game": "Prossimo gioco",
+      "Compatible pick": "Proposta compatibile",
+      "Ready when you are": "Pronti quando volete",
+      "Secret Signals": "Segnali segreti",
+      "Mirror Moves": "Mosse a specchio",
+      "Rapid Categories": "Categorie lampo",
+      "Card Tower": "Torre di carte",
+      "Memorize a secret signal, then spot your partner's bluff.": "Memorizza un segnale segreto e scopri il bluff dell'altra persona.",
+      "Copy the leader's movements, freeze on the signal and catch the first mistake.": "Copia i movimenti di chi guida, fermati al segnale e scopri il primo errore.",
+      "Copy the leader without getting caught.": "Imita chi guida senza farti scoprire.",
+      "Take turns naming items before the timer catches you.": "Nominate a turno elementi della categoria prima che scada il tempo.",
+      "8-12 min": "8-12 min",
+      "5-8 min": "5-8 min",
+      "No materials": "Nessun materiale",
+      "Virtual": "Virtuale",
+      "Physical": "Fisico",
+      "Social": "Sociale",
+      "Active handicap": "Handicap attivo",
+      "Alex must answer using only three words. Expires after this game.": "Alex deve rispondere usando solo tre parole. Scade dopo questo gioco.",
+      "Why this fits:": "Perché è adatto:",
+      "Works with 2 players, uses only this phone and fits your Standard session.": "Funziona con 2 giocatori, usa solo questo telefono ed è adatto alla sessione Standard.",
+      "A faster social game changes the pace after Secret Signals.": "Un gioco sociale più rapido cambia ritmo dopo Segnali segreti.",
+      "A physical round changes the rhythm after a phone-led bluff game and needs no extra materials.": "Un round fisico cambia ritmo dopo un gioco di bluff guidato dal telefono e non richiede materiali aggiuntivi.",
+      "Play": "Gioca",
+      "Play next game": "Gioca il prossimo",
+      "Replace": "Cambia",
+      "Choose game": "Scegli gioco",
+      "Full Digital + private roles": "Tutto sul telefono + ruoli segreti",
+      "Pass, reveal, remember.": "Passa, rivela, memorizza.",
+      "The phone gives each player one private signal, then guides the shared round.": "Il telefono assegna un segnale privato a ogni giocatore, poi guida il round condiviso.",
+      "Goal": "Obiettivo",
+      "Spot the false signal before your opponent spots yours.": "Scopri il segnale falso prima che l'avversario scopra il tuo.",
+      "Before you start": "Prima di iniziare",
+      "Sit where players cannot read the screen while the phone is passed.": "Sedetevi in modo che gli altri non possano leggere lo schermo durante il passaggio del telefono.",
+      "End condition": "Condizione di fine",
+      "The first correct accusation ends the round.": "La prima accusa corretta conclude il round.",
+      "Start private setup": "Avvia assegnazione segreta",
+      "Replace game": "Cambia gioco",
+      "Physical game": "Gioco fisico",
+      "Follow. Freeze. Fool them.": "Segui. Fermati. Ingannali.",
+      "One player leads the movement. Everyone else mirrors them until the phone calls freeze.": "Una persona guida il movimento. Gli altri la imitano finché il telefono non dà il segnale di stop.",
+      "No extra materials. Clear enough space for everyone to move safely.": "Non servono materiali. Lasciate abbastanza spazio perché tutti possano muoversi in sicurezza.",
+      "The leader starts a repeating movement. Copy it exactly. On every freeze signal, the first person still moving loses the round.": "Chi guida inizia un movimento ripetuto. Copiatelo esattamente. A ogni segnale di stop, la prima persona ancora in movimento perde il round.",
+      "Phone role": "Ruolo del telefono",
+      "Assisted timer and freeze signals. The actual game happens in the room.": "Timer assistito e segnali di stop. Il gioco vero avviene nella stanza.",
+      "Build under pressure.": "Costruite sotto pressione.",
+      "Players build a shared card tower while following one changing restriction.": "I giocatori costruiscono insieme una torre di carte rispettando un vincolo che cambia.",
+      "1 French deck. Available in this session.": "1 mazzo francese. Disponibile in questa sessione.",
+      "1 French deck. Not listed in this session.": "1 mazzo francese. Non indicato tra i materiali della sessione.",
+      "Essential rules": "Regole essenziali",
+      "On your turn, place one card using one hand. If the tower falls, the previous player wins. Stop after ten successful cards if the tower remains standing.": "Al tuo turno, posiziona una carta usando una mano. Se la torre cade, vince il giocatore precedente. Se resta in piedi, fermatevi dopo dieci carte posizionate.",
+      "Start physical game": "Avvia gioco fisico",
+      "Use virtual alternative": "Usa la variante virtuale",
+      "Edit materials": "Modifica materiali",
+      "Private setup": "Assegnazione segreta",
+      "Content hidden": "Contenuto nascosto",
+      "No secret is visible on this screen.": "Nessun segreto è visibile in questa schermata.",
+      "Wrong person has the phone": "Il telefono è alla persona sbagliata",
+      "Hold the area to reveal. Release to hide.": "Tieni premuta l'area per rivelare. Rilascia per nascondere.",
+      "Tap to show or hide your secret.": "Tocca per mostrare o nascondere il segreto.",
+      "Secret hidden": "Segreto nascosto",
+      "Your signal is: touch your left ear.": "Il tuo segnale è: tocca l'orecchio sinistro.",
+      "Use accessible tap instead": "Usa la modalità accessibile con tocco",
+      "Use hold instead": "Usa la pressione continua",
+      "I memorized it": "L'ho memorizzato",
+      "Secrets are hidden.": "I segreti sono nascosti.",
+      "The screen is safe for the group.": "Ora lo schermo è sicuro per il gruppo.",
+      "Place the phone where everyone can see it. The round begins after Start.": "Metti il telefono dove tutti possono vederlo. Il round inizia dopo Avvia.",
+      "Start round": "Avvia round",
+      "Game in progress": "Partita in corso",
+      "Eyes up. Follow the leader.": "Occhi in alto. Seguite chi guida.",
+      "The phone handles the freeze signals. Tap Finish game when only one player remains.": "Il telefono gestisce i segnali di stop. Tocca Termina gioco quando resta una sola persona.",
+      "The phone can wait.": "Ora il telefono può aspettare.",
+      "Watch the signals.": "Osservate i segnali.",
+      "Play with the deck. Return here when the round ends.": "Giocate con il mazzo. Tornate qui quando il round finisce.",
+      "Tap Finish game after the first correct accusation.": "Tocca Termina gioco dopo la prima accusa corretta.",
+      "Session status": "Stato sessione",
+      "Game 1 - Standard Party Night - 2 players": "Gioco 1 - Party Night Standard - 2 giocatori",
+      "Finish game": "Termina gioco",
+      "Cancel game": "Annulla gioco",
+      "Game cancelled": "Gioco annullato",
+      "No result recorded": "Nessun risultato registrato",
+      "This game will not affect the standings.": "Questo gioco non modifica la classifica.",
+      "Choose what should happen next. Ruckus Party will not invent a winner.": "Scegli cosa fare adesso. Ruckus Party non inventerà un vincitore.",
+      "Retry game": "Riprova il gioco",
+      "Return to Party Night": "Torna alla Party Night",
+      "Game result": "Risultato del gioco",
+      "Correct result": "Correggi risultato",
+      "Confirm before scoring": "Conferma prima del punteggio",
+      "Who won?": "Chi ha vinto?",
+      "Choose one winner for this prototype round. You can change this before confirming.": "Scegli un vincitore per questo round del prototipo. Puoi cambiarlo prima di confermare.",
+      "Selected": "Selezionato",
+      "Select": "Seleziona",
+      "Confirm result": "Conferma risultato",
+      "Save correction": "Salva correzione",
+      "Cancel": "Annulla",
+      "Result": "Risultato",
+      "+1 Party Night point": "+1 punto Party Night",
+      "The result is now in session history and the standings have been updated.": "Il risultato è nella cronologia e la classifica è stata aggiornata.",
+      "See standings": "Vedi classifica",
+      "See the finale": "Vai al finale",
+      "Party Night progress": "Avanzamento Party Night",
+      "The night is taking shape.": "La serata prende forma.",
+      "Progress is indicative. It does not promise a fixed number of games.": "L'avanzamento è indicativo e non promette un numero fisso di giochi.",
+      "Consequence": "Conseguenza",
+      "Playful - immediate": "Giocosa - immediata",
+      "One quick challenge.": "Una sfida veloce.",
+      "For Alex": "Per Alex",
+      "Alex must narrate the next minute like a sports commentator.": "Alex deve raccontare il prossimo minuto come un telecronista sportivo.",
+      "Alex must answer the next question using only three words.": "Alex deve rispondere alla prossima domanda usando solo tre parole.",
+      "This proposal uses only General content and is compatible with your current settings.": "Questa proposta usa solo contenuti generali ed è compatibile con le impostazioni attive.",
+      "Accept": "Accetta",
+      "Skip": "Salta",
+      "No compatible game": "Nessun gioco compatibile",
+      "Nothing changed automatically": "Nessuna modifica automatica",
+      "Your current filters block every game.": "I filtri attivi bloccano tutti i giochi.",
+      "The combination “French deck only” and “No card games” leaves no compatible option for 2 players.": "La combinazione “Solo mazzo francese” e “Nessun gioco di carte” non lascia opzioni compatibili per 2 giocatori.",
+      "Fastest fix": "Correzione più rapida",
+      "Allow phone-only games while keeping every content filter unchanged.": "Consenti i giochi solo telefono senza modificare i filtri dei contenuti.",
+      "Allow phone-only games": "Consenti giochi solo telefono",
+      "Edit filters": "Modifica filtri",
+      "Finish session now": "Termina sessione adesso",
+      "Private reveal paused": "Rivelazione privata in pausa",
+      "No private content is visible.": "Nessun contenuto privato è visibile.",
+      "Resume from covered screen": "Riprendi dalla schermata coperta",
+      "Restart all private reveals": "Riavvia tutte le rivelazioni private",
+      "One game only": "Una sola partita",
+      "Play without starting a Party Night.": "Gioca senza avviare una Party Night.",
+      "No shared standings, session progress or Party Night finale.": "Niente classifica condivisa, avanzamento o finale Party Night.",
+      "Surprise me": "Sorprendimi",
+      "Get one compatible suggestion": "Ricevi una proposta compatibile",
+      "Browse requirements before playing": "Controlla i requisiti prima di giocare",
+      "Find one game.": "Trova un gioco.",
+      "Catalog entries show requirements before opening Quick Play.": "Il catalogo mostra i requisiti prima di aprire la Partita veloce.",
+      "2-6 players - Phone only - Private reveal": "2-6 giocatori - Solo telefono - Rivelazione privata",
+      "2-6 players - Phone only - Social": "2-6 giocatori - Solo telefono - Sociale",
+      "2-4 players - French deck - Physical": "2-4 giocatori - Mazzo francese - Fisico",
+      "Game detail": "Dettaglio gioco",
+      "Catalog entry": "Voce del catalogo",
+      "A short bluff game with one private signal per player.": "Un breve gioco di bluff con un segnale privato per giocatore.",
+      "Digital support": "Supporto digitale",
+      "Full Digital": "Tutto sul telefono",
+      "Play in Quick Play": "Gioca in Partita veloce",
+      "Back to Games": "Torna ai Giochi",
+      "Session history": "Cronologia sessione",
+      "Confirmed games.": "Giochi confermati.",
+      "Session settings": "Impostazioni sessione",
+      "Current choices.": "Scelte attive.",
+      "Changing these settings affects future recommendations, never confirmed results.": "Le modifiche influenzano solo le proposte future, mai i risultati confermati.",
+      "Language": "Lingua",
+      "Italian": "Italiano",
+      "English": "Inglese",
+      "Change language": "Cambia lingua",
+      "Save settings": "Salva impostazioni",
+      "Choose the game language.": "Scegli la lingua del gioco.",
+      "Italian is the default. You can change this choice at any time.": "L'italiano è la lingua predefinita. Puoi cambiare questa scelta in qualsiasi momento.",
+      "Default language": "Lingua predefinita",
+      "Full interface and game instructions": "Interfaccia e istruzioni complete",
+      "Keep this language": "Mantieni questa lingua",
+      "Finding a game": "Ricerca gioco",
+      "Checking compatibility": "Controllo compatibilità",
+      "Loading compatible game": "Caricamento gioco compatibile",
+      "Loading preserves space and does not show an incompatible fallback.": "Il caricamento mantiene lo spazio e non mostra alternative incompatibili.",
+      "Show result": "Mostra proposta",
+      "Session unavailable": "Sessione non disponibile",
+      "Session data could not load": "Impossibile caricare i dati della sessione",
+      "Your Party Night is still stored locally.": "La Party Night è ancora salvata in locale.",
+      "Retry before starting a new session. No result or setting has been changed.": "Riprova prima di iniziare una nuova sessione. Nessun risultato o impostazione è stato modificato.",
+      "Retry": "Riprova",
+      "Return Home": "Torna alla Home",
+      "Party Night complete": "Party Night conclusa",
+      "Final standings": "Classifica finale",
+      "1 win across 1 completed game": "1 vittoria in 1 gioco completato",
+      "Night recap": "Riepilogo della serata",
+      "Secret Signals completed. No cancelled game affected the standings.": "Segnali segreti completato. Nessun gioco annullato ha modificato la classifica.",
+      "Start another Party Night": "Avvia un'altra Party Night",
+      "Party Night": "Party Night",
+      "Close menu": "Chiudi menu",
+      "Finish Party Night?": "Terminare la Party Night?",
+      "Only confirmed results will be included in the final standings.": "Solo i risultati confermati saranno inclusi nella classifica finale.",
+      "Finish and see results": "Termina e mostra i risultati",
+      "Keep playing": "Continua a giocare"
+    };
+
+    const ENGLISH = Object.fromEntries(Object.entries(ITALIAN).map(([english, italian]) => [italian, english]));
+
+    function translateDynamic(text, language) {
+      const toItalian = [
+        [/^Player (\d+)$/, "Giocatore $1"],
+        [/^Pass the phone to (.+)\.$/, "Passa il telefono a $1."],
+        [/^I am (.+)$/, "Sono $1"],
+        [/^(.+)'s secret$/, "Segreto di $1"],
+        [/^(.+) wins\.$/, "$1 vince."],
+        [/^(.+) is the champion\.$/, "$1 è il campione."],
+        [/^Winner: (.+) - \+1 point$/, "Vincitore: $1 - +1 punto"],
+        [/^Return the phone to (.+) before continuing\.$/, "Restituisci il telefono a $1 prima di continuare."],
+        [/^(\d+) players$/, "$1 giocatori"],
+        [/^(\d+) players - Game (\d+) in progress$/, "$1 giocatori - Gioco $2 in corso"],
+        [/^Game (\d+) - Standard Party Night - (\d+) players$/, "Gioco $1 - Party Night Standard - $2 giocatori"],
+        [/^Game (\d+) complete$/, "Gioco $1 completato"],
+        [/^(\d+) pt$/, "$1 pt"]
+      ];
+      const toEnglish = [
+        [/^Giocatore (\d+)$/, "Player $1"],
+        [/^Passa il telefono a (.+)\.$/, "Pass the phone to $1."],
+        [/^Sono (.+)$/, "I am $1"],
+        [/^Segreto di (.+)$/, "$1's secret"],
+        [/^(.+) vince\.$/, "$1 wins."],
+        [/^(.+) è il campione\.$/, "$1 is the champion."],
+        [/^Vincitore: (.+) - \+1 punto$/, "Winner: $1 - +1 point"],
+        [/^Restituisci il telefono a (.+) prima di continuare\.$/, "Return the phone to $1 before continuing."],
+        [/^(\d+) giocatori$/, "$1 players"],
+        [/^(\d+) giocatori - Gioco (\d+) in corso$/, "$1 players - Game $2 in progress"],
+        [/^Gioco (\d+) - Party Night Standard - (\d+) giocatori$/, "Game $1 - Standard Party Night - $2 players"],
+        [/^Gioco (\d+) completato$/, "Game $1 complete"]
+      ];
+      const patterns = language === "it" ? toItalian : toEnglish;
+      for (const [pattern, replacement] of patterns) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }
+
+    function translateText(raw, language) {
+      const trimmed = raw.trim();
+      if (!trimmed) return raw;
+      const dictionary = language === "it" ? ITALIAN : ENGLISH;
+      const translated = dictionary[trimmed] || translateDynamic(trimmed, language);
+      return raw.replace(trimmed, translated);
+    }
+
+    function localize(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => { node.nodeValue = translateText(node.nodeValue, state.language); });
+      root.querySelectorAll("[aria-label], [title], [placeholder]").forEach(element => {
+        ["aria-label", "title", "placeholder"].forEach(attribute => {
+          if (element.hasAttribute(attribute)) {
+            element.setAttribute(attribute, translateText(element.getAttribute(attribute), state.language));
+          }
+        });
+      });
+    }
+
+    function render() {
+      const views = {
+        home: renderHome,
+        players: renderPlayers,
+        setup: renderSetup,
+        summary: renderSummary,
+        customize: renderCustomize,
+        proposal: () => renderProposal(false),
+        "next-proposal": () => renderProposal(true),
+        "virtual-prep": renderVirtualPrep,
+        physical: renderPhysical,
+        "private-pass": renderPrivatePass,
+        "private-ready": renderPrivateReady,
+        "group-ready": renderGroupReady,
+        "active-game": () => renderActiveGame(false),
+        "physical-active": () => renderActiveGame(true),
+        cancelled: renderCancelled,
+        "result-entry": () => renderResultEntry(false),
+        correction: () => renderResultEntry(true),
+        "result-reveal": renderResultReveal,
+        standings: renderStandings,
+        consequence: renderConsequence,
+        "no-match": renderNoMatch,
+        "private-interrupted": renderPrivateInterrupted,
+        "quick-play": renderQuickPlay,
+        games: renderGames,
+        "game-detail": renderGameDetail,
+        history: renderHistory,
+        settings: renderSettings,
+        language: renderLanguage,
+        loading: renderLoading,
+        error: renderError,
+        final: renderFinal
+      };
+      const view = views[state.screen] || renderHome;
+      app.innerHTML = view();
+      document.documentElement.lang = state.language;
+      localize(app);
+      localize(sessionDialog);
+      localize(confirmDialog);
+      document.querySelectorAll("[data-route]").forEach(button => {
+        button.setAttribute("aria-current", button.dataset.route === state.screen ? "true" : "false");
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"
+      })[character]);
+    }
+
+    function openDialog(dialog) {
+      document.body.classList.add("modal-open");
+      dialog.showModal();
+    }
+
+    function closeDialog(dialog) {
+      dialog.close();
+      document.body.classList.remove("modal-open");
+    }
+
+    document.addEventListener("click", event => {
+      const route = event.target.closest("[data-route]");
+      if (route) {
+        if (["proposal", "virtual-prep", "private-pass"].includes(route.dataset.route)) state.currentGame = 1;
+        if (["next-proposal", "physical", "physical-active"].includes(route.dataset.route)) state.currentGame = 2;
+        if (route.dataset.route === "final" && state.completedGames < 2) {
+          state.completedGames = 2;
+          state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, 1]));
+        }
+        saveState();
+        go(route.dataset.route);
+        return;
+      }
+
+      const duration = event.target.closest("[data-duration]");
+      if (duration) {
+        state.duration = duration.dataset.duration;
+        saveState();
+        render();
+        return;
+      }
+
+      const resource = event.target.closest("[data-resource]");
+      if (resource) {
+        const name = resource.dataset.resource;
+        state.resources = state.resources.includes(name)
+          ? state.resources.filter(item => item !== name)
+          : [...state.resources, name];
+        saveState();
+        render();
+        return;
+      }
+
+      const sensitive = event.target.closest("[data-sensitive]");
+      if (sensitive) {
+        const name = sensitive.dataset.sensitive;
+        state.sensitive = state.sensitive.includes(name)
+          ? state.sensitive.filter(item => item !== name)
+          : [...state.sensitive, name];
+        saveState();
+        render();
+        return;
+      }
+
+      const winner = event.target.closest("[data-winner]");
+      if (winner) {
+        state.selectedWinner = winner.dataset.winner;
+        saveState();
+        render();
+        return;
+      }
+
+      const action = event.target.closest("[data-action]");
+      if (!action) return;
+      handleAction(action.dataset.action);
+    });
+
+    document.addEventListener("input", event => {
+      if (!event.target.matches("[data-player-index]")) return;
+      state.players[Number(event.target.dataset.playerIndex)] = event.target.value;
+      saveState();
+      const valid = state.players.filter(name => name.trim()).length >= 2;
+      const continueButton = document.querySelector('[data-action="players-next"]');
+      if (continueButton) continueButton.disabled = !valid;
+      event.target.setAttribute("aria-invalid", event.target.value.trim() ? "false" : "true");
+    });
+
+    function handleAction(action) {
+      const actions = {
+        back: () => go(state.previousScreen || "home"),
+        menu: () => openDialog(sessionDialog),
+        "start-party": () => go("players"),
+        resume: () => go(state.currentGame >= 2 ? "physical" : "proposal"),
+        "spin-wheel": () => {
+          const wheel = document.querySelector(".party-wheel");
+          const orbit = document.querySelector(".party-orbit");
+          const status = document.querySelector("[data-wheel-status]");
+          if (!wheel || !orbit || !status) {
+            console.error("Party wheel elements are missing from the Home prototype.");
+            return;
+          }
+          state.wheelSpin += 1;
+          saveState();
+          wheel.classList.remove("is-spinning");
+          orbit.classList.remove("is-spinning");
+          void wheel.offsetWidth;
+          wheel.classList.add("is-spinning");
+          orbit.classList.add("is-spinning");
+          const italianMessages = ["Si parte dal caos.", "Carte, dadi o movimento?", "La serata ha scelto energia."];
+          const englishMessages = ["Let the chaos begin.", "Cards, dice or movement?", "The night picked energy."];
+          const messages = state.language === "it" ? italianMessages : englishMessages;
+          status.textContent = messages[(state.wheelSpin - 1) % messages.length];
+        },
+        "quick-play": () => go("quick-play"),
+        games: () => go("games"),
+        language: () => go("language"),
+        "set-language-it": () => { state.language = "it"; saveState(); render(); },
+        "set-language-en": () => { state.language = "en"; saveState(); render(); },
+        "language-back": () => go(state.previousScreen === "settings" ? "settings" : "home"),
+        "add-player": () => { if (state.players.length < 6) state.players.push(""); saveState(); render(); },
+        "players-next": () => go("setup"),
+        "setup-next": () => go("summary"),
+        "summary-back": () => go("setup"),
+        customize: () => go("customize"),
+        "save-customize": () => go("summary"),
+        "begin-session": () => {
+          state.activeSession = true;
+          state.currentGame = 1;
+          state.completedGames = 0;
+          state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, 0]));
+          saveState();
+          go("loading");
+        },
+        proposal: () => go("proposal"),
+        replace: () => { state.replacementCount += 1; saveState(); go("proposal"); },
+        "replace-next": () => { state.replacementCount += 1; saveState(); go("next-proposal"); },
+        "prepare-virtual": () => go("virtual-prep"),
+        "start-private": () => { state.privatePlayer = 0; state.hasRevealed = false; state.secretVisible = false; saveState(); go("private-pass"); },
+        "private-ready": () => go("private-ready"),
+        "private-pass": () => go("private-pass"),
+        "toggle-reveal-mode": () => { state.accessibleReveal = !state.accessibleReveal; state.secretVisible = false; saveState(); render(); },
+        memorized: () => {
+          state.secretVisible = false;
+          state.hasRevealed = false;
+          if (state.privatePlayer < state.players.filter(name => name.trim()).length - 1) {
+            state.privatePlayer += 1;
+            saveState();
+            go("private-pass");
+          } else {
+            saveState();
+            go("group-ready");
+          }
+        },
+        "active-game": () => go("active-game"),
+        "physical-active": () => go("physical-active"),
+        "finish-game": () => { state.selectedWinner = null; saveState(); go("result-entry"); },
+        "cancel-game": () => go("cancelled"),
+        "confirm-result": () => {
+          const winner = state.selectedWinner;
+          const names = state.players.filter(name => name.trim());
+          state.score = Object.fromEntries(names.map(name => [name, (state.score[name] || 0) + (name === winner ? 1 : 0)]));
+          state.completedGames = Math.max(state.completedGames, state.currentGame);
+          saveState();
+          go("result-reveal");
+        },
+        standings: () => go("standings"),
+        consequence: () => go("consequence"),
+        "accept-consequence": () => { state.consequenceAccepted = true; saveState(); go("next-proposal"); },
+        "replace-consequence": () => { state.consequenceVersion += 1; saveState(); render(); },
+        "skip-consequence": () => { state.consequenceAccepted = false; saveState(); go("next-proposal"); },
+        "play-next": () => { state.currentGame = 2; saveState(); go("physical"); },
+        "edit-materials": () => go("setup"),
+        "private-interrupted": () => go("private-interrupted"),
+        "restart-private": () => { state.privatePlayer = 0; state.hasRevealed = false; saveState(); go("private-pass"); },
+        "fix-no-match": () => { if (!state.resources.includes("Phone only")) state.resources.push("Phone only"); saveState(); go("proposal"); },
+        "open-finish": () => openDialog(confirmDialog),
+        "quick-surprise": () => go("proposal"),
+        "game-detail": () => go("game-detail"),
+        "correct-result": () => { state.selectedWinner = state.selectedWinner || "Alex"; saveState(); go("correction"); },
+        "save-correction": () => {
+          const winner = state.selectedWinner;
+          state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, name === winner ? 1 : 0]));
+          saveState();
+          go("history");
+        },
+        final: () => go("final"),
+        "new-party": () => { state = { ...defaultState, score: { ...defaultState.score }, screen: "players" }; saveState(); render(); },
+        "end-home": () => { state.activeSession = false; saveState(); go("home"); },
+        home: () => go("home")
+      };
+      if (actions[action]) actions[action]();
+    }
+
+    document.addEventListener("pointerdown", event => {
+      const zone = event.target.closest("[data-reveal-zone]");
+      if (!zone || state.accessibleReveal) return;
+      state.secretVisible = true;
+      state.hasRevealed = true;
+      saveState();
+      render();
+    });
+
+    document.addEventListener("pointerup", event => {
+      if (!event.target.closest("[data-reveal-zone]") || state.accessibleReveal) return;
+      state.secretVisible = false;
+      saveState();
+      render();
+    });
+
+    document.addEventListener("keydown", event => {
+      const zone = event.target.closest("[data-reveal-zone]");
+      if (!zone || !["Enter", " "].includes(event.key)) return;
+      event.preventDefault();
+      if (state.accessibleReveal) {
+        state.secretVisible = !state.secretVisible;
+      } else {
+        state.secretVisible = true;
+      }
+      state.hasRevealed = true;
+      saveState();
+      render();
+    });
+
+    document.addEventListener("keyup", event => {
+      if (state.accessibleReveal || !["Enter", " "].includes(event.key)) return;
+      state.secretVisible = false;
+      saveState();
+      render();
+    });
+
+    sessionDialog.addEventListener("click", event => {
+      const button = event.target.closest("[data-dialog-action]");
+      if (!button) return;
+      const action = button.dataset.dialogAction;
+      closeDialog(sessionDialog);
+      if (action === "standings") go("standings");
+      if (action === "history") go("history");
+      if (action === "settings") go("settings");
+      if (action === "finish") openDialog(confirmDialog);
+    });
+
+    document.querySelector("[data-confirm-finish]").addEventListener("click", () => {
+      closeDialog(confirmDialog);
+      go("final");
+    });
+
+    document.querySelector("[data-confirm-cancel]").addEventListener("click", () => closeDialog(confirmDialog));
+
+    [sessionDialog, confirmDialog].forEach(dialog => {
+      dialog.addEventListener("cancel", () => document.body.classList.remove("modal-open"));
+      dialog.addEventListener("close", () => document.body.classList.remove("modal-open"));
+    });
+
+    app.addEventListener("click", event => {
+      const zone = event.target.closest("[data-reveal-zone]");
+      if (!zone || !state.accessibleReveal) return;
+      state.secretVisible = !state.secretVisible;
+      state.hasRevealed = true;
+      saveState();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
