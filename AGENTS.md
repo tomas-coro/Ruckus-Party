@@ -1,136 +1,97 @@
 # Ruckus Party - Project Agent Rules
 
-Queste regole valgono per ogni attività nel repository.
+Queste regole valgono per ogni attività nel repository. Il repository è la fonte di verità durevole.
 
-## Lingua e punteggiatura
+## Regole universali
 
-- Comunica sempre in italiano.
-- Mantieni in inglese identificatori, API e terminologia tecnica standard.
-- Non usare em dash o en dash. Usa soltanto il trattino ASCII `-`.
+### Lingua e comunicazione
 
-## Comunicazione
+- Comunica sempre in italiano. Mantieni in inglese identificatori, API e terminologia tecnica standard.
+- Non produrre em dash, en dash o equivalenti HTML: usa il trattino ASCII `-`. Non alterare arbitrariamente contenuti esterni che li contengono.
+- Applica `Think enough. Read enough. Verify enough. Say less.` La concisione riguarda l'output, mai analisi, contesto, debugging, test, QA, sicurezza o verifiche necessarie.
+- Scrivi risposte concise e operative: `risultato -> evidenza -> prossimo passo`, idealmente 5-12 righe utili per task normali. Evita introduzioni, ripetizioni, piani impliciti, alternative inutili e sezioni vuote; approfondisci solo quando decisioni, rischi o complessità lo richiedono.
+- Non narrare ogni azione interna. Aggiorna soltanto per decisioni owner, rischi, blocchi, cambi di scope o milestone significativi. Spiega il perché in 1-2 righe, dai una raccomandazione netta e chiudi con un solo prossimo step utile.
+- Non dichiarare completato o funzionante ciò che non hai verificato. Per gli errori comunica nell'ordine: posizione, causa, correzione. I dettagli e i formati sono in `docs/WORKFLOW.md`.
 
-- Prima riga: azione, risultato, percorso o prossimo passo concreto.
-- Per lavori composti usa liste numerate, un'azione principale per passo.
-- Dopo un milestone indica: `Step X di Y completato: risultato. Prossimo: azione.`
-- Liste con massimo 5 voci. Se servono più elementi, dividili in blocchi.
-- Quando utile, chiudi con una sola azione eseguibile dall'owner in meno di 2 minuti.
-- Spiega in 1-2 righe il motivo delle raccomandazioni.
-- Dai una raccomandazione netta. Presenta al massimo 2-3 alternative reali.
-- Alla fine di ogni task completata indica sempre il prossimo step consigliato, senza aspettare che l'owner lo chieda. Specifica una sola azione o un solo workstream da avviare; se non serve altro, dichiaralo esplicitamente.
-- Non dire che qualcosa è completato o funzionante senza una verifica concreta.
-- Per gli errori comunica nell'ordine: posizione, causa, correzione.
+### CAMPO, autonomia e scope
 
-## CAMPO e decisioni
+- Per richieste non banali verifica internamente CAMPO: Contesto, Attività, Materiali, Paletti, Output. Non trasformarlo in un questionario automatico.
+- Leggi prima la fonte di verità pertinente. Chiedi solo se l'informazione mancante cambia materialmente prodotto, architettura, UX, dati, sicurezza, costi o compatibilità; proponi già risposta consigliata e motivo.
+- Una raccomandazione non è un'approvazione. Non inventare decisioni owner e registra quelle importanti secondo `docs/WORKFLOW.md` in `docs/DECISIONS.md`.
+- Non aggiungere feature, refactor collaterali, astrazioni premature, ottimizzazioni non misurate o lavoro speculativo. Se lo scope cresce, completa la parte coerente e proponi il resto come workstream separato.
 
-Prima di una richiesta non banale verifica:
+### Qualità
 
-- Contesto: problema e obiettivo.
-- Attività: singolo risultato richiesto.
-- Materiali: repository, documenti, test e configurazioni esistenti.
-- Paletti: scope, sicurezza, architettura, UX e compatibilità.
-- Output: risultato e formato attesi.
+- Usa TypeScript strict ed evita `any` senza una ragione concreta.
+- Separa business logic e UI; la logica rilevante deve essere testabile senza componenti React.
+- Non usare fallback silenziosi, catch vuoti o errori ignorati. Gestisci gli errori in modo esplicito e leggibile.
+- Aggiungi o aggiorna i test pertinenti quando cambia un comportamento. Proporziona ispezione e verifica al rischio senza ridurre il rigore necessario.
+- Non dichiarare concluso un task senza applicare la Definition of Done pertinente in `docs/WORKFLOW.md`.
 
-Leggi prima le informazioni già presenti nel repository. Chiedi chiarimenti solo quando la risposta cambia materialmente prodotto, architettura, UX, dati, sicurezza, costi o compatibilità. Per ogni domanda proponi già la risposta consigliata e il motivo. Non trasformare dettagli minori in decisioni dell'owner.
+## What to read for each task
 
-Per una decisione di prodotto importante registra in `docs/DECISIONS.md`:
+Leggi sempre questo file e le eventuali istruzioni più specifiche della directory. Poi carica soltanto il contesto indicato e i file o test direttamente coinvolti.
 
-- Problem
-- Recommendation
-- Why
-- Tradeoff
-- Status: `Recommended`, `Needs owner decision` oppure `Deferred`
+| Task | Contesto da leggere |
+|---|---|
+| Product o feature definition | `docs/PRODUCT.md`; `docs/DECISIONS.md` se cambia o verifica una decisione; specifica di Phase pertinente |
+| Architecture | invarianti sotto; `docs/GAME_SYSTEM.md`; `docs/DECISIONS.md`; codice e test coinvolti. `docs/ARCHITECTURE.md` solo quando esisterà un'architettura tecnica approvata |
+| Game logic o nuovo gioco | `docs/GAME_SYSTEM.md`; definizione, codice e test del gioco; `docs/PRODUCT.md` solo se cambia il perimetro |
+| UX o UI | `docs/DESIGN.md`; componente coinvolto; `docs/UX_FLOWS.md` e specifica di Phase solo per flussi o UI sostanziali |
+| Workflow, test, Git o contesto | sezione pertinente di `docs/WORKFLOW.md`; `git diff` e `git status` per preparare o chiudere lavoro |
+| Roadmap o scope futuro | `docs/ROADMAP.md`; `docs/DECISIONS.md`; non caricarli per un fix corrente senza impatto di pianificazione |
 
-Una raccomandazione non è una decisione approvata. Non inventare risposte dell'owner.
+Esempi: un overflow UI richiede `AGENTS.md`, `docs/DESIGN.md` e il componente; un nuovo gioco richiede `GAME_SYSTEM`, codice e test; una modifica al finale richiede `PRODUCT`, `GAME_SYSTEM`, `DECISIONS` e codice; preparare un commit richiede `WORKFLOW` e stato Git.
 
-## Prodotto
+## Prodotto e invarianti architetturali
 
-Ruckus Party è una piattaforma mobile-first di party game per 2 o più persone nella stessa stanza. Deve funzionare per coppie, amici, piccoli gruppi e party.
-
-Non deve diventare:
-
-- una raccolta statica di giochi o regole;
-- un clone di UNO;
-- un'app esclusivamente di carte o per coppie;
-- una raccolta di drinking game.
-
-Il concetto di dominio principale è `Game`, non `CardGame`. Le carte sono una capability opzionale. Il prodotto deve poter crescere verso giochi fisici, virtuali e misti, più modalità, tornei, quick play, party mode, couple e team preset, e giochi standalone.
-
-## Codice e architettura
-
-- Codice semplice, leggibile e mantenibile.
-- Niente astrazioni premature, feature non richieste o refactor collaterali.
-- TypeScript strict. Evita `any` senza una ragione concreta.
-- Business logic separata dai componenti React.
-- Mantieni separate UI, definizioni dei giochi, engine, deck, randomness, scoring, sessioni, progressione, ruote, penitenze e persistence.
-- Non hardcodare nella UI regole, punteggi, contenuti delle ruote, penitenze o progressione.
-- Non assumere quantità fisse di giochi, categorie o giochi per categoria.
-- Non distribuire `Math.random()` nella business logic. La casualità deve poter essere centralizzata, testata, seedata e resa deterministica.
-- Non accoppiare il dominio direttamente a `localStorage`.
-- Prima di aggiungere una dipendenza, verifica se serve davvero e segnala motivo e impatto.
-- Niente fallback silenziosi, catch vuoti o errori ignorati.
-- Commenta soltanto vincoli, invarianti, workaround o motivazioni non ovvie.
-
-## UI
-
-Ruckus Party è principalmente mobile e touch:
-
-- tap target di almeno 44x44 CSS px quando possibile;
-- portrait, uso con una mano, leggibilità e feedback immediato;
-- nessuna funzione dipendente soltanto da hover;
-- movimento intenzionale e legato agli eventi;
-- rispetto di `prefers-reduced-motion`.
-
-Prima di una nuova schermata o di un flusso importante definisci mood, gerarchia, interazione principale, riferimento visuale e comportamento mobile. Per un lavoro UI sostanziale crea prima un prototipo verificabile e ottieni approvazione. Non serve per bugfix o micro-modifiche.
-
-Evita UI SaaS generiche, gradienti viola-blu, glassmorphism diffuso, glow decorativo, emoji come icone principali, font di sistema come identità finale, animazioni continue, eccesso di border radius e card annidate.
-
-Prima di dichiarare pronta una UI controlla mobile, viewport ampia rilevante, overflow, sovrapposizioni, testi lunghi, stati vuoti, loading, errori, disabled, focus, placeholder e reduced motion.
-
-## Test e verifica
-
-La business logic deve essere testabile senza UI. Quando cambia un comportamento rilevante, aggiungi o aggiorna test pertinenti. Alla chiusura di una feature significativa esegui, quando applicabili:
-
-1. lint;
-2. typecheck;
-3. test;
-4. build;
-5. QA visuale per la UI.
+- Ruckus Party è una piattaforma mobile-first di party game per almeno 2 persone nella stessa stanza, adatta a coppie, amici, piccoli gruppi e party.
+- Non è una raccolta statica di regole, un clone di UNO, un'app solo di carte o coppie, né una raccolta di drinking game.
+- Il dominio principale è `Game`, non `CardGame`; le carte sono una capability opzionale. Non assumere quantità fisse di giochi, categorie o giochi per categoria.
+- Mantieni separati UI, definizioni dei giochi, engine, deck, randomness, scoring, sessioni, progressione, ruote, conseguenze e persistence.
+- Non hardcodare nella UI regole, punteggi, contenuti delle ruote, conseguenze o progressione.
+- Centralizza la casualità: niente `Math.random()` distribuito nella business logic. Deve essere testabile, seedabile e deterministica.
+- Astrai la persistence dal dominio e non accoppiarlo direttamente a `localStorage`.
+- Prima di aggiungere una dipendenza, verifica necessità e impatto e segnalali. Scrivi codice semplice, leggibile e mantenibile; commenta solo vincoli, invarianti, workaround o motivi non ovvi.
 
 ## Git e sicurezza
 
-- Nessun commit, push o remote automatico.
-- Non riscrivere la history, non usare force push e non eliminare branch senza approvazione.
-- Non usare `git reset --hard` e non scartare modifiche dell'utente senza approvazione.
+- Nessun commit, push o altra scrittura remota automatica. Riporta il commit Conventional Commits consigliato, ma eseguilo solo su richiesta esplicita.
+- Non riscrivere la history, usare force push, eliminare branch, eseguire `git reset --hard` o scartare modifiche dell'utente senza approvazione.
+- Chiedi conferma prima di azioni distruttive o difficili da annullare.
 - Non committare password, token, chiavi, credenziali, dati sensibili o `.env` reali.
 - Non operare su produzione, servizi live o dati reali senza autorizzazione esplicita.
-- Chiedi conferma prima di azioni distruttive o difficili da annullare.
-- Quando il lavoro è pronto, riporta file cambiati, controlli, stato Git e commit Conventional Commits consigliato. Non eseguire il commit senza richiesta esplicita.
 
-## Memoria del progetto
+## Context e usage efficiency
 
-La fonte di verità durevole è il repository:
+- Applica `minimum sufficient context`: usa ricerca mirata, leggi file, sezioni e test pertinenti e amplia solo davanti a un'ambiguità concreta. Accuratezza e sicurezza hanno priorità.
+- Non rileggere nello stesso workstream fonti appena analizzate, invariate e ancora affidabili. Non sostituire una verifica necessaria con memoria vaga.
+- Rimuovi spreco, non rigore. Proporziona piano, analisi e controlli al task; la procedura completa è in `docs/WORKFLOW.md`.
+- Il repository conserva regole, prodotto, decisioni, comportamento e test. Chat, checkpoint e attachment temporanei descrivono solo lo stato di passaggio e non devono diventare fonti durevoli.
+- Mantieni una conversazione per workstream coerente. Cambia chat e crea checkpoint solo quando il beneficio supera il costo di restore e rilettura.
+- Il reasoning predefinito è Medium. Prima di ogni task non banale valuta internamente se è sufficiente; High è un'eccezione motivata secondo `docs/WORKFLOW.md`. Se Medium basta, non parlarne.
 
-- `AGENTS.md`: regole operative;
-- `docs/PRODUCT.md`: prodotto e scope;
-- `docs/GAME_SYSTEM.md`: sistema dei giochi;
-- `docs/UX_FLOWS.md`: flussi utente;
-- `docs/DECISIONS.md`: decisioni e motivazioni;
-- `docs/ROADMAP.md`: workstream e ordine di lavoro.
+## Fonti di verità
 
-Alla fine di ogni workstream aggiorna documentazione, decisioni, TODO, limitazioni e test. Controlla `git diff` e `git status`.
+| Fonte | Responsabilità |
+|---|---|
+| `AGENTS.md` | regole universali, mappa e invarianti |
+| `docs/PRODUCT.md` | prodotto e scope |
+| `docs/ARCHITECTURE.md` quando esisterà | struttura tecnica approvata; oggi non è ancora presente |
+| `docs/GAME_SYSTEM.md` | giochi, compatibilità e concetti di dominio |
+| `docs/UX_FLOWS.md`, `docs/PHASE_2A_UX.md` | flussi e UX approvata |
+| `docs/DESIGN.md`, `docs/PHASE_2B_DESIGN.md` | disciplina UI e direzione corrente |
+| `docs/WORKFLOW.md` | esecuzione, verifica, Git, contesto e usage |
+| `docs/DECISIONS.md` | decisioni, raccomandazioni e stato owner |
+| `docs/ROADMAP.md` | stato delle Phase e ordine futuro |
+| Codice e test | comportamento implementato e comportamento verificato |
 
 ## Vincolo attuale - Phase 2B
 
-Phase 2B è esclusivamente visual direction, design system e prototipo high-fidelity. Non scrivere codice prodotto, non modificare `src/`, non implementare backend, account, multiplayer online o persistence reale e non installare dipendenze.
+Phase 2B riguarda esclusivamente visual direction, design system e prototipo high-fidelity. Non modificare `src/`, non scrivere codice prodotto, non implementare backend, account, multiplayer online o persistence reale e non installare dipendenze.
 
-Durante Phase 2B:
-
-- usa i flussi e le decisioni approvate in Phase 2A senza riprogettare il prodotto;
-- crea e confronta 2-3 direzioni visive prima di selezionarne una;
-- ottieni approvazione owner sulla direzione prima del prototipo high-fidelity;
-- copri Home, setup, due giochi, Physical, Virtual, private reveal, errore e finale;
-- usa soltanto dati finti e stato locale al prototipo;
-- esegui QA visivo, responsive, interattivo, bilingue e reduced motion prima della consegna.
-
-Prima di chiudere Phase 2B aggiorna design system, decisioni, roadmap, limitazioni e controlli eseguiti. Controlla `git diff` e `git status`, poi fermati al gate di approvazione. Non fare commit o push senza richiesta esplicita.
+- Usa i flussi e le decisioni approvate in Phase 2A senza riprogettare il prodotto. Lo stato esatto delle approvazioni vive in `docs/DECISIONS.md` e `docs/ROADMAP.md`.
+- La direzione deve derivare dal confronto di 2-3 alternative e dall'approvazione owner; non confondere una raccomandazione o un candidato con il gate finale.
+- Il prototipo deve coprire Home, setup, due giochi, Physical, Virtual, private reveal, errore e finale usando solo dati finti e stato locale.
+- Prima della consegna esegui QA visuale, responsive, interattivo, bilingue e reduced motion secondo `docs/DESIGN.md`.
+- Prima di chiudere Phase 2B aggiorna, se coinvolti, design system, decisioni, roadmap, limiti e controlli; verifica diff e status, poi fermati al gate owner senza commit o push.
