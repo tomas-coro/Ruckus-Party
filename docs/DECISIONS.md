@@ -203,3 +203,21 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Tradeoff: l'icona non replica il lockup completo, ma sacrifica la corrispondenza letterale per garantire riconoscibilità alle dimensioni di sistema.
 - Status: `Recommended`, confermata dall'owner il 2026-08-23.
 - Owner answer: approvato il sistema `Passa la R` dopo la correzione del timing d'impatto e dell'icona Home; autorizzati commit e push. Questa risposta non approva D-020 né chiude il gate finale di Phase 2B.
+
+### D-022 - Catalogo V1 e consultazione delle regole
+
+- Problem: rendere esplorabili giochi, materiali compatibili e regole senza trasformare Ruckus Party in una raccolta statica o nascondere le differenze tra mazzi, dadi e giochi fisici personali.
+- Recommendation: adottare la direzione B del Catalogo V1 mostrata in `mockups/12-catalogo-v1-regole.html`. Usare le cinque raccolte visuali come accessi per materiale, mantenere ricerca e filtri espliciti, aprire le regole nello stesso flusso e consentire giochi Extra salvati localmente. Su mobile il catalogo diventa un percorso verticale; su desktop usa indice, raccolte e dettaglio affiancati.
+- Why: il catalogo resta consultabile e concreto, ma Party Night conserva il ruolo di esperienza principale. Le copertine distinguono subito i materiali e il dettaglio rende verificabili regole, vittoria e ruolo del telefono.
+- Tradeoff: quantità, bilanciamento e completezza dei giochi devono ancora essere validati con playtest; l'approvazione del mockup non equivale a implementazione prodotto né chiude D-020 o Phase 2B.
+- Status: `Recommended`, confermata dall'owner il 2026-08-24.
+- Owner answer: approvato il Catalogo V1 dopo QA visivo e interattivo su mobile, landscape, desktop, stati, lingue, testo ingrandito e reduced motion.
+
+### D-023 - Sezione Complicità e Controcanto
+
+- Problem: includere giochi cooperativi e a squadre senza introdurre un sistema Team generale nella V1.
+- Recommendation: aggiungere `Complicità`, sottotitolo `Cooperativi e sfide a squadre`. I giochi a squadre della V1 richiedono esattamente 6 persone in due squadre da 3. Il primo titolo è `Controcanto`: cooperativo, 3-6 giocatori, telefono, carta e penne, con indizi divisi in `Solisti` e `Coro` e due tentativi da 2 o 1 punto.
+- Why: apre una famiglia sociale distinta mantenendo limitato lo scope delle squadre.
+- Tradeoff: il preset Team resta Later; la V1 ammette solo regole a squadre locali ai singoli giochi, senza estensione oltre 6 persone. Controcanto richiede playtest su equivalenza degli indizi e bilanciamento.
+- Status: `Recommended`, confermata dall'owner il 2026-08-24.
+- Owner answer: approvati `Complicità`, `Controcanto` e la copertina C `Tavolo`.

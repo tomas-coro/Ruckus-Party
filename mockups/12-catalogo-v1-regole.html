@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Franklin:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/catalog-covers/complicity-table-v1.png">
   <style>
     :root {
       --petrol: #0d3432;
@@ -416,10 +417,15 @@
     .collection-gallery { display: grid; gap: 18px; margin-bottom: 30px; }
 
     .deck-stage,
-    .support-stage { display: grid; gap: 14px; }
+    .support-stage,
+    .experience-stage { display: grid; gap: 14px; }
 
     .deck-stage { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .support-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .experience-stage { grid-template-columns: minmax(0, 1fr); }
+    .experience-stage .collection-select { grid-template-columns: minmax(0, 1.45fr) minmax(210px, .55fr); grid-template-rows: none; }
+    .experience-stage .collection-art { border-right: 2px solid var(--ink); border-bottom: 0; }
+    .experience-stage .collection-copy { display: flex; flex-direction: column; justify-content: center; }
 
     .collection-tile {
       position: relative;
@@ -462,6 +468,7 @@
     .collection-tile[data-collection="italian"] .collection-art { background: var(--mint); }
     .collection-tile[data-collection="dice"] .collection-art { background: #cfe4d7; }
     .collection-tile[data-collection="extra"] .collection-art { background: var(--shell); }
+    .collection-tile[data-collection="complicity"] .collection-art { background: var(--mint); }
 
     .collection-copy { padding: 14px 15px 15px; }
     .collection-copy strong { display: block; font-family: "Archivo Black", sans-serif; font-size: 1.05rem; line-height: 1; text-transform: uppercase; }
@@ -482,6 +489,8 @@
     .dice-composite-photo { width: 100%; height: 100%; display: block; object-fit: contain; }
     .extra-composite-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
     .extra-composite-photo { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .complicity-composite-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+    .complicity-photo { width: 100%; height: 100%; display: block; object-fit: cover; }
 
     .extra-add {
       position: absolute;
@@ -844,7 +853,9 @@
       .catalog-intro p { font-size: .88rem; }
       .game-row { min-height: 82px; gap: 10px; }
       .game-badge { padding-inline: 6px; }
-      .deck-stage, .support-stage { display: grid; grid-template-columns: 1fr; overflow: visible; padding: 0; }
+      .deck-stage, .support-stage, .experience-stage { display: grid; grid-template-columns: 1fr; overflow: visible; padding: 0; }
+      .experience-stage .collection-select { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+      .experience-stage .collection-art { border-right: 0; border-bottom: 2px solid var(--ink); }
       .collection-tile, .collection-select { min-height: 214px; }
       .collection-art { min-height: 142px; }
       .deck-game-grid { grid-template-columns: 1fr; }
@@ -871,7 +882,7 @@
 </head>
 <body>
   <aside class="lab-bar" aria-label="Controlli del mockup">
-    <div class="lab-title" id="lab-title">Mockup catalogo V1 - direzione B approvata</div>
+    <div class="lab-title" id="lab-title">Catalogo V1 - Complicità approvata</div>
     <div class="lab-controls">
       <button class="lab-control" id="lab-catalog" type="button" data-demo-state="catalog" aria-pressed="true">Catalogo</button>
       <button class="lab-control" id="lab-states" type="button" data-demo-state="loading" aria-pressed="false">Stati</button>
@@ -891,10 +902,10 @@
     <div class="catalog-layout" id="catalog-layout">
       <aside class="catalog-sidebar" id="catalog-sidebar">
         <h2 id="sidebar-title">Trova il tuo prossimo gioco.</h2>
-        <p id="sidebar-copy">Quaranta giochi ufficiali, materiali compatibili e i tuoi giochi fisici nella stessa Party Night.</p>
+        <p id="sidebar-copy">Quarantuno giochi ufficiali, materiali compatibili e i tuoi giochi fisici nella stessa Party Night.</p>
         <label class="filter-label" for="game-search" id="search-label">Cerca per nome</label>
         <input class="search-field" id="game-search" type="search" placeholder="Es. bluff, scopa, sprint" autocomplete="off">
-        <span class="filter-label" id="deck-filter-label">Filtra per mazzo</span>
+        <span class="filter-label" id="deck-filter-label">Filtra per materiale o esperienza</span>
         <div class="deck-filters" id="deck-filters" aria-label="Filtra per mazzo"></div>
         <p class="catalog-note" id="catalog-note">T preserva il nucleo tradizionale. R indica un remix progettato per Ruckus Party.</p>
       </aside>
@@ -911,8 +922,8 @@
 
   <script>
     const deckLabels = {
-      it: { all: "Tutti", colored: "Carte colorate", french: "Mazzo Poker", italian: "Mazzo italiano", dice: "Dadi", extra: "Giochi Extra" },
-      en: { all: "All", colored: "Colored cards", french: "Poker deck", italian: "Italian deck", dice: "Dice", extra: "Extra Games" }
+      it: { all: "Tutti", colored: "Carte colorate", french: "Mazzo Poker", italian: "Mazzo italiano", dice: "Dadi", extra: "Giochi Extra", complicity: "Complicità" },
+      en: { all: "All", colored: "Colored cards", french: "Poker deck", italian: "Italian deck", dice: "Dice", extra: "Extra Games", complicity: "Complicity" }
     };
 
     const games = [
@@ -1120,24 +1131,30 @@
         id: "secret-face", deck: "dice", kind: "R", players: "2-6", duration: "5-8 min", mechanic: { it: "Previsione", en: "Prediction" },
         it: { title: "Faccia Segreta", objective: "Scegli una faccia poco contesa e guadagna tutte le sue corrispondenze nei lanci pubblici.", rules: ["Ogni giocatore memorizza in private reveal una faccia da 1 a 6.", "Lanciate sei dadi e contate quante volte appare ogni faccia scelta.", "Se più giocatori avevano scelto la stessa faccia, i loro punti del round si annullano."], win: "Dopo quattro round vince chi ha raccolto più corrispondenze valide.", phone: "L'app usa private reveal brevi per le scelte, poi lancia sei dadi pubblici e assegna i punti." },
         en: { title: "Secret Face", objective: "Choose a less contested face and score all its matches in the public roll.", rules: ["Each player memorizes a face from 1 to 6 through a private reveal.", "Roll six dice and count how often every chosen face appears.", "If multiple players chose the same face, their round points cancel out."], win: "After four rounds, the most valid matches wins.", phone: "The app uses brief private reveals for choices, then rolls six public dice and awards points." }
+      },
+      {
+        id: "counterpoint", deck: "complicity", kind: "R", players: "3-6", duration: "8-12 min", mechanic: { it: "Cooperativo", en: "Cooperative" },
+        material: { it: "Telefono, carta e penna", en: "Phone, paper and pens" },
+        it: { title: "Controcanto", objective: "Indovinate più parole possibile: prima con i Solisti, poi con il Coro se serve.", rules: ["Il giocatore di turno si volta mentre Ruckus mostra la parola agli altri.", "Senza consultarvi, scrivete un indizio ciascuno e rivelateli insieme: gli indizi unici sono Solisti; quelli uguali o con la stessa radice formano il Coro e restano coperti.", "Il giocatore tenta con i Solisti. Se sbaglia, rivelate il Coro per un ultimo tentativo."], win: "La squadra ottiene 2 punti se indovina con i Solisti e 1 punto dopo il Coro. Dopo sei parole registra un unico risultato di gruppo.", phone: "Ruckus sceglie le parole, nasconde il bersaglio, scandisce turni e timer e conserva il punteggio comune. Gli indizi richiedono carta e penna." },
+        en: { title: "Counterpoint", objective: "Guess as many words as possible: first with the Soloists, then with the Chorus if needed.", rules: ["The active player turns away while Ruckus shows the word to everyone else.", "Without consulting, write one clue each and reveal together: unique clues become Soloists; matching clues or clues with the same root form the Chorus and stay covered.", "The player guesses using the Soloists. If they miss, reveal the Chorus for one final attempt."], win: "The team scores 2 points with the Soloists and 1 point after revealing the Chorus. After six words, record one shared group result.", phone: "Ruckus chooses words, hides the target, runs turns and timers and stores the shared score. Clues require paper and pens." }
       }
     );
 
     const copy = {
       it: {
         appTitle: "Giochi",
-        labTitle: "Mockup catalogo V1 - direzione B approvata",
+        labTitle: "Catalogo V1 - Complicità approvata",
         labCatalog: "Catalogo",
         labStates: "Stati",
         sidebarTitle: "Trova il tuo prossimo gioco.",
-        sidebarCopy: "Quaranta giochi ufficiali, materiali compatibili e i tuoi giochi fisici nella stessa Party Night.",
+        sidebarCopy: "Quarantuno giochi ufficiali, materiali compatibili e i tuoi giochi fisici nella stessa Party Night.",
         searchLabel: "Cerca per nome",
         searchPlaceholder: "Es. bluff, scopa, sprint",
-        filterLabel: "Filtra per materiale",
+        filterLabel: "Filtra per materiale o esperienza",
         note: "T preserva il nucleo tradizionale. R indica un remix Ruckus. Extra identifica un gioco fisico aggiunto da te.",
-        kicker: "40 giochi ufficiali + i tuoi",
+        kicker: "41 giochi ufficiali + i tuoi",
         heading: "Ogni scatola può entrare nella festa.",
-        intro: "Tre mazzi allineati, dieci giochi con dadi e uno spazio per i giochi fisici che possiedi già.",
+        intro: "Tre mazzi, dieci giochi con dadi, una sezione cooperativa e spazio per i giochi fisici che possiedi già.",
         found: count => `${count} ${count === 1 ? "gioco" : "giochi"}`,
         rules: "Come si gioca",
         players: "giocatori",
@@ -1186,18 +1203,18 @@
       },
       en: {
         appTitle: "Games",
-        labTitle: "V1 catalog mockup - approved direction B",
+        labTitle: "V1 catalog - approved Complicity",
         labCatalog: "Catalog",
         labStates: "States",
         sidebarTitle: "Find your next game.",
-        sidebarCopy: "Forty official games, compatible materials and your physical games in the same Party Night.",
+        sidebarCopy: "Forty-one official games, compatible materials and your physical games in the same Party Night.",
         searchLabel: "Search by name",
         searchPlaceholder: "Try bluff, scopa, sprint",
-        filterLabel: "Filter by material",
+        filterLabel: "Filter by material or experience",
         note: "T preserves the traditional core. R marks a Ruckus remix. Extra is a physical game added by you.",
-        kicker: "40 official games + yours",
+        kicker: "41 official games + yours",
         heading: "Every box can join the party.",
-        intro: "Three aligned decks, ten dice games and room for physical games you already own.",
+        intro: "Three decks, ten dice games, one cooperative section and room for physical games you already own.",
         found: count => `${count} ${count === 1 ? "game" : "games"}`,
         rules: "How to play",
         players: "players",
@@ -1366,7 +1383,7 @@
     function renderFilters() {
       const labels = deckLabels[state.lang];
       elements.filters.setAttribute("aria-label", copy[state.lang].filterLabel);
-      elements.filters.innerHTML = ["all", "colored", "french", "italian", "dice", "extra"].map(deck => {
+      elements.filters.innerHTML = ["all", "colored", "french", "italian", "dice", "complicity", "extra"].map(deck => {
         const count = deck === "all" ? allGames().length : allGames().filter(game => gameMaterials(game).includes(deck)).length;
         return `<button class="deck-filter" type="button" data-deck="${deck}" aria-pressed="${state.deck === deck}"><span>${escapeHtml(labels[deck])}</span><span>${count}</span></button>`;
       }).join("");
@@ -1409,13 +1426,20 @@
       if (deck === "french") return `<div class="collection-art" aria-hidden="true"><div class="poker-composite-stage"><img class="poker-composite-photo" src="assets/catalog-covers/poker-composite-v1.png" alt="" draggable="false"></div></div>`;
       if (deck === "italian") return `<div class="collection-art" aria-hidden="true"><div class="italian-composite-stage"><img class="italian-composite-photo" src="assets/catalog-covers/italian-composite-v1.png" alt="" draggable="false"></div></div>`;
       if (deck === "dice") return `<div class="collection-art" aria-hidden="true"><div class="dice-composite-stage"><img class="dice-composite-photo" src="assets/catalog-covers/dice-composite-v1.png" alt="" draggable="false"></div></div>`;
+      if (deck === "complicity") return `<div class="collection-art" aria-hidden="true"><div class="complicity-composite-stage"><img class="complicity-photo" src="assets/catalog-covers/complicity-table-v1.png" alt="" draggable="false"></div></div>`;
       return `<div class="collection-art" aria-hidden="true"><div class="extra-composite-stage"><img class="extra-composite-photo" src="assets/catalog-covers/extra-games-composite-v1.png" alt="" draggable="false"></div></div>`;
     }
 
     function collectionTile(deck) {
       const labels = deckLabels[state.lang];
       const count = allGames().filter(game => gameMaterials(game).includes(deck)).length;
-      const suffix = deck === "extra" ? (state.lang === "it" ? "salvati sul dispositivo" : "saved on this device") : deck === "colored" ? `${count - 10} ${copy[state.lang].compatible} T` : copy[state.lang].official;
+      const suffix = deck === "extra"
+        ? (state.lang === "it" ? "salvati sul dispositivo" : "saved on this device")
+        : deck === "complicity"
+          ? (state.lang === "it" ? "cooperativi e sfide a squadre" : "cooperative and team challenges")
+          : deck === "colored"
+            ? `${count - 10} ${copy[state.lang].compatible} T`
+            : copy[state.lang].official;
       return `<article class="collection-tile" data-collection="${deck}" data-active="${state.deck === deck}">
         <button class="collection-select" type="button" data-collection-select="${deck}" aria-pressed="${state.deck === deck}">
           ${collectionArt(deck)}
@@ -1430,6 +1454,7 @@
       const gallery = `<div class="collection-gallery">
         <div class="deck-stage">${["colored", "french", "italian"].map(collectionTile).join("")}</div>
         <div class="support-stage">${["dice", "extra"].map(collectionTile).join("")}</div>
+        <div class="experience-stage">${collectionTile("complicity")}</div>
       </div>`;
       const heading = state.deck === "all" ? (state.lang === "it" ? "Tutti i giochi" : "All games") : labels[state.deck];
       const list = gamesToRender.length
@@ -1497,7 +1522,7 @@
       const c = copy[state.lang];
       const activeMaterial = state.deck !== "all" && gameMaterials(game).includes(state.deck) ? state.deck : game.deck;
       const compatibilityLabel = activeMaterial !== game.deck ? ` - ${escapeHtml(c.compatible)}` : "";
-      const materialChip = game.kind === "X" ? c.physicalOriginal : c.physicalVirtual;
+      const materialChip = game.kind === "X" ? c.physicalOriginal : game.material?.[state.lang] || c.physicalVirtual;
       const phoneHeading = game.kind === "X" ? c.phoneExtra : c.phone;
       elements.detail.innerHTML = `<div class="detail-sticky">
         <button class="mobile-back" type="button" data-mobile-back>${escapeHtml(c.back)}</button>

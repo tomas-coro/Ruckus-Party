@@ -43,13 +43,14 @@ async function assertVisibleTapTargets(page, label) {
     await page.goto(pathToFileURL(mockup).href, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(350);
 
-    assert.equal(await page.locator('[data-game-id]').count(), 40);
-    assert.equal(await page.locator('.deck-filter').count(), 6);
-    assert.equal(await page.locator('.catalog-count').textContent(), '40 giochi');
-    assert.equal(await page.locator('.collection-tile').count(), 5);
+    assert.equal(await page.locator('[data-game-id]').count(), 41);
+    assert.equal(await page.locator('.deck-filter').count(), 7);
+    assert.equal(await page.locator('.catalog-count').textContent(), '41 giochi');
+    assert.equal(await page.locator('.collection-tile').count(), 6);
     assert.equal(await page.locator('html').evaluate(element => getComputedStyle(element).getPropertyValue('--focus').trim()), '#0d3432');
     assert.equal(await page.locator('.deck-stage .collection-tile').count(), 3);
     assert.equal(await page.locator('.support-stage .collection-tile').count(), 2);
+    assert.equal(await page.locator('.experience-stage .collection-tile').count(), 1);
     assert.equal(await page.locator('.collection-art .cover-svg').count(), 0);
     assert.deepEqual(await page.locator('[data-collection="colored"] .colored-card-photo').evaluateAll(cards => cards.map(card => ({
       loaded: card.complete && card.naturalWidth > 0,
@@ -82,6 +83,11 @@ async function assertVisibleTapTargets(page, label) {
       height: image.naturalHeight
     }))), [{ complete: true, width: 1672, height: 941 }]);
     assert.equal(await page.locator('[data-collection="extra"] .extra-component').count(), 0);
+    assert.deepEqual(await page.locator('[data-collection="complicity"] .complicity-photo').evaluateAll(images => images.map(image => ({
+      loaded: image.complete && image.naturalWidth > 0,
+      source: new URL(image.currentSrc).pathname.split('/').pop(),
+    }))), [{ loaded: true, source: 'complicity-table-v1.png' }]);
+    assert.equal(await page.locator('[data-complicity-art]').count(), 0);
     assert.doesNotMatch(await page.locator('body').innerText(), /Lorem ipsum|\bTODO\b/i);
     const initialToast = await page.locator('#toast').evaluate(element => ({
       visible: element.dataset.visible,
@@ -101,6 +107,8 @@ async function assertVisibleTapTargets(page, label) {
       assert.equal(new Set(deckBoxes.map(box => box.top)).size, 1, 'desktop: i tre mazzi non sono allineati');
       assert.ok(Math.max(...deckBoxes.map(box => box.width)) - Math.min(...deckBoxes.map(box => box.width)) <= 1, 'desktop: i tre mazzi non hanno la stessa larghezza');
       assert.ok(Math.max(...deckBoxes.map(box => box.height)) - Math.min(...deckBoxes.map(box => box.height)) <= 1, 'desktop: i tre mazzi non hanno la stessa altezza');
+      await page.locator('[data-collection="complicity"]').scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(out, 'desktop-complicity-table.png') });
       await page.screenshot({ path: path.join(out, 'desktop-materials.png'), fullPage: true });
       await page.screenshot({ path: path.join(out, 'desktop-materials-viewport.png') });
     }
@@ -137,6 +145,11 @@ async function assertVisibleTapTargets(page, label) {
     const diceNames = await page.locator('[data-game-id] span:first-child').allTextContents();
     assert.deepEqual(diceNames, ['Mira 100', 'Spaccato!', 'Poker di Dadi', 'Dubito!', 'Banco Rotto', 'Cambio Faccia', 'Codice Comune', 'Linea Storta', 'Te lo Passo', 'Faccia Segreta']);
 
+    await page.locator('[data-deck="complicity"].deck-filter').click();
+    assert.equal(await page.locator('[data-game-id]').count(), 1);
+    assert.equal(await page.locator('[data-game-id="counterpoint"]').count(), 1);
+    assert.equal(await page.locator('.catalog-count').textContent(), '1 gioco');
+
     await page.locator('#game-search').fill('testo che non esiste');
     assert.equal(await page.locator('.empty-state').count(), 1);
     await page.locator('#game-search').fill('');
@@ -144,14 +157,14 @@ async function assertVisibleTapTargets(page, label) {
 
     await page.locator('#language-button').click();
     assert.equal(await page.locator('#app-title').textContent(), 'Games');
-    assert.equal(await page.locator('.catalog-count').textContent(), '40 games');
+    assert.equal(await page.locator('.catalog-count').textContent(), '41 games');
 
     await page.locator('[data-demo-state="loading"]').click();
     assert.equal(await page.locator('.skeleton-row').count(), 4);
     await page.locator('[data-demo-state="loading"]').click();
     assert.equal(await page.locator('[data-retry]').count(), 1);
     await page.locator('[data-retry]').click();
-    assert.equal(await page.locator('[data-game-id]').count(), 40);
+    assert.equal(await page.locator('[data-game-id]').count(), 41);
 
     await page.screenshot({ path: path.join(out, `${target.name}.png`), fullPage: true });
     if (target.name === 'mobile-narrow') await page.screenshot({ path: path.join(out, 'mobile-catalog-viewport.png') });
@@ -164,7 +177,7 @@ async function assertVisibleTapTargets(page, label) {
   const allGamesPage = await allGamesContext.newPage();
   await allGamesPage.goto(pathToFileURL(mockup).href, { waitUntil: 'domcontentloaded' });
   const ids = await allGamesPage.locator('[data-game-id]').evaluateAll(buttons => [...new Set(buttons.map(button => button.dataset.gameId))]);
-  assert.equal(ids.length, 40);
+  assert.equal(ids.length, 41);
   for (const id of ids) {
     await allGamesPage.locator(`[data-game-id="${id}"]`).first().click();
     assert.ok((await allGamesPage.locator('#game-detail h2').textContent()).trim().length > 1, `${id}: titolo mancante`);
@@ -175,6 +188,13 @@ async function assertVisibleTapTargets(page, label) {
   await allGamesPage.locator('[data-deck="colored"].deck-filter').click();
   await allGamesPage.locator('[data-game-id="speed"]').click();
   assert.match(await allGamesPage.locator('.detail-deck').textContent(), /Carte colorate - compatibili/);
+  await allGamesPage.locator('[data-deck="complicity"].deck-filter').click();
+  await allGamesPage.locator('[data-game-id="counterpoint"]').click();
+  assert.equal(await allGamesPage.locator('#game-detail h2').textContent(), 'Controcanto');
+  assert.match(await allGamesPage.locator('.detail-deck').textContent(), /Complicità/);
+  assert.match(await allGamesPage.locator('.result-block').textContent(), /2 punti|1 punto/);
+  assert.match(await allGamesPage.locator('.phone-block').textContent(), /carta e penna/i);
+  await allGamesPage.screenshot({ path: path.join(out, 'desktop-counterpoint-detail.png') });
   await allGamesContext.close();
 
   const extraContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
@@ -237,7 +257,7 @@ async function assertVisibleTapTargets(page, label) {
   await reducedContext.close();
 
   await browser.close();
-  console.log('PASS catalogo V1: 40 giochi, 3 mazzi allineati, 10 dadi, compatibilità T, Giochi Extra locali, IT/EN, mobile 375/430, landscape 844, desktop 1440, stati, tap target, overflow e reduced motion');
+  console.log('PASS catalogo V1: 41 giochi, Complicità e Controcanto con copertina Tavolo, IT/EN, mobile 375/430, landscape 844, desktop 1440, stati, tap target, overflow e reduced motion');
 })().catch(error => {
   console.error(error);
   process.exit(1);

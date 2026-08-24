@@ -4,6 +4,17 @@
 
 Questo documento raccoglie candidati da prototipare e playtestare. Non costituisce catalogo approvato, non modifica lo scope dell'MVP e non sostituisce `docs/GAME_SYSTEM.md`.
 
+## Complicità
+
+### Controcanto
+
+- Stato: concept confermato dall'owner il 2026-08-24; bilanciamento da playtestare.
+- Giocatori: 3-6, cooperativo; durata 8-12 minuti.
+- Materiali: telefono, carta e penne.
+- Nucleo: un giocatore non vede la parola. Gli altri scrivono un indizio ciascuno; gli indizi unici diventano `Solisti`, quelli uguali o con la stessa radice formano il `Coro` coperto.
+- Punteggio: un tentativo con i Solisti vale 2 punti. Se fallisce, si rivela il Coro e l'ultimo tentativo vale 1 punto. La partita dura sei parole e produce un risultato condiviso.
+- Da playtestare: criterio di equivalenza degli indizi, soglie del risultato finale e ritmo con 3 giocatori.
+
 ## Giochi con dadi
 
 ### Mira 100
