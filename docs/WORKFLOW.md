@@ -134,17 +134,28 @@ Preferisci `hypothesis -> targeted inspection -> confirmation` a `scan everythin
 
 ## Conversazioni, checkpoint e handoff
 
-Una conversazione copre normalmente un workstream coerente, incluse iterazioni e verifica. Non proporre una nuova chat dopo ogni task piccolo: valuta il costo di restore, rilettura e ricostruzione.
+Applica `Keep useful context. Drop stale context.` Continua nella stessa chat finché il contesto corrente è utile al workstream. Non suggerire un cambio durante debugging attivo o mentre si lavora sullo stesso problema.
 
-Usa context save o restore soltanto per fine Phase, feature importante, cambio subsystem, interruzione lunga o stato non banale. Un checkpoint sintetico contiene:
+Consiglia una nuova chat quando un workstream è concluso e il prossimo task è chiaramente diverso, oppure quando cronologia non più utile, tentativi precedenti o contesto obsoleto rischiano di confondere il lavoro. Fallo anche quando continuare aumenterebbe probabilmente il context usage senza un beneficio concreto. Applica `Recommend the switch and package the restart.`: quando consigli il cambio, includi automaticamente nello stesso messaggio questo mini-handoff pronto da usare, senza aspettare una richiesta separata:
 
-- stato e gate corrente;
-- decisioni approvate e decisioni ancora aperte;
-- lavoro completato e lavoro restante;
-- file e controlli rilevanti;
-- commit di riferimento, se esiste.
+```text
+CONTEXT CHECK: consiglio una nuova chat.
+Motivo: <una frase breve>.
 
-Il repository resta la memoria durevole. Il checkpoint descrive `where we stopped`, non duplica specifiche né dipende da attachment temporanei. Ripristina contesto solo quando il costo è inferiore a una lettura mirata delle fonti correnti.
+HANDOFF:
+- Fatto: <1-2 righe>
+- Stato: <modifiche non committate, branch e verifica rilevante>
+- Aperto: <solo ciò che resta realmente, oppure nessuna questione aperta>
+- File: <massimo 3-5 file o documenti utili>
+- Prossimo: <un solo task concreto>
+
+NUOVA CHAT:
+"<prompt breve che specifica esattamente da dove riprendere>"
+```
+
+Mantieni il messaggio entro circa 8-12 righe utili e non creare documenti lunghi. Includi soltanto ciò che serve per riprendere con precisione: niente cronologia, ragionamenti intermedi, tentativi falliti irrilevanti o informazioni già facilmente recuperabili dal repository, che resta la source of truth. Se il cambio non è consigliato, non produrre alcun handoff.
+
+Nella nuova chat leggi `AGENTS.md`, usa l'eventuale handoff e carica soltanto file, documenti e test necessari al task. Non rileggere automaticamente l'intero progetto.
 
 ## Usage, modello e reasoning
 

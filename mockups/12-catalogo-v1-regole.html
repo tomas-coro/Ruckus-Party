@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Ruckus Party - Catalogo V1 e regole</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Franklin:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --petrol: #0d3432;
+      --petrol-deep: #132824;
+      --mandarin: #ff643b;
+      --mandarin-dark: #d94726;
+      --honey: #f7c64b;
+      --shell: #fff0d1;
+      --shell-soft: #fff8e8;
+      --mint: #6fd2b8;
+      --ink: #132824;
+      --muted: #50645e;
+      --line: rgba(19, 40, 36, 0.32);
+      --danger: #9c2541;
+      --focus: #0d3432;
+      --z-sticky: 20;
+      --z-toast: 60;
+      --ease: cubic-bezier(.2, .75, .25, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      min-height: 100%;
+      background: var(--petrol);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 5% 8%, rgba(255, 100, 59, .16), transparent 28rem),
+        radial-gradient(circle at 95% 92%, rgba(247, 198, 75, .12), transparent 25rem),
+        var(--petrol);
+      font-family: "Libre Franklin", sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input { font: inherit; }
+
+    button,
+    [role="button"] {
+      min-height: 48px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    p, li { text-wrap: pretty; }
+
+    .lab-bar {
+      position: relative;
+      z-index: var(--z-sticky);
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px max(16px, calc((100vw - 1440px) / 2));
+      border-bottom: 1px solid rgba(255, 240, 209, .24);
+      color: var(--shell);
+      background: rgba(19, 40, 36, .98);
+    }
+
+    .lab-title {
+      min-width: 0;
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .lab-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .lab-control {
+      min-height: 44px;
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 240, 209, .42);
+      border-radius: 999px;
+      color: var(--shell);
+      background: transparent;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .lab-control:hover,
+    .lab-control[aria-pressed="true"] {
+      border-color: var(--honey);
+      color: var(--ink);
+      background: var(--honey);
+    }
+
+    .app-shell {
+      width: min(100%, 1440px);
+      min-height: calc(100dvh - 69px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: clip;
+      color: var(--ink);
+      background: var(--shell);
+      box-shadow: 0 0 0 1px rgba(255, 240, 209, .16);
+    }
+
+    .app-header {
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr);
+      align-items: center;
+      gap: 16px;
+      padding: 12px 22px;
+      border-bottom: 2px solid var(--ink);
+      background: var(--shell-soft);
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .brand-r {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 10px 4px 10px 4px;
+      color: var(--honey);
+      background: var(--ink);
+      font-family: "Archivo Black", sans-serif;
+      font-size: 1.35rem;
+      line-height: 1;
+      box-shadow: 3px 3px 0 var(--mandarin);
+    }
+
+    .brand-name { font-size: .88rem; letter-spacing: -.02em; }
+
+    .app-header h1 {
+      margin: 0;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 1.12rem;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .language-button {
+      justify-self: end;
+      min-width: 54px;
+      padding: 8px 12px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--honey);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .language-button:hover,
+    .language-button:active { background: var(--mint); }
+
+    .catalog-layout {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 228px minmax(380px, 1fr) minmax(360px, 470px);
+      align-items: stretch;
+    }
+
+    .catalog-layout[data-editor="true"] { grid-template-columns: 228px minmax(0, 1fr); }
+
+    .catalog-sidebar {
+      min-width: 0;
+      padding: 26px 18px;
+      border-right: 1.5px solid var(--ink);
+      color: var(--shell);
+      background: var(--petrol-deep);
+    }
+
+    .catalog-sidebar h2 {
+      margin-bottom: 8px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 1.8rem;
+      line-height: .98;
+      letter-spacing: -.035em;
+    }
+
+    .catalog-sidebar p {
+      margin-bottom: 24px;
+      color: #c6d7d0;
+      font-size: .84rem;
+    }
+
+    .filter-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--mint);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .search-field {
+      width: 100%;
+      min-height: 48px;
+      margin-bottom: 18px;
+      padding: 10px 12px;
+      border: 2px solid #6f817a;
+      border-radius: 11px;
+      color: var(--shell);
+      background: #0d201e;
+      font-size: .9rem;
+    }
+
+    .search-field::placeholder { color: #b6c7c0; opacity: 1; }
+
+    .deck-filters {
+      display: grid;
+      gap: 8px;
+    }
+
+    .deck-filter {
+      width: 100%;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1.5px solid #52645e;
+      border-radius: 10px;
+      color: var(--shell);
+      background: transparent;
+      text-align: left;
+      font-size: .84rem;
+      font-weight: 800;
+    }
+
+    .deck-filter span:last-child {
+      min-width: 26px;
+      color: var(--ink);
+      background: var(--mint);
+      border-radius: 999px;
+      text-align: center;
+      font-size: .72rem;
+      line-height: 24px;
+    }
+
+    .deck-filter:hover,
+    .deck-filter[aria-pressed="true"] {
+      border-color: var(--honey);
+      color: var(--ink);
+      background: var(--honey);
+    }
+
+    .deck-filter[aria-pressed="true"] span:last-child { background: var(--shell); }
+
+    .catalog-note {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid #52645e;
+      color: #b8cac3;
+      font-size: .73rem;
+    }
+
+    .catalog-main {
+      min-width: 0;
+      padding: 28px 28px 48px;
+      background:
+        linear-gradient(90deg, transparent 0 97%, rgba(255, 100, 59, .12) 97% 98%, transparent 98%),
+        var(--shell);
+    }
+
+    .catalog-intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .catalog-kicker {
+      margin-bottom: 8px;
+      color: var(--mandarin-dark);
+      font-size: .75rem;
+      font-weight: 900;
+    }
+
+    .catalog-intro h2 {
+      max-width: 620px;
+      margin-bottom: 8px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(2.3rem, 5vw, 4.6rem);
+      line-height: .88;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+    }
+
+    .catalog-intro p {
+      max-width: 58ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .catalog-count {
+      flex: none;
+      padding: 10px 12px;
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      background: var(--mint);
+      font-size: .78rem;
+      font-weight: 900;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .game-list { display: grid; }
+
+    .game-row {
+      width: 100%;
+      min-width: 0;
+      min-height: 86px;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 4px;
+      border: 0;
+      border-bottom: 1.5px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+      transition: background-color 180ms var(--ease), padding 180ms var(--ease);
+    }
+
+    .game-row:hover,
+    .game-row[aria-current="true"] {
+      padding-inline: 12px;
+      background: rgba(247, 198, 75, .38);
+    }
+
+    .game-row[aria-current="true"] { box-shadow: inset 4px 0 0 var(--mandarin); }
+
+    .game-index {
+      color: var(--mandarin-dark);
+      font-family: "Archivo Black", sans-serif;
+      font-size: .84rem;
+    }
+
+    .game-row strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    .game-row small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .76rem;
+      font-weight: 600;
+    }
+
+    .game-badge {
+      min-width: 32px;
+      padding: 5px 8px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--shell-soft);
+      text-align: center;
+      font-size: .68rem;
+      font-weight: 900;
+    }
+
+    .collection-gallery { display: grid; gap: 18px; margin-bottom: 30px; }
+
+    .deck-stage,
+    .support-stage { display: grid; gap: 14px; }
+
+    .deck-stage { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .support-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .collection-tile {
+      position: relative;
+      min-width: 0;
+      min-height: 230px;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      background: var(--shell-soft);
+      box-shadow: 5px 5px 0 var(--ink);
+      transition: transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+
+    .collection-tile:hover,
+    .collection-tile[data-active="true"] { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+    .collection-tile[data-active="true"] { outline: 4px solid var(--focus); outline-offset: 3px; }
+
+    .collection-select {
+      width: 100%;
+      height: 100%;
+      min-height: 230px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 0;
+      border: 0;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+    }
+
+    .collection-art {
+      position: relative;
+      min-height: 156px;
+      overflow: hidden;
+      border-bottom: 2px solid var(--ink);
+      background: var(--mandarin);
+    }
+
+    .collection-tile[data-collection="french"] .collection-art { background: var(--honey); }
+    .collection-tile[data-collection="italian"] .collection-art { background: var(--mint); }
+    .collection-tile[data-collection="dice"] .collection-art { background: #cfe4d7; }
+    .collection-tile[data-collection="extra"] .collection-art { background: var(--shell); }
+
+    .collection-copy { padding: 14px 15px 15px; }
+    .collection-copy strong { display: block; font-family: "Archivo Black", sans-serif; font-size: 1.05rem; line-height: 1; text-transform: uppercase; }
+    .collection-copy small { display: block; margin-top: 5px; color: var(--muted); font-size: .72rem; font-weight: 750; }
+
+    .cover-svg { width: 100%; height: 100%; min-height: 156px; display: block; }
+    .cover-svg text { font-family: "Archivo Black", sans-serif; }
+    .cover-svg .cover-shadow { fill: rgba(19, 40, 36, .28); stroke: none; }
+    .cover-svg .cover-card { fill: #fffaf0; stroke: var(--ink); stroke-width: 4; }
+    .cover-svg .cover-line { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .colored-photo-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+    .colored-card-photo { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .poker-composite-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+    .poker-composite-photo { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .italian-composite-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+    .italian-composite-photo { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .dice-composite-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+    .dice-composite-photo { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .extra-composite-stage { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+    .extra-composite-photo { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+    .extra-add {
+      position: absolute;
+      z-index: 2;
+      right: 12px;
+      bottom: 13px;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      color: white;
+      background: var(--mandarin);
+      font-size: .74rem;
+      font-weight: 900;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .collection-results { border-top: 2px solid var(--ink); }
+    .collection-results-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding: 20px 0 12px; }
+    .collection-results-head h3 { margin: 0; font-family: "Archivo Black", sans-serif; font-size: 1.55rem; line-height: 1; text-transform: uppercase; }
+    .collection-results-head span { color: var(--muted); font-size: .78rem; font-weight: 800; }
+
+    .deck-game-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 2px solid var(--ink); background: var(--shell-soft); }
+    .deck-game { min-width: 0; min-height: 74px; padding: 12px 14px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--ink); background: transparent; text-align: left; font-size: .88rem; font-weight: 800; }
+    .deck-game:nth-child(even) { border-right: 0; }
+    .deck-game:hover, .deck-game[aria-current="true"] { color: var(--shell); background: var(--petrol); }
+    .deck-game small { display: block; margin-top: 3px; opacity: .72; font-size: .69rem; }
+    .extra-game-row { min-width: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--shell-soft); }
+    .extra-game-row:nth-child(even) { border-right: 0; }
+    .extra-game-row .deck-game { width: 100%; border: 0; }
+    .extra-game-row .availability { padding: 0 14px 12px; }
+
+    .extra-form { width: min(100%, 920px); display: grid; gap: 20px; margin: 0 auto; }
+    .form-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
+    .form-heading h2 { margin: 0; font-family: "Archivo Black", sans-serif; font-size: 2.6rem; line-height: .92; text-transform: uppercase; }
+    .form-heading p { max-width: 54ch; margin: 8px 0 0; color: var(--muted); }
+    .form-back { flex: none; min-height: 44px; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 10px; color: var(--ink); background: var(--shell-soft); font-weight: 850; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .field { display: grid; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label, .field-label { font-size: .76rem; font-weight: 900; }
+    .field input, .field textarea, .field select { width: 100%; min-height: 48px; padding: 10px 12px; border: 2px solid var(--ink); border-radius: 10px; color: var(--ink); background: white; font: inherit; }
+    .field textarea { min-height: 118px; resize: vertical; }
+    .field small { color: var(--muted); font-size: .73rem; }
+    .advanced-rules { border: 2px solid var(--ink); background: var(--shell-soft); }
+    .advanced-rules summary { min-height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; font-weight: 900; }
+    .advanced-rules summary::after { content: "+"; font-family: "Archivo Black", sans-serif; font-size: 1.4rem; }
+    .advanced-rules[open] summary::after { content: "−"; }
+    .advanced-inner { padding: 4px 14px 16px; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .save-extra { min-width: 180px; min-height: 52px; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 12px; color: white; background: var(--mandarin); font-weight: 900; box-shadow: 4px 4px 0 var(--ink); }
+    .form-error { margin: 0; padding: 10px 12px; border: 2px solid var(--danger); color: var(--danger); background: #fff1f3; font-size: .82rem; font-weight: 800; }
+    .availability { min-height: 44px; display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: .74rem; }
+    .availability input { width: 20px; height: 20px; accent-color: var(--petrol); }
+
+    .game-detail {
+      min-width: 0;
+      padding: 30px 28px 48px;
+      border-left: 1.5px solid var(--ink);
+      background: var(--shell-soft);
+    }
+
+    .detail-sticky { position: sticky; top: 90px; }
+
+    .mobile-back {
+      display: none;
+      min-height: 48px;
+      margin-bottom: 16px;
+      padding: 8px 0;
+      border: 0;
+      color: var(--ink);
+      background: transparent;
+      font-weight: 900;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 5px;
+    }
+
+    .detail-deck {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--mandarin-dark);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .detail-deck::before {
+      content: "";
+      width: 26px;
+      height: 4px;
+      background: currentColor;
+    }
+
+    .game-detail h2 {
+      margin-bottom: 12px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(2.1rem, 4vw, 3.55rem);
+      line-height: .9;
+      letter-spacing: -.04em;
+    }
+
+    .detail-objective {
+      max-width: 62ch;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: .98rem;
+      font-weight: 600;
+    }
+
+    .meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .meta-chip {
+      padding: 6px 9px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--shell);
+      font-size: .7rem;
+      font-weight: 850;
+    }
+
+    .meta-chip.kind { background: var(--honey); }
+
+    .rules-heading {
+      margin: 0 0 10px;
+      font-size: .75rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .rules-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: rule;
+      border-top: 2px solid var(--ink);
+    }
+
+    .rules-list li {
+      min-height: 62px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-size: .87rem;
+      counter-increment: rule;
+    }
+
+    .rules-list li::before {
+      content: counter(rule);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--shell);
+      background: var(--petrol);
+      font-size: .72rem;
+      font-weight: 900;
+    }
+
+    .result-block,
+    .phone-block {
+      margin-top: 16px;
+      padding: 15px 16px;
+      border: 2px solid var(--ink);
+    }
+
+    .result-block { background: var(--honey); box-shadow: 4px 4px 0 var(--ink); }
+    .phone-block { background: var(--mint); }
+
+    .result-block strong,
+    .phone-block strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .result-block p,
+    .phone-block p { margin: 0; font-size: .85rem; }
+
+    .primary-action {
+      width: 100%;
+      min-height: 56px;
+      margin-top: 20px;
+      padding: 12px 18px;
+      border: 2px solid var(--ink);
+      border-radius: 13px;
+      color: white;
+      background: var(--mandarin);
+      font-weight: 900;
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: transform 160ms var(--ease), box-shadow 160ms var(--ease), background 160ms var(--ease);
+    }
+
+    .primary-action:hover { background: #ff7658; }
+    .primary-action:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+
+    .state-panel {
+      min-height: 440px;
+      display: grid;
+      place-items: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .state-panel-inner { width: min(100%, 520px); }
+
+    .state-panel h2 {
+      margin-bottom: 10px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .state-panel p { color: var(--muted); }
+
+    .recovery-button {
+      min-width: 180px;
+      padding: 10px 16px;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      color: white;
+      background: var(--mandarin);
+      font-weight: 900;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .skeleton-list { display: grid; gap: 12px; }
+
+    .skeleton-row {
+      min-height: 78px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(19, 40, 36, .08), rgba(255, 255, 255, .48), rgba(19, 40, 36, .08)),
+        var(--shell-soft);
+      background-size: 220% 100%;
+      animation: skeleton 1.4s linear infinite;
+    }
+
+    @keyframes skeleton { to { background-position: -220% 0; } }
+
+    .empty-state {
+      padding: 34px 20px;
+      border: 2px dashed var(--ink);
+      text-align: center;
+    }
+
+    .empty-state h3 { margin-bottom: 8px; font-size: 1.25rem; }
+    .empty-state p { margin: 0; color: var(--muted); }
+
+    .toast {
+      position: fixed;
+      z-index: var(--z-toast);
+      right: 18px;
+      bottom: 18px;
+      width: min(390px, calc(100vw - 36px));
+      padding: 14px 16px;
+      border: 2px solid var(--shell);
+      border-radius: 12px;
+      color: var(--shell);
+      background: var(--petrol-deep);
+      box-shadow: 5px 5px 0 var(--mandarin);
+      transform: translateY(calc(100% + 40px));
+      visibility: hidden;
+      opacity: 0;
+      transition: transform 220ms var(--ease);
+      pointer-events: none;
+    }
+
+    .toast[data-visible="true"] { transform: none; visibility: visible; opacity: 1; }
+
+    .toast strong { display: block; margin-bottom: 3px; }
+    .toast span { display: block; color: #c6d7d0; font-size: .82rem; }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 1080px) {
+      .catalog-layout { grid-template-columns: 190px minmax(340px, 1fr) 360px; }
+      .catalog-sidebar { padding-inline: 14px; }
+      .catalog-main, .game-detail { padding-inline: 20px; }
+      .brand-name { display: none; }
+    }
+
+    @media (max-width: 1040px) {
+      .lab-bar { position: relative; align-items: flex-start; flex-direction: column; }
+      .lab-controls { justify-content: flex-start; }
+      .app-shell { min-height: 100dvh; }
+      .app-header {
+        position: sticky;
+        z-index: var(--z-sticky);
+        top: 0;
+        grid-template-columns: 54px 1fr 54px;
+        padding: 10px 14px;
+      }
+      .brand-name { display: none; }
+      .catalog-layout { display: block; }
+      .catalog-sidebar {
+        padding: 16px;
+        border: 0;
+        border-bottom: 2px solid var(--ink);
+      }
+      .catalog-sidebar h2,
+      .catalog-sidebar > p,
+      .catalog-note { display: none; }
+      .filter-label { margin-bottom: 6px; }
+      .search-field { margin-bottom: 12px; }
+      .deck-filters {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 0 5px;
+        scrollbar-width: none;
+      }
+      .deck-filters::-webkit-scrollbar { display: none; }
+      .deck-filter { width: auto; min-width: max-content; }
+      .catalog-main { min-height: 620px; padding: 24px 16px 48px; background: var(--shell); }
+      .catalog-intro { align-items: start; flex-direction: column; }
+      .catalog-intro h2 { font-size: clamp(2.55rem, 13vw, 4rem); }
+      .catalog-count { align-self: flex-start; }
+      .game-detail {
+        min-height: 100dvh;
+        padding: 22px 18px 48px;
+        border: 0;
+      }
+      .detail-sticky { position: static; }
+      .mobile-back { display: inline-flex; align-items: center; }
+      .game-detail h2 { font-size: clamp(2.4rem, 13vw, 4rem); }
+      .game-row { grid-template-columns: 38px minmax(0, 1fr) auto; }
+      .deck-stage { grid-template-columns: repeat(3, minmax(210px, 1fr)); overflow-x: auto; padding: 4px 6px 12px 4px; scroll-snap-type: x proximity; }
+      .collection-tile { scroll-snap-align: start; }
+      .support-stage { grid-template-columns: repeat(2, minmax(250px, 1fr)); overflow-x: auto; padding: 4px 6px 12px 4px; }
+      .form-heading { align-items: stretch; flex-direction: column-reverse; }
+      .form-back { align-self: flex-start; }
+      .toast { right: 12px; bottom: 12px; width: calc(100vw - 24px); }
+    }
+
+    @media (max-width: 430px) {
+      .lab-bar { gap: 10px; padding: 10px 12px; }
+      .lab-title { font-size: .68rem; }
+      .lab-controls { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+      .lab-control { width: 100%; padding-inline: 8px; }
+      .app-header h1 { font-size: .92rem; }
+      .brand-r { width: 38px; height: 38px; }
+      .language-button { min-width: 48px; padding-inline: 8px; }
+      .catalog-intro p { font-size: .88rem; }
+      .game-row { min-height: 82px; gap: 10px; }
+      .game-badge { padding-inline: 6px; }
+      .deck-stage, .support-stage { display: grid; grid-template-columns: 1fr; overflow: visible; padding: 0; }
+      .collection-tile, .collection-select { min-height: 214px; }
+      .collection-art { min-height: 142px; }
+      .deck-game-grid { grid-template-columns: 1fr; }
+      .deck-game { border-right: 0; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .form-heading h2 { font-size: 2.1rem; }
+      .form-actions { display: grid; }
+      .save-extra { width: 100%; }
+      .meta-strip { gap: 6px; }
+      .rules-list li { font-size: .85rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="lab-bar" aria-label="Controlli del mockup">
+    <div class="lab-title" id="lab-title">Mockup catalogo V1 - direzione B approvata</div>
+    <div class="lab-controls">
+      <button class="lab-control" id="lab-catalog" type="button" data-demo-state="catalog" aria-pressed="true">Catalogo</button>
+      <button class="lab-control" id="lab-states" type="button" data-demo-state="loading" aria-pressed="false">Stati</button>
+    </div>
+  </aside>
+
+  <main class="app-shell">
+    <header class="app-header">
+      <a class="brand-lockup" href="#catalog" aria-label="Ruckus Party, torna al catalogo">
+        <span class="brand-r" aria-hidden="true">R</span>
+        <span class="brand-name">RUCKUS PARTY</span>
+      </a>
+      <h1 id="app-title">Giochi</h1>
+      <button class="language-button" type="button" id="language-button" aria-label="Passa all'inglese">EN</button>
+    </header>
+
+    <div class="catalog-layout" id="catalog-layout">
+      <aside class="catalog-sidebar" id="catalog-sidebar">
+        <h2 id="sidebar-title">Trova il tuo prossimo gioco.</h2>
+        <p id="sidebar-copy">Quaranta giochi ufficiali, materiali compatibili e i tuoi giochi fisici nella stessa Party Night.</p>
+        <label class="filter-label" for="game-search" id="search-label">Cerca per nome</label>
+        <input class="search-field" id="game-search" type="search" placeholder="Es. bluff, scopa, sprint" autocomplete="off">
+        <span class="filter-label" id="deck-filter-label">Filtra per mazzo</span>
+        <div class="deck-filters" id="deck-filters" aria-label="Filtra per mazzo"></div>
+        <p class="catalog-note" id="catalog-note">T preserva il nucleo tradizionale. R indica un remix progettato per Ruckus Party.</p>
+      </aside>
+
+      <section class="catalog-main" id="catalog" aria-labelledby="catalog-heading"></section>
+      <aside class="game-detail" id="game-detail" aria-live="polite"></aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" data-visible="false">
+    <strong id="toast-title">Mockup interattivo</strong>
+    <span id="toast-copy">L'avvio del gioco verrà collegato dopo l'approvazione del catalogo.</span>
+  </div>
+
+  <script>
+    const deckLabels = {
+      it: { all: "Tutti", colored: "Carte colorate", french: "Mazzo Poker", italian: "Mazzo italiano", dice: "Dadi", extra: "Giochi Extra" },
+      en: { all: "All", colored: "Colored cards", french: "Poker deck", italian: "Italian deck", dice: "Dice", extra: "Extra Games" }
+    };
+
+    const games = [
+      {
+        id: "sprint", deck: "colored", kind: "R", players: "2-6", duration: "3-5 min", mechanic: { it: "Velocità", en: "Speed" },
+        it: { title: "Sprint", objective: "Svuota la mano prima degli altri giocando in contemporanea per colore o numero.", rules: ["Distribuite 7 carte a testa e scoprite una carta al centro.", "Tutti possono scartare insieme una carta dello stesso colore o numero della carta visibile.", "Quando nessuno può giocare, ciascuno pesca una carta e il ritmo riparte."], win: "Vince il primo giocatore che resta senza carte.", phone: "Il telefono può creare un mazzo virtuale pubblico, verificare le corrispondenze e segnalare la vittoria." },
+        en: { title: "Sprint", objective: "Empty your hand before everyone else by playing matching colors or numbers at the same time.", rules: ["Deal 7 cards to each player and reveal one center card.", "Everyone may discard at once by matching the visible color or number.", "When nobody can play, everyone draws one card and the rush resumes."], win: "The first player with no cards wins.", phone: "The phone can provide a shared virtual deck, validate matches and announce the winner." }
+      },
+      {
+        id: "forbidden-color", deck: "colored", kind: "R", players: "2-8", duration: "5 min", mechanic: { it: "Attenzione", en: "Attention" },
+        it: { title: "Colore Proibito", objective: "Liberati delle carte senza usare il colore che Ruckus ha temporaneamente vietato.", rules: ["Distribuite 6 carte a testa e scoprite la prima carta della pila.", "A turno giocate per colore o numero, ma mai usando il colore proibito mostrato dall'app.", "Dopo tre carte valide l'app cambia il colore proibito; chi non può giocare pesca."], win: "Vince chi svuota per primo la propria mano.", phone: "Ruckus mostra il colore vietato, conta le giocate valide e lo cambia al momento giusto." },
+        en: { title: "Forbidden Color", objective: "Get rid of your cards without using the color Ruckus has temporarily banned.", rules: ["Deal 6 cards each and reveal the first pile card.", "Take turns matching color or number, but never use the forbidden color shown by the app.", "After three valid cards the app changes the banned color; draw if you cannot play."], win: "The first player to empty their hand wins.", phone: "Ruckus displays the banned color, counts valid plays and changes it at the right moment." }
+      },
+      {
+        id: "roulette", deck: "colored", kind: "R", players: "2-8", duration: "3-6 min", mechanic: { it: "Rischio", en: "Push your luck" },
+        it: { title: "Roulette", objective: "Accumula punti pescando carte dello stesso colore, ma fermati prima che il colore cambi.", rules: ["L'app stabilisce tre round e il primo giocatore pesca una carta.", "Puoi fermarti e conservare la somma, oppure pescare ancora.", "Se il colore cambia perdi i punti del round; poi il turno passa al giocatore successivo."], win: "Dopo tre round vince il totale più alto. Le parità restano valide.", phone: "Il telefono sostituisce il mazzo, nasconde la prossima carta e conserva tutti i punteggi." },
+        en: { title: "Roulette", objective: "Build points by drawing the same color, but stop before the color changes.", rules: ["The app starts three rounds and the first player draws a card.", "You may stop and bank the sum, or draw again.", "If the color changes you lose the round points, then play passes on."], win: "The highest total after three rounds wins. Ties remain valid.", phone: "The phone replaces the deck, hides the next card and stores every score." }
+      },
+      {
+        id: "assassin", deck: "colored", kind: "R", players: "3-8", duration: "5-10 min", mechanic: { it: "Bluff", en: "Bluff" },
+        it: { title: "Assassino", objective: "Completa una missione segreta attraverso le carte senza farti identificare.", rules: ["Ruckus assegna a ogni giocatore una missione breve da memorizzare.", "Giocate normalmente per colore o numero cercando di provocare la vostra condizione.", "Ogni avversario può accusare una sola volta; un'accusa sbagliata rende la missione più facile."], win: "Vince chi completa per primo la missione senza essere smascherato, oppure chi formula l'accusa corretta.", phone: "Usa private reveal brevi per missioni e accuse; non conserva segreti consultabili durante la partita." },
+        en: { title: "Assassin", objective: "Complete a secret card mission without being identified.", rules: ["Ruckus gives each player one short mission to memorize.", "Play by matching color or number while trying to trigger your condition.", "Each opponent may accuse once; a wrong accusation makes your mission easier."], win: "Complete your mission undetected, or make the first correct accusation, to win.", phone: "Uses brief private reveals for missions and accusations, without keeping secrets available during play." }
+      },
+      {
+        id: "chain", deck: "colored", kind: "R", players: "2-8", duration: "5 min", mechanic: { it: "Combo", en: "Combos" },
+        it: { title: "Catena", objective: "Costruisci la catena più lunga alternando corrispondenze di colore e numero.", rules: ["Distribuite 7 carte a testa e scoprite una carta iniziale.", "Nel tuo turno puoi continuare a scartare alternando stesso colore e stesso numero.", "Quando ti fermi, segna un punto per ogni carta della catena e pesca fino a tornare a 7."], win: "Dopo tre turni a testa vince chi ha costruito il totale più alto.", phone: "Il telefono può gestire mano pubblica, validazione della catena e punteggio." },
+        en: { title: "Chain", objective: "Build the longest chain by alternating color and number matches.", rules: ["Deal 7 cards each and reveal a starting card.", "On your turn keep discarding by alternating same color and same number.", "When you stop, score one point per chained card and draw back to 7."], win: "The highest total after three turns each wins.", phone: "The phone can manage public hands, validate the chain and track scores." }
+      },
+      {
+        id: "target", deck: "colored", kind: "R", players: "2-6", duration: "5 min", mechanic: { it: "Calcolo", en: "Quick math" },
+        it: { title: "Bersaglio", objective: "Forma dalla tua mano la somma più vicina al numero bersaglio senza superarlo.", rules: ["Ruckus mostra un bersaglio e distribuisce 5 carte a ogni giocatore.", "Tutti scelgono in segreto una combinazione di carte e possono cambiarne una sola.", "Quando tutti sono pronti, le combinazioni vengono rivelate insieme."], win: "Vince la somma più vicina senza superare il bersaglio. Se tutti superano, vince lo scarto minore.", phone: "Il telefono può distribuire mani pubbliche per giocatore e gestire bersaglio, cambio e confronto finale." },
+        en: { title: "Target", objective: "Build the hand total closest to the target number without going over.", rules: ["Ruckus shows a target and deals 5 cards to each player.", "Everyone secretly chooses a combination and may replace one card.", "When everyone is ready, all combinations are revealed together."], win: "Closest without going over wins. If everyone goes over, the smallest excess wins.", phone: "The phone can deal public player hands and manage the target, replacement and final comparison." }
+      },
+      {
+        id: "chromatic-war", deck: "colored", kind: "R", players: "2-6", duration: "3-5 min", mechanic: { it: "Simultaneo", en: "Simultaneous" },
+        it: { title: "Guerra Cromatica", objective: "Vinci duelli simultanei usando valore e colore dominante del round.", rules: ["Distribuite 5 carte a testa; Ruckus annuncia il colore dominante.", "Tutti scelgono una carta coperta e la rivelano insieme.", "Il colore dominante batte gli altri; tra carte equivalenti vince il numero più alto."], win: "Dopo cinque duelli vince chi ha conquistato più round.", phone: "Il telefono gestisce mazzo virtuale pubblico, colore dominante e conteggio dei duelli." },
+        en: { title: "Chromatic War", objective: "Win simultaneous duels through card value and the round's dominant color.", rules: ["Deal 5 cards each; Ruckus announces the dominant color.", "Everyone chooses one card face down and reveals together.", "The dominant color beats all others; equivalent cards compare by number."], win: "The player who wins the most of five duels wins.", phone: "The phone manages a public virtual deck, dominant color and duel count." }
+      },
+      {
+        id: "contagion", deck: "colored", kind: "R", players: "3-8", duration: "5-8 min", mechanic: { it: "Regole mobili", en: "Shifting rules" },
+        it: { title: "Contagio", objective: "Svuota la mano evitando il colore infetto che continua a cambiare.", rules: ["Distribuite 6 carte a testa e lasciate che l'app scelga il primo colore infetto.", "Giocate per colore o numero; usare il colore infetto assegna un punto contagio.", "Dopo ogni contagio Ruckus sposta l'infezione su un nuovo colore."], win: "Quando qualcuno svuota la mano, vince chi ha meno punti contagio; la chiusura spezza le parità.", phone: "Ruckus rende visibile l'infezione, applica i cambi e conserva i punti." },
+        en: { title: "Contagion", objective: "Empty your hand while avoiding the infected color as it keeps changing.", rules: ["Deal 6 cards each and let the app choose the first infected color.", "Match color or number; using the infected color gives one contagion point.", "After each contagion Ruckus moves the infection to another color."], win: "When a hand is emptied, the fewest contagion points wins; going out breaks ties.", phone: "Ruckus displays the infection, applies changes and stores points." }
+      },
+      {
+        id: "last-card", deck: "colored", kind: "R", players: "2-8", duration: "5-10 min", mechanic: { it: "Previsione", en: "Prediction" },
+        it: { title: "Ultima Carta", objective: "Liberati della mano e fai coincidere l'ultima carta con il colore che avevi previsto.", rules: ["Ogni giocatore sceglie in segreto un colore e riceve 7 carte.", "Giocate a turno abbinando colore o numero; se non puoi, pesca.", "Quando chiudi la mano, rivela la previsione: vale 2 punti se corretta e 1 se errata."], win: "Dopo due mani vince chi ha più punti. Le parità producono più vincitori.", phone: "Il telefono gestisce previsioni con private reveal brevi, mazzo virtuale e punteggio." },
+        en: { title: "Last Card", objective: "Empty your hand and make your final card match the color you predicted.", rules: ["Each player secretly chooses a color and receives 7 cards.", "Take turns matching color or number; draw if you cannot play.", "When you go out, reveal the prediction: score 2 if correct and 1 if wrong."], win: "The highest score after two hands wins. Ties create multiple winners.", phone: "The phone handles brief private predictions, a virtual deck and scoring." }
+      },
+      {
+        id: "chaos", deck: "colored", kind: "R", players: "2-8", duration: "5-10 min", mechanic: { it: "Party", en: "Party" },
+        it: { title: "Caos", objective: "Svuota la mano mentre Ruckus cambia temporaneamente le regole.", rules: ["Distribuite 7 carte e iniziate abbinando colore o numero.", "Ogni tre turni l'app introduce una regola valida fino al segnale successivo.", "La regola può invertire i valori, vietare azioni o imporre un limite di tempo."], win: "Vince il primo giocatore senza carte. Una giocata non valida obbliga a riprendere due carte.", phone: "Il telefono è arbitro: mostra un solo modificatore alla volta, scandisce il tempo e segnala gli errori." },
+        en: { title: "Chaos", objective: "Empty your hand while Ruckus temporarily changes the rules.", rules: ["Deal 7 cards and start by matching color or number.", "Every three turns the app introduces one rule until the next signal.", "The rule may invert values, ban actions or impose a time limit."], win: "The first player with no cards wins. An invalid play means drawing two cards.", phone: "The phone acts as referee, showing one modifier at a time, timing turns and flagging errors." }
+      },
+
+      {
+        id: "speed", deck: "french", kind: "T", players: "2", duration: "3-8 min", mechanic: { it: "Velocità", en: "Speed" },
+        it: { title: "Speed", objective: "Liberati delle carte giocando prima dell'avversario sulle due pile centrali.", rules: ["Preparate due pile centrali e una riserva personale per ciascun giocatore.", "Giocate insieme una carta immediatamente superiore o inferiore a quella visibile, senza considerare il seme.", "Quando nessuno può muoversi, scoprite una nuova carta centrale dalle riserve."], win: "Vince chi esaurisce per primo mano e riserva.", phone: "La versione su un solo telefono usa due aree di gioco contrapposte e pile centrali condivise." },
+        en: { title: "Speed", objective: "Get rid of your cards by beating your opponent to the two center piles.", rules: ["Prepare two center piles and one personal reserve per player.", "Play simultaneously one rank above or below a visible center card, ignoring suit.", "When nobody can move, reveal new center cards from the reserves."], win: "The first player to empty both hand and reserve wins.", phone: "The one-phone version uses two opposing play areas and shared center piles." }
+      },
+      {
+        id: "slapjack", deck: "french", kind: "T", players: "2-6", duration: "5-15 min", mechanic: { it: "Riflessi", en: "Reflexes" },
+        it: { title: "Slapjack", objective: "Colpisci la pila quando appare un Fante e conquista tutte le carte.", rules: ["Distribuite tutto il mazzo senza guardare le carte.", "A turno scoprite la carta superiore sulla pila centrale.", "Quando appare un Fante, tutti possono colpire la pila; il primo la aggiunge al proprio mazzo."], win: "Vince chi conquista tutte le carte. Per Party Night, dopo 8 minuti vince chi ne possiede di più.", phone: "Il telefono rivela una carta alla volta e usa un grande bersaglio centrale per registrare il primo tocco." },
+        en: { title: "Slapjack", objective: "Slap the pile when a Jack appears and capture all the cards.", rules: ["Deal the whole deck without looking at the cards.", "Take turns revealing the top card onto the center pile.", "When a Jack appears, everyone may slap; the first player takes the pile."], win: "Capture every card to win. In Party Night, most cards after 8 minutes wins.", phone: "The phone reveals one card at a time and uses a large center target to register the first touch." }
+      },
+      {
+        id: "irish-snap", deck: "french", kind: "T", players: "2-6", duration: "5-15 min", mechanic: { it: "Riflessi e memoria", en: "Reflexes and memory" },
+        it: { title: "Irish Snap", objective: "Evita di essere l'ultimo a colpire quando valore pronunciato e carta coincidono.", rules: ["Distribuite il mazzo e pronunciate ciclicamente Asso, 2, 3 fino a Re.", "A turno scoprite una carta mentre dite il valore successivo della sequenza.", "Se parola e carta coincidono, tutti colpiscono la pila; l'ultimo raccoglie tutto."], win: "Vince chi resta senza carte. Se scade il tempo, vince chi ne possiede meno.", phone: "Ruckus scandisce i valori, rivela le carte e riconosce l'ordine dei tocchi sul bersaglio centrale." },
+        en: { title: "Irish Snap", objective: "Avoid being last to slap when the spoken rank matches the revealed card.", rules: ["Deal the deck and cycle aloud from Ace, 2, 3 through King.", "Take turns revealing a card while saying the next rank.", "If word and card match, everyone slaps; the last player takes the pile."], win: "The first player with no cards wins. If time expires, fewest cards wins.", phone: "Ruckus calls ranks, reveals cards and records touch order on the center target." }
+      },
+      {
+        id: "durak", deck: "french", kind: "T", players: "2-6", duration: "10-20 min", mechanic: { it: "Attacco e difesa", en: "Attack and defense" },
+        it: { title: "Durak", objective: "Difenditi dagli attacchi e non essere l'ultimo giocatore rimasto con carte.", rules: ["Usate 36 carte dal 6 all'Asso, date 6 carte a testa e scoprite la briscola.", "L'attaccante gioca una carta; il difensore la batte con una carta superiore dello stesso seme o con una briscola.", "Se la difesa riesce le carte escono dal gioco; se fallisce, il difensore le raccoglie."], win: "Tutti possono salvarsi tranne l'ultimo con carte, che è il Durak e perde.", phone: "La modalità su un solo telefono usa mani a informazione aperta per evitare segreti consultabili continuamente." },
+        en: { title: "Durak", objective: "Defend against attacks and avoid being the last player holding cards.", rules: ["Use 36 cards from 6 to Ace, deal 6 each and reveal trump.", "The attacker plays a card; the defender beats it with a higher same-suit card or a trump.", "Successful defenses leave play; failed defenses are picked up."], win: "Everyone may escape except the final player with cards, the Durak, who loses.", phone: "The one-phone mode uses open information hands to avoid continuously accessible private state." }
+      },
+      {
+        id: "bluff", deck: "french", kind: "T", players: "3-8", duration: "5-15 min", mechanic: { it: "Bluff", en: "Bluff" },
+        it: { title: "Bluff", objective: "Liberati delle carte dichiarando il vero o mentendo senza farti scoprire.", rules: ["Distribuite tutte le carte; il primo giocatore cala una o più carte coperte e ne dichiara il valore.", "Il giocatore successivo può aggiungere carte con la stessa dichiarazione oppure accusare.", "Se l'accusa è corretta il bugiardo raccoglie la pila; altrimenti la raccoglie chi ha accusato."], win: "Vince il primo giocatore senza carte, purché la sua ultima dichiarazione superi l'eventuale accusa.", phone: "La versione virtuale usa un singolo passaggio coperto per scegliere carte e dichiarazione, poi torna allo schermo comune." },
+        en: { title: "Bluff", objective: "Get rid of your cards by telling the truth or lying without being caught.", rules: ["Deal all cards; the first player lays one or more face down and declares their rank.", "The next player may add cards under the same claim or challenge.", "A correct challenge makes the liar take the pile; a wrong one punishes the challenger."], win: "The first player out wins if their final claim survives any challenge.", phone: "Virtual play uses one covered selection pass, then returns to the shared screen." }
+      },
+      {
+        id: "president", deck: "french", kind: "T", players: "3-6", duration: "10-20 min", mechanic: { it: "Scarto", en: "Shedding" },
+        it: { title: "Presidente", objective: "Finisci le carte giocando combinazioni dello stesso tipo ma sempre più alte.", rules: ["Distribuite tutto il mazzo; il primo giocatore apre con una singola, coppia o tris.", "Gli altri devono giocare lo stesso numero di carte con valore superiore oppure passare.", "Quando tutti passano, l'ultimo giocatore valido apre una nuova sequenza."], win: "Il primo senza carte è Presidente; l'ultimo determina l'ultimo posto del gioco.", phone: "Il telefono mostra mani pubbliche, combinazione richiesta e ordine di arrivo senza introdurre ruoli persistenti." },
+        en: { title: "President", objective: "Empty your hand by playing same-size combinations of increasing rank.", rules: ["Deal the whole deck; the first player opens with a single, pair or triple.", "Others must play the same number of higher cards or pass.", "After everyone passes, the last valid player opens a new sequence."], win: "The first player out is President; the final player determines last place.", phone: "The phone shows open hands, the required combination and finishing order without persistent roles." }
+      },
+      {
+        id: "thirty-one", deck: "french", kind: "T", players: "2-6", duration: "5-10 min", mechanic: { it: "Rischio", en: "Push your luck" },
+        it: { title: "Trentuno", objective: "Costruisci il valore più alto possibile in un solo seme, idealmente 31.", rules: ["Date tre carte a testa e lasciate una carta scoperta accanto al mazzo.", "A turno pescate dal mazzo o prendete lo scarto, poi scartate una carta.", "Quando siete soddisfatti bussate: gli altri hanno un ultimo turno prima del confronto."], win: "Vince il totale più alto nello stesso seme. Asso vale 11, figure 10, numeri il proprio valore.", phone: "Il telefono può gestire mani pubbliche, pescata, scarto e calcolo automatico del seme migliore." },
+        en: { title: "Thirty-One", objective: "Build the highest total in one suit, ideally 31.", rules: ["Deal three cards each and reveal one discard beside the deck.", "On your turn draw from deck or discard, then discard one card.", "Knock when ready; everyone else gets one final turn before comparison."], win: "Highest same-suit total wins. Ace is 11, faces 10, numbers keep their value.", phone: "The phone can manage open hands, draws, discards and automatic best-suit scoring." }
+      },
+      {
+        id: "flash-poker", deck: "french", kind: "R", players: "2-6", duration: "5 min", mechanic: { it: "Poker", en: "Poker" },
+        it: { title: "Poker Lampo", objective: "Crea la mano di poker migliore con un solo cambio e senza puntate.", rules: ["Distribuite cinque carte a ogni giocatore.", "In un unico turno potete cambiare fino a due carte.", "Quando tutti hanno deciso, rivelate le mani insieme e applicate la graduatoria standard."], win: "Vince la combinazione di poker più alta. Le combinazioni identiche producono più vincitori.", phone: "Ruckus distribuisce mani pubbliche, guida il cambio e confronta automaticamente le combinazioni." },
+        en: { title: "Flash Poker", objective: "Make the best poker hand with one draw and no betting.", rules: ["Deal five cards to each player.", "In one turn, replace up to two cards.", "When everyone has decided, reveal together and use standard hand rankings."], win: "The highest poker hand wins. Identical ranked hands create multiple winners.", phone: "Ruckus deals open player hands, guides the draw and compares combinations automatically." }
+      },
+      {
+        id: "flash-run", deck: "french", kind: "R", players: "2-6", duration: "5-10 min", mechanic: { it: "Combinazioni", en: "Set collection" },
+        it: { title: "Scala Flash", objective: "Completa prima degli altri la combinazione breve scelta da Ruckus.", rules: ["L'app estrae un obiettivo, per esempio un tris e una scala da tre.", "Date 7 carte a testa; a turno pescate una carta e scartatene una.", "Quando la mano soddisfa interamente l'obiettivo, mostratela e chiudete il round."], win: "Vince il primo giocatore che completa esattamente l'obiettivo.", phone: "Il telefono può usare mani pubbliche, generare l'obiettivo e validare tris e scale." },
+        en: { title: "Flash Run", objective: "Be first to complete the short combination selected by Ruckus.", rules: ["The app selects a goal, such as one triple and one three-card run.", "Deal 7 cards each; draw one and discard one on every turn.", "Reveal and close the round as soon as your hand fully matches the goal."], win: "The first player to complete the exact goal wins.", phone: "The phone can use open hands, generate the goal and validate sets and runs." }
+      },
+      {
+        id: "golf", deck: "french", kind: "T", players: "2-6", duration: "10-15 min", mechanic: { it: "Memoria", en: "Memory" },
+        it: { title: "Golf", objective: "Riduci il valore delle quattro carte davanti a te ricordando quelle ancora coperte.", rules: ["Ogni giocatore dispone quattro carte in quadrato e ne scopre due.", "A turno pesca una carta e la scambia con una delle quattro, oppure la scarta.", "Una carta sostituita resta scoperta; il round finisce quando un giocatore ha tutte le carte visibili."], win: "Vince il totale più basso dopo l'ultimo turno degli avversari.", phone: "La modalità virtuale mostra i quattro quadranti pubblicamente e gestisce pescata, sostituzione e punteggio." },
+        en: { title: "Golf", objective: "Lower the value of your four-card layout while remembering the hidden cards.", rules: ["Each player lays four cards in a square and reveals two.", "On your turn draw and swap with one layout card, or discard the draw.", "A replaced card stays face up; the round ends when one layout is fully visible."], win: "Lowest total wins after every opponent takes one final turn.", phone: "Virtual play displays public four-card layouts and handles draws, swaps and scoring." }
+      },
+
+      {
+        id: "briscola", deck: "italian", kind: "T", players: "2-3", duration: "10-15 min", mechanic: { it: "Prese", en: "Trick-taking" },
+        it: { title: "Briscola", objective: "Conquista più punti degli avversari usando il seme di briscola e la gerarchia tradizionale.", rules: ["Date tre carte a testa e scoprite la carta che stabilisce il seme di briscola.", "Giocate una carta senza obbligo di seguire il seme; prende la briscola più alta o la carta più alta del seme iniziale.", "Chi prende pesca per primo e apre la presa successiva; continuate fino a esaurire il mazzo."], win: "A due vince chi supera 60 punti; a tre vince il totale più alto. Asso 11, Tre 10, Re 4, Cavallo 3, Fante 2.", phone: "La modalità senza carte usa mani pubbliche e automatizza mazzo, briscola, prese e conteggio." },
+        en: { title: "Briscola", objective: "Capture more points through the trump suit and traditional Briscola ranking.", rules: ["Deal three cards each and reveal the card that sets trump.", "Play any card; the highest trump wins, otherwise the highest card of the led suit.", "The trick winner draws first and leads next; continue until the deck is exhausted."], win: "With two players, exceed 60 points; with three, highest total wins. Ace 11, Three 10, King 4, Knight 3, Jack 2.", phone: "Cardless mode uses open hands and automates the deck, trump, tricks and scoring." }
+      },
+      {
+        id: "called-briscola", deck: "italian", kind: "T", players: "5", duration: "15-30 min", mechanic: { it: "Squadre segrete", en: "Hidden teams" },
+        it: { title: "Briscola Chiamata", objective: "Vinci l'asta e raggiungi il punteggio dichiarato insieme al possessore segreto della carta chiamata.", rules: ["Distribuite otto carte a testa e svolgete l'asta secondo la variante scelta.", "Il vincitore chiama una carta: chi la possiede diventa il suo compagno senza dichiararsi.", "Giocate le prese come a Briscola; l'alleanza emerge quando la carta chiamata viene giocata."], win: "La squadra del chiamante vince se raggiunge il contratto; altrimenti vincono gli altri tre giocatori.", phone: "Ruckus guida asta e contratto. La modalità senza carte usa mani a informazione aperta e perde parte del bluff tradizionale." },
+        en: { title: "Called Briscola", objective: "Win the auction and fulfill the contract with the secret holder of the called card.", rules: ["Deal eight cards each and run the auction under the selected house variant.", "The winner calls one card; its holder becomes the hidden partner.", "Play Briscola tricks until the called card reveals the alliance."], win: "The caller's team wins by fulfilling the contract; otherwise the other three players win.", phone: "Ruckus guides auction and contract. Cardless play uses open information hands and loses some traditional bluff." }
+      },
+      {
+        id: "briscola-target", deck: "italian", kind: "R", players: "2-3", duration: "6-9 min", mechanic: { it: "Precisione", en: "Precision" },
+        it: { title: "Briscola Bersaglio", objective: "Vinci una presa che totalizza esattamente il bersaglio mostrato da Ruckus.", rules: ["Giocate come a Briscola con bersaglio 13 o 14 in due, 16, 17 o 18 in tre.", "Dopo ogni presa sommate i punti delle carte: Asso 11, Tre 10, Re 4, Cavallo 3, Fante 2.", "Un totale esatto chiude subito; altrimenti ogni giocatore conserva il proprio tentativo migliore."], win: "Se nessuno centra il bersaglio, vince la distanza minore; a pari distanza, sotto batte sopra, poi conta il totale Briscola.", phone: "La modalità Full Digital usa mani pubbliche e gestisce bersaglio, prese, confronti e risultato." },
+        en: { title: "Briscola Bullseye", objective: "Win a trick whose cards total exactly the target shown by Ruckus.", rules: ["Play Briscola with target 13 or 14 for two players, 16, 17 or 18 for three.", "After every trick total card points: Ace 11, Three 10, King 4, Knight 3, Jack 2.", "An exact total ends immediately; otherwise each player keeps their best attempt."], win: "If nobody hits, smallest distance wins; below beats above on equal distance, then total Briscola points break ties.", phone: "Full Digital mode uses open hands and manages target, tricks, comparisons and result." }
+      },
+      {
+        id: "briscola-151", deck: "italian", kind: "T", players: "2", duration: "10-20 min", mechanic: { it: "Prese e combinazioni", en: "Tricks and melds" },
+        it: { title: "Briscola 151", objective: "Accumula prese e matrimoni di Re e Cavallo fino a raggiungere 151 punti.", rules: ["Date cinque carte a testa, scoprite la briscola e giocate le prese con la gerarchia tradizionale.", "Dichiara Re e Cavallo dello stesso seme quando sei di mano: 40 punti in briscola, 20 negli altri semi.", "Continuate tra smazzate, conservando il totale cumulativo."], win: "Vince chi raggiunge per primo almeno 151 punti secondo la chiusura concordata della variante.", phone: "Ruckus automatizza mani pubbliche, dichiarazioni, punti delle prese e totale tra le smazzate." },
+        en: { title: "Briscola 151", objective: "Build trick points and King-Knight marriages until reaching 151.", rules: ["Deal five cards each, reveal trump and play tricks under traditional ranking.", "Declare same-suit King and Knight while leading: 40 in trump, 20 in another suit.", "Continue across deals while keeping the cumulative total."], win: "The first player to reach at least 151 under the chosen closing convention wins.", phone: "Ruckus automates open hands, declarations, trick points and cumulative scoring." }
+      },
+      {
+        id: "seven-half", deck: "italian", kind: "T", players: "2-6", duration: "3-10 min", mechanic: { it: "Rischio", en: "Push your luck" },
+        it: { title: "Sette e Mezzo", objective: "Avvicinati a sette e mezzo senza superarlo e batti il banco.", rules: ["Un giocatore fa il banco; distribuisce una carta coperta a ogni partecipante e a sé stesso.", "A turno ciascuno chiede carta oppure si ferma; numeri al valore facciale, figure mezzo punto.", "Chi supera sette e mezzo perde subito; poi il banco gioca contro tutti i superstiti."], win: "Batte il banco chi resta sotto o pari a sette e mezzo con un totale superiore. Il banco vince le parità.", phone: "Ruckus sostituisce denaro con esiti di round, gestisce il banco virtuale e consente private reveal brevi." },
+        en: { title: "Seven and a Half", objective: "Get close to seven and a half without going over, then beat the dealer.", rules: ["One player deals one hidden card to every participant and to themselves.", "Each player hits or stands; numbers keep face value and court cards are half a point.", "Going over loses immediately; then the dealer plays against all survivors."], win: "Beat the dealer with a higher total at or below seven and a half. The dealer wins ties.", phone: "Ruckus replaces betting with round outcomes, manages a virtual dealer and uses brief private reveals." }
+      },
+      {
+        id: "scopa", deck: "italian", kind: "T", players: "2-3", duration: "10-15 min", mechanic: { it: "Cattura", en: "Capture" },
+        it: { title: "Scopa", objective: "Cattura carte dal tavolo e costruisci i punti tradizionali della smazzata.", rules: ["Mettete quattro carte scoperte sul tavolo e date tre carte a ogni giocatore.", "Gioca una carta: prende lo stesso valore oppure una combinazione che somma quel valore; se esiste la presa diretta, è obbligatoria.", "Svuotare il tavolo vale una Scopa; ridistribuite tre carte finché il mazzo termina."], win: "Assegnate carte, denari, settebello, primiera e scope. Vince il totale più alto.", phone: "La modalità digitale usa mani pubbliche e segnala catture valide, scope e categorie di punteggio." },
+        en: { title: "Scopa", objective: "Capture table cards and build the traditional scoring categories.", rules: ["Place four cards face up and deal three to each player.", "Play one card to take an equal rank or a combination totaling its value; a direct match takes priority.", "Clearing the table scores a Scopa; redeal three cards until the deck is exhausted."], win: "Score most cards, coins, settebello, primiera and scope. Highest total wins.", phone: "Digital mode uses open hands and highlights valid captures, scope and scoring categories." }
+      },
+      {
+        id: "flash-scopa", deck: "italian", kind: "R", players: "2-4", duration: "5-8 min", mechanic: { it: "Cattura rapida", en: "Quick capture" },
+        it: { title: "Scopa Flash", objective: "Conquista più punti in una sola mini-smazzata di Scopa.", rules: ["Mettete quattro carte sul tavolo e date tre carte a testa.", "Giocate con le normali catture della Scopa; una pulizia completa vale subito 2 punti.", "Dopo aver giocato la prima mano, distribuite una seconda e ultima mano da tre carte."], win: "Vince chi totalizza più carte catturate più 2 punti per ogni Scopa. Le parità restano valide.", phone: "Il telefono gestisce mani pubbliche, catture disponibili e punteggio breve senza categorie finali complesse." },
+        en: { title: "Flash Scopa", objective: "Score the most points in one compact Scopa mini-deal.", rules: ["Place four cards on the table and deal three to each player.", "Use normal Scopa captures; clearing the table immediately scores 2 points.", "After the first hand, deal one final hand of three cards each."], win: "Most captured cards plus 2 points per Scopa wins. Ties remain valid.", phone: "The phone manages open hands, available captures and short scoring without complex final categories." }
+      },
+      {
+        id: "steal-pile", deck: "italian", kind: "T", players: "2-4", duration: "5-10 min", mechanic: { it: "Furto", en: "Stealing" },
+        it: { title: "Rubamazzo", objective: "Costruisci il mazzetto più grande e rubalo agli avversari abbinando la carta superiore.", rules: ["Mettete quattro carte scoperte sul tavolo e date tre carte a testa.", "Gioca una carta per prendere lo stesso valore dal tavolo, oppure posala scoperta se non può catturare.", "Se il valore coincide con la carta in cima al mazzetto avversario, rubi l'intero mazzetto."], win: "Quando finiscono le carte, vince chi possiede il maggior numero di carte catturate.", phone: "Ruckus mostra mani pubbliche e rende sempre leggibile la carta superiore di ogni mazzetto." },
+        en: { title: "Steal the Pile", objective: "Build the biggest pile and steal opponents' piles by matching their top card.", rules: ["Place four cards face up and deal three to each player.", "Play a card to capture the same table value, or leave it face up if no capture exists.", "Match the top card of an opponent's pile to steal the whole pile."], win: "When the deck ends, the player with the most captured cards wins.", phone: "Ruckus shows open hands and keeps every pile's top card clearly visible." }
+      },
+      {
+        id: "common-capture", deck: "italian", kind: "R", players: "2-4", duration: "5-8 min", mechanic: { it: "Scelta condivisa", en: "Shared choice" },
+        it: { title: "Presa Comune", objective: "Scegli dalla mano condivisa la carta migliore per catturare dal tavolo prima degli altri.", rules: ["Mettete quattro carte sul tavolo e tre carte scoperte nella mano comune.", "A turno scegli una carta comune e cattura lo stesso valore o una somma equivalente.", "Dopo la giocata Ruckus riempie lo spazio vuoto; se non puoi catturare, la carta scelta resta sul tavolo."], win: "A esaurimento del mazzo vince chi ha catturato più carte; le Scope spezzano le parità.", phone: "È pensato per un solo schermo: tavolo, mano comune e raccolte sono sempre pubblici." },
+        en: { title: "Common Capture", objective: "Choose from the shared hand to make the best table capture before your opponents.", rules: ["Place four cards on the table and three face-up cards in the shared hand.", "On your turn choose a shared card and capture an equal value or matching sum.", "Ruckus refills the empty slot; if no capture exists, the chosen card stays on the table."], win: "Most captured cards when the deck ends wins; Scope break ties.", phone: "Designed for one screen: table, shared hand and captured collections stay public." }
+      },
+      {
+        id: "four-suits", deck: "italian", kind: "R", players: "2-4", duration: "5-8 min", mechanic: { it: "Collezione", en: "Set collection" },
+        it: { title: "I Quattro Semi", objective: "Sii il primo a conquistare almeno una carta di coppe, denari, bastoni e spade.", rules: ["Mettete quattro carte sul tavolo e date tre carte a testa.", "Catturate con le regole della Scopa: stesso valore o combinazione che raggiunge il valore giocato.", "Dopo ogni presa controllate i semi già raccolti; continuate a distribuire fino a completare il set o il mazzo."], win: "Vince subito chi raccoglie tutti e quattro i semi. Se il mazzo finisce, contano semi diversi e poi carte totali.", phone: "Il telefono usa mani pubbliche e mostra per ogni giocatore i quattro semi conquistati senza affidarsi solo al colore." },
+        en: { title: "The Four Suits", objective: "Be first to capture at least one cup, coin, club and sword card.", rules: ["Place four cards on the table and deal three to each player.", "Capture under Scopa rules: equal value or a combination totaling the played card.", "After every capture check collected suits; keep dealing until a set or the deck is complete."], win: "Collect all four suits to win immediately. If the deck ends, compare distinct suits, then total cards.", phone: "The phone uses open hands and shows each player's four collected suits with labels as well as color." }
+      }
+    ];
+
+    games.push(
+      {
+        id: "target-100", deck: "dice", kind: "R", players: "2-6", duration: "6-9 min", mechanic: { it: "Precisione", en: "Precision" },
+        it: { title: "Mira 100", objective: "Avvicinati al bersaglio scegliendo dopo ogni lancio se vale x1 oppure x10.", rules: ["Ruckus genera un bersaglio tra 70 e 140 e cambia il primo giocatore a ogni round.", "In ciascuno dei tre round lancia un dado e assegna al risultato il valore x1 oppure x10.", "L'app aggiorna sempre totale e distanza, così ogni scelta resta leggibile a tutti."], win: "Dopo tre round vince chi è più vicino al bersaglio. Un totale esatto è sempre il risultato migliore.", phone: "Il telefono può lanciare il dado virtuale, alternare il primo giocatore e calcolare automaticamente le distanze." },
+        en: { title: "Target 100", objective: "Get closest to the target by choosing whether every roll is worth x1 or x10.", rules: ["Ruckus creates a target from 70 to 140 and rotates the starting player each round.", "During each of three rounds, roll one die and assign x1 or x10 to the result.", "The app keeps every total and distance visible so the choices stay clear."], win: "After three rounds, the closest total wins. An exact hit is always best.", phone: "The phone can roll a virtual die, rotate the starting player and calculate every distance." }
+      },
+      {
+        id: "bust-25", deck: "dice", kind: "R", players: "2-6", duration: "6-10 min", mechanic: { it: "Attacco", en: "Take that" },
+        it: { title: "Spaccato!", objective: "Raggiungi esattamente 25, avanzando oppure rallentando chi è davanti.", rules: ["A turno lancia un dado e scegli se aggiungerlo al tuo totale o sottrarlo a un avversario in vantaggio.", "Hai due attacchi e non puoi colpire la stessa persona due volte consecutive.", "Se supereresti 25 e non hai un attacco valido, perdi intenzionalmente il turno."], win: "Vince chi raggiunge esattamente 25. Dopo otto minuti vince chi è più vicino senza superarlo.", phone: "Ruckus può lanciare il dado e mostra soltanto le azioni valide, evitando calcoli e discussioni." },
+        en: { title: "Busted!", objective: "Reach exactly 25 by advancing yourself or slowing down the leader.", rules: ["Roll one die and either add it to your total or subtract it from an opponent ahead of you.", "You have two attacks and cannot target the same person twice in a row.", "If the roll would pass 25 and no attack is valid, you deliberately lose the turn."], win: "Reach exactly 25 to win. After eight minutes, closest without going over wins.", phone: "Ruckus can roll the die and show only valid actions, preventing calculation disputes." }
+      },
+      {
+        id: "dice-poker", deck: "dice", kind: "T", players: "2-6", duration: "8-18 min", mechanic: { it: "Combinazioni", en: "Combinations" },
+        it: { title: "Poker di Dadi", objective: "Costruisci le combinazioni migliori scegliendo quali dadi conservare tra tre lanci.", rules: ["Nel tuo turno lancia cinque dadi e tieni quelli utili.", "Puoi rilanciare gli altri fino a due volte, per un massimo di tre lanci.", "Assegna il risultato a una categoria ancora libera: otto nella versione completa, quattro nella Flash."], win: "Quando tutte le categorie sono compilate vince il punteggio totale più alto.", phone: "Il telefono può sostituire i cinque dadi, bloccare quelli scelti e gestire la scheda punti pubblica." },
+        en: { title: "Dice Poker", objective: "Build the best combinations by choosing which dice to keep across three rolls.", rules: ["Roll five dice on your turn and keep the useful ones.", "Reroll the others up to twice, for a maximum of three rolls.", "Score the result in an unused category: eight in the full game, four in Flash."], win: "When every category is filled, the highest total wins.", phone: "The phone can replace all five dice, lock selected dice and manage the public score sheet." }
+      },
+      {
+        id: "dice-doubt", deck: "dice", kind: "T", players: "3-6", duration: "6-15 min", mechanic: { it: "Bluff", en: "Bluff" },
+        it: { title: "Dubito!", objective: "Sopravvivi dichiarando quantità sempre maggiori e smascherando i bluff.", rules: ["Ogni giocatore lancia i propri dadi sotto un bicchiere e guarda soltanto il proprio risultato.", "A turno aumenta la dichiarazione sulla quantità di una faccia presente tra tutti i dadi, oppure esclama Dubito!", "Si scoprono i dadi: perde un dado chi ha dubitato se la dichiarazione era vera, altrimenti chi l'ha fatta."], win: "Nella completa vince l'ultimo con almeno un dado. Nella Flash, dopo tre round vince chi ne conserva di più.", phone: "Richiede dadi fisici e bicchieri: un solo telefono condiviso non può custodire segreti consultabili durante il round." },
+        en: { title: "I Doubt It!", objective: "Survive by raising bids and exposing bluffs.", rules: ["Each player rolls their own dice under a cup and sees only their result.", "Raise the claim about how many dice show one face, or call I Doubt It!", "Reveal all dice: the challenger loses one if the claim was true, otherwise the bidder does."], win: "Full game: last player with a die wins. Flash: most dice after three rounds wins.", phone: "Physical dice and cups are required because one shared phone cannot keep continuously available secrets during a round." }
+      },
+      {
+        id: "broken-bank", deck: "dice", kind: "R", players: "2-6", duration: "5-10 min", mechanic: { it: "Rischio", en: "Push your luck" },
+        it: { title: "Banco Rotto", objective: "Colleziona facce diverse e fermati prima che un lancio senza novità cancelli il turno.", rules: ["Lancia tre dadi e conserva davanti a te una faccia che non avevi ancora bloccato.", "Puoi salvare i punti ottenuti oppure rilanciare i dadi rimasti.", "Se un lancio non mostra alcuna faccia nuova, perdi tutti i punti accumulati nel turno."], win: "Vince il primo a 18 punti, oppure il totale più alto dopo tre giri completi.", phone: "Ruckus può lanciare i dadi, mostrare le facce già bloccate e conservare i punteggi." },
+        en: { title: "Broken Bank", objective: "Collect new faces and stop before a roll with no new result wipes the turn.", rules: ["Roll three dice and keep one face you have not locked before.", "Bank the points or reroll the remaining dice.", "If a roll shows no new face, lose every point built during that turn."], win: "First to 18 points wins, or highest total after three full rounds.", phone: "Ruckus can roll the dice, show locked faces and store scores." }
+      },
+      {
+        id: "face-change", deck: "dice", kind: "R", players: "2-6", duration: "3-7 min", mechanic: { it: "Velocità", en: "Speed" },
+        it: { title: "Cambio Faccia", objective: "Completa per primo la missione mostrata, rilanciando insieme agli altri.", rules: ["Ogni giocatore parte con tre dadi e Ruckus mostra una missione pubblica, come una coppia o totale 11.", "Tutti lanciano contemporaneamente e possono bloccare o rilanciare liberamente i propri dadi.", "Appena completi la missione, ferma gli altri e fai verificare il risultato."], win: "Vince chi conquista per primo tre missioni.", phone: "L'app genera le missioni e tiene i round; servono dadi fisici separati per il lancio simultaneo." },
+        en: { title: "Face Change", objective: "Be first to complete the displayed mission while everyone rerolls together.", rules: ["Each player has three dice and Ruckus shows a public mission, such as a pair or total 11.", "Everyone rolls at once and may freely keep or reroll their dice.", "As soon as you complete the mission, stop the group and verify the result."], win: "First player to claim three missions wins.", phone: "The app creates missions and tracks rounds; separate physical dice are needed for simultaneous play." }
+      },
+      {
+        id: "common-code", deck: "dice", kind: "R", players: "2-6", duration: "5-8 min", mechanic: { it: "Cooperativo", en: "Cooperative" },
+        it: { title: "Codice Comune", objective: "Collaborate per completare tre bersagli esatti con un numero sempre minore di dadi liberi.", rules: ["Ruckus mostra tre bersagli e il gruppo lancia cinque dadi condivisi.", "Dopo ogni lancio dovete bloccare almeno un dado, anche se rende più difficile il bersaglio.", "Usate i dadi bloccati per completare esattamente un bersaglio, poi passate al successivo."], win: "Il gruppo vince completando tutti e tre i bersagli entro nove lanci totali.", phone: "Il telefono può sostituire i dadi, bloccarli visivamente e contare i lanci senza informazioni private." },
+        en: { title: "Common Code", objective: "Work together to complete three exact targets with fewer free dice after every roll.", rules: ["Ruckus shows three targets and the group rolls five shared dice.", "After every roll, lock at least one die even when it makes the target harder.", "Use locked dice to hit one target exactly, then move to the next."], win: "The group wins by completing all three targets within nine total rolls.", phone: "The phone can replace the dice, lock them visually and count rolls with no private information." }
+      },
+      {
+        id: "crooked-line", deck: "dice", kind: "R", players: "2-6", duration: "6-10 min", mechanic: { it: "Pianificazione", en: "Planning" },
+        it: { title: "Linea Storta", objective: "Costruisci la sequenza crescente più lunga decidendo dove inserire ogni lancio condiviso.", rules: ["Ogni giocatore prepara sei spazi vuoti ordinati da sinistra a destra.", "Per sei volte si lancia un dado condiviso e ciascuno inserisce il risultato in uno spazio ancora libero.", "I valori non possono essere spostati: devi prevedere dove potranno crescere i lanci successivi."], win: "Vince la sequenza strettamente crescente più lunga; a pari lunghezza vince quella con somma maggiore.", phone: "Ruckus lancia il dado pubblico e offre a ogni giocatore una griglia pass-and-play da compilare." },
+        en: { title: "Crooked Line", objective: "Build the longest rising sequence by deciding where every shared roll belongs.", rules: ["Each player prepares six empty spaces from left to right.", "Roll one shared die six times and place every result into an unused space.", "Values cannot move, so predict where future rolls may continue the sequence."], win: "Longest strictly rising sequence wins; higher sum breaks equal lengths.", phone: "Ruckus rolls the shared die and provides each player with a brief pass-and-play grid." }
+      },
+      {
+        id: "pass-it-on", deck: "dice", kind: "R", players: "2-6", duration: "6-10 min", mechanic: { it: "Interferenza", en: "Interference" },
+        it: { title: "Te lo Passo", objective: "Costruisci un totale sicuro trattenendo un dado e imponendo l'altro al giocatore successivo.", rules: ["Nel tuo turno lancia due dadi e scegli quale aggiungere al tuo totale.", "Il dado scartato diventa obbligatoriamente il primo valore del turno del giocatore successivo.", "Il giocatore successivo lancia un solo dado, sceglie tra i due e passa l'altro ancora avanti."], win: "Dopo cinque giri vince il totale più alto senza superare 30. Chi supera 30 viene eliminato dalla classifica del round.", phone: "Il telefono può gestire entrambi i dadi, il valore imposto e tutti i totali pubblici." },
+        en: { title: "Pass It On", objective: "Build a safe total by keeping one die and forcing the other on the next player.", rules: ["Roll two dice and choose which one to add to your total.", "The rejected die becomes the required first value for the next player's turn.", "That player rolls one die, chooses between the two and passes the other onward."], win: "After five laps, highest total without passing 30 wins. Totals above 30 are out of the round ranking.", phone: "The phone can manage both dice, the forced value and every public total." }
+      },
+      {
+        id: "secret-face", deck: "dice", kind: "R", players: "2-6", duration: "5-8 min", mechanic: { it: "Previsione", en: "Prediction" },
+        it: { title: "Faccia Segreta", objective: "Scegli una faccia poco contesa e guadagna tutte le sue corrispondenze nei lanci pubblici.", rules: ["Ogni giocatore memorizza in private reveal una faccia da 1 a 6.", "Lanciate sei dadi e contate quante volte appare ogni faccia scelta.", "Se più giocatori avevano scelto la stessa faccia, i loro punti del round si annullano."], win: "Dopo quattro round vince chi ha raccolto più corrispondenze valide.", phone: "L'app usa private reveal brevi per le scelte, poi lancia sei dadi pubblici e assegna i punti." },
+        en: { title: "Secret Face", objective: "Choose a less contested face and score all its matches in the public roll.", rules: ["Each player memorizes a face from 1 to 6 through a private reveal.", "Roll six dice and count how often every chosen face appears.", "If multiple players chose the same face, their round points cancel out."], win: "After four rounds, the most valid matches wins.", phone: "The app uses brief private reveals for choices, then rolls six public dice and awards points." }
+      }
+    );
+
+    const copy = {
+      it: {
+        appTitle: "Giochi",
+        labTitle: "Mockup catalogo V1 - direzione B approvata",
+        labCatalog: "Catalogo",
+        labStates: "Stati",
+        sidebarTitle: "Trova il tuo prossimo gioco.",
+        sidebarCopy: "Quaranta giochi ufficiali, materiali compatibili e i tuoi giochi fisici nella stessa Party Night.",
+        searchLabel: "Cerca per nome",
+        searchPlaceholder: "Es. bluff, scopa, sprint",
+        filterLabel: "Filtra per materiale",
+        note: "T preserva il nucleo tradizionale. R indica un remix Ruckus. Extra identifica un gioco fisico aggiunto da te.",
+        kicker: "40 giochi ufficiali + i tuoi",
+        heading: "Ogni scatola può entrare nella festa.",
+        intro: "Tre mazzi allineati, dieci giochi con dadi e uno spazio per i giochi fisici che possiedi già.",
+        found: count => `${count} ${count === 1 ? "gioco" : "giochi"}`,
+        rules: "Come si gioca",
+        players: "giocatori",
+        physicalVirtual: "Materiale o telefono",
+        win: "Come si vince",
+        phone: "Senza carte, su un telefono",
+        phoneExtra: "Ruolo del telefono",
+        physicalOriginal: "Materiale originale",
+        play: "Gioca in Partita veloce",
+        back: "Torna al catalogo",
+        emptyTitle: "Nessun gioco trovato.",
+        emptyCopy: "Cambia ricerca oppure torna a Tutti per vedere l'intero catalogo.",
+        loadingTitle: "Carico il catalogo",
+        loadingCopy: "Questo stato evita una schermata vuota mentre arrivano i giochi compatibili.",
+        errorTitle: "Il catalogo non è disponibile.",
+        errorCopy: "I giochi non sono stati caricati. Puoi riprovare senza perdere ricerca e filtri.",
+        retry: "Riprova",
+        toastTitle: "Mockup interattivo",
+        toastCopy: "L'avvio verrà collegato dopo l'approvazione del catalogo.",
+        languageLabel: "Passa all'inglese",
+        official: "giochi ufficiali",
+        compatible: "compatibili",
+        availableTonight: "Disponibile stasera",
+        addExtra: "Aggiungi gioco",
+        extraEmpty: "Nessun Gioco Extra salvato. Aggiungi una scatola, un mazzo particolare o un gioco fisico che vuoi portare nel torneo.",
+        formTitle: "Aggiungi un Gioco Extra",
+        formIntro: "Ruckus conserva regole e risultato. Carte, tabellone e componenti restano quelli originali che possiedi.",
+        cancel: "Torna ai giochi",
+        name: "Nome del gioco *",
+        playersField: "Giocatori *",
+        materialField: "Materiale fisico necessario *",
+        rulesField: "Regole o promemoria *",
+        durationField: "Durata indicativa",
+        advanced: "Regole avanzate",
+        points: "Punti Party Night per vincitore",
+        resultType: "Tipo di risultato",
+        resultOptions: ["Un vincitore", "Più vincitori", "Classifica completa", "Risultato di gruppo"],
+        consequence: "Conseguenza",
+        consequenceOptions: ["Ultimo classificato", "Scelta manuale", "Nessuna"],
+        repeatable: "Ripetibile nella stessa Party Night",
+        saveExtra: "Salva Gioco Extra",
+        formRequired: "Compila nome, giocatori, materiale e regole prima di salvare.",
+        saved: "Gioco Extra salvato",
+        savedCopy: "Ora puoi renderlo disponibile nella prossima Party Night.",
+        personalContent: "Contenuto personale non tradotto"
+      },
+      en: {
+        appTitle: "Games",
+        labTitle: "V1 catalog mockup - approved direction B",
+        labCatalog: "Catalog",
+        labStates: "States",
+        sidebarTitle: "Find your next game.",
+        sidebarCopy: "Forty official games, compatible materials and your physical games in the same Party Night.",
+        searchLabel: "Search by name",
+        searchPlaceholder: "Try bluff, scopa, sprint",
+        filterLabel: "Filter by material",
+        note: "T preserves the traditional core. R marks a Ruckus remix. Extra is a physical game added by you.",
+        kicker: "40 official games + yours",
+        heading: "Every box can join the party.",
+        intro: "Three aligned decks, ten dice games and room for physical games you already own.",
+        found: count => `${count} ${count === 1 ? "game" : "games"}`,
+        rules: "How to play",
+        players: "players",
+        physicalVirtual: "Physical material or phone",
+        win: "How to win",
+        phone: "Cardless, on one phone",
+        phoneExtra: "Phone role",
+        physicalOriginal: "Original material",
+        play: "Play in Quick Play",
+        back: "Back to catalog",
+        emptyTitle: "No games found.",
+        emptyCopy: "Change your search or return to All to see the full catalog.",
+        loadingTitle: "Loading the catalog",
+        loadingCopy: "This state avoids a blank screen while compatible games arrive.",
+        errorTitle: "The catalog is unavailable.",
+        errorCopy: "Games did not load. Retry without losing your search and filters.",
+        retry: "Retry",
+        toastTitle: "Interactive mockup",
+        toastCopy: "Game launch will be connected after the catalog is approved.",
+        languageLabel: "Switch to Italian",
+        official: "official games",
+        compatible: "compatible",
+        availableTonight: "Available tonight",
+        addExtra: "Add game",
+        extraEmpty: "No Extra Games saved. Add a box, a special deck or any physical game you want in the tournament.",
+        formTitle: "Add an Extra Game",
+        formIntro: "Ruckus stores rules and results. Cards, board and components remain the originals you own.",
+        cancel: "Back to games",
+        name: "Game name *",
+        playersField: "Players *",
+        materialField: "Required physical material *",
+        rulesField: "Rules or reminder *",
+        durationField: "Estimated duration",
+        advanced: "Advanced rules",
+        points: "Party Night points per winner",
+        resultType: "Result type",
+        resultOptions: ["One winner", "Multiple winners", "Full ranking", "Group result"],
+        consequence: "Consequence",
+        consequenceOptions: ["Last place", "Manual choice", "None"],
+        repeatable: "Repeatable in the same Party Night",
+        saveExtra: "Save Extra Game",
+        formRequired: "Complete name, players, material and rules before saving.",
+        saved: "Extra Game saved",
+        savedCopy: "You can now make it available for the next Party Night.",
+        personalContent: "Personal content is not translated"
+      }
+    };
+
+    const state = {
+      lang: "it",
+      direction: "decks",
+      demo: "catalog",
+      selected: "briscola-target",
+      deck: "all",
+      query: "",
+      mobileDetail: false,
+      loadingPhase: "loading",
+      extraEditor: false,
+      formError: false,
+      storageError: false
+    };
+
+    const elements = {
+      catalog: document.getElementById("catalog"),
+      detail: document.getElementById("game-detail"),
+      sidebar: document.getElementById("catalog-sidebar"),
+      filters: document.getElementById("deck-filters"),
+      search: document.getElementById("game-search"),
+      toast: document.getElementById("toast"),
+      language: document.getElementById("language-button")
+    };
+
+    const materialCompatibility = {
+      speed: ["colored"],
+      bluff: ["colored"],
+      president: ["colored"],
+      golf: ["colored"]
+    };
+
+    function loadExtraGames() {
+      try {
+        const stored = JSON.parse(localStorage.getItem("ruckus-extra-games-v1") || "[]");
+        if (!Array.isArray(stored)) throw new Error("Formato Giochi Extra non valido");
+        return stored;
+      } catch (error) {
+        console.error("Impossibile leggere i Giochi Extra:", error);
+        state.storageError = true;
+        return [];
+      }
+    }
+
+    let extraGames = loadExtraGames();
+
+    function normalizeExtraGame(extra) {
+      const rules = String(extra.rules || "").split("\n").map(rule => rule.trim()).filter(Boolean).slice(0, 3);
+      while (rules.length < 3) rules.push(state.lang === "it" ? "Seguite il regolamento fisico originale del gioco." : "Follow the original physical rules for this game.");
+      const content = {
+        title: extra.title,
+        objective: state.lang === "it" ? `Gioco fisico personale. Serve: ${extra.material}.` : `Personal physical game. Required: ${extra.material}.`,
+        rules,
+        win: state.lang === "it" ? `Selezionate manualmente il risultato. Ogni vincitore riceve ${extra.points || 1} punti Party Night.` : `Select the result manually. Each winner receives ${extra.points || 1} Party Night points.`,
+        phone: state.lang === "it" ? "Ruckus mostra le regole e registra il risultato, ma non sostituisce carte, tabellone o componenti." : "Ruckus shows the rules and records the result, but does not replace cards, board or components."
+      };
+      return {
+        id: extra.id,
+        deck: "extra",
+        kind: "X",
+        players: extra.players,
+        duration: extra.duration || (state.lang === "it" ? "durata libera" : "open duration"),
+        mechanic: { it: "Fisico", en: "Physical" },
+        available: Boolean(extra.available),
+        extra,
+        it: content,
+        en: content
+      };
+    }
+
+    function allGames() { return [...games, ...extraGames.map(normalizeExtraGame)]; }
+
+    function gameMaterials(game) {
+      return [game.deck, ...(materialCompatibility[game.id] || [])];
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function localizedGame(game) {
+      return { ...game, ...game[state.lang], mechanicLabel: game.mechanic[state.lang] };
+    }
+
+    function filteredGames() {
+      const query = state.query.trim().toLocaleLowerCase(state.lang === "it" ? "it" : "en");
+      return allGames().filter(game => {
+        const content = localizedGame(game);
+        const matchesDeck = state.deck === "all" || gameMaterials(game).includes(state.deck);
+        const haystack = `${content.title} ${content.objective} ${content.mechanicLabel}`.toLocaleLowerCase(state.lang === "it" ? "it" : "en");
+        return matchesDeck && (!query || haystack.includes(query));
+      });
+    }
+
+    function renderStaticCopy() {
+      const c = copy[state.lang];
+      document.documentElement.lang = state.lang;
+      document.getElementById("app-title").textContent = c.appTitle;
+      document.getElementById("lab-title").textContent = c.labTitle;
+      document.getElementById("lab-catalog").textContent = c.labCatalog;
+      document.getElementById("lab-states").textContent = c.labStates;
+      document.getElementById("sidebar-title").textContent = c.sidebarTitle;
+      document.getElementById("sidebar-copy").textContent = c.sidebarCopy;
+      document.getElementById("search-label").textContent = c.searchLabel;
+      document.getElementById("deck-filter-label").textContent = c.filterLabel;
+      document.getElementById("catalog-note").textContent = c.note;
+      elements.search.placeholder = c.searchPlaceholder;
+      elements.language.textContent = state.lang === "it" ? "EN" : "IT";
+      elements.language.setAttribute("aria-label", c.languageLabel);
+      document.getElementById("toast-title").textContent = c.toastTitle;
+      document.getElementById("toast-copy").textContent = c.toastCopy;
+    }
+
+    function renderFilters() {
+      const labels = deckLabels[state.lang];
+      elements.filters.setAttribute("aria-label", copy[state.lang].filterLabel);
+      elements.filters.innerHTML = ["all", "colored", "french", "italian", "dice", "extra"].map(deck => {
+        const count = deck === "all" ? allGames().length : allGames().filter(game => gameMaterials(game).includes(deck)).length;
+        return `<button class="deck-filter" type="button" data-deck="${deck}" aria-pressed="${state.deck === deck}"><span>${escapeHtml(labels[deck])}</span><span>${count}</span></button>`;
+      }).join("");
+    }
+
+    function catalogIntro(count) {
+      const c = copy[state.lang];
+      return `
+        <div class="catalog-intro">
+          <div>
+            <div class="catalog-kicker">${escapeHtml(c.kicker)}</div>
+            <h2 id="catalog-heading">${escapeHtml(c.heading)}</h2>
+            <p>${escapeHtml(c.intro)}</p>
+          </div>
+          <div class="catalog-count" aria-live="polite">${escapeHtml(c.found(count))}</div>
+        </div>`;
+    }
+
+    function gameButton(game, index, className) {
+      const content = localizedGame(game);
+      const selected = state.selected === game.id;
+      if (className === "game-row") {
+        return `<button class="game-row" type="button" data-game-id="${game.id}" aria-current="${selected}">
+          <span class="game-index">${String(index + 1).padStart(2, "0")}</span>
+          <span><strong>${escapeHtml(content.title)}</strong><small>${escapeHtml(content.players)} ${escapeHtml(copy[state.lang].players)} - ${escapeHtml(content.duration)} - ${escapeHtml(content.mechanicLabel)}</small></span>
+          <span class="game-badge" aria-label="${content.kind === "T" ? "Traditional" : content.kind === "R" ? "Ruckus remix" : "Extra game"}">${content.kind === "X" ? "EXTRA" : content.kind}</span>
+        </button>`;
+      }
+      const button = `<button class="deck-game" type="button" data-game-id="${game.id}" aria-current="${selected}"><span>${escapeHtml(content.title)}</span><small>${escapeHtml(content.players)} - ${escapeHtml(content.duration)} - ${content.kind === "X" ? "EXTRA" : content.kind}</small></button>`;
+      if (game.kind !== "X") return button;
+      return `<div class="extra-game-row">${button}<label class="availability"><input type="checkbox" data-extra-available="${game.id}" ${game.available ? "checked" : ""}> ${escapeHtml(copy[state.lang].availableTonight)}</label></div>`;
+    }
+
+    function renderIndex(gamesToRender) {
+      return `<div class="game-list">${gamesToRender.map((game, index) => gameButton(game, index, "game-row")).join("")}</div>`;
+    }
+
+    function collectionArt(deck) {
+      if (deck === "colored") return `<div class="collection-art" aria-hidden="true"><div class="colored-photo-stage"><img class="colored-card-photo" src="assets/catalog-covers/ruckus-colored-cards-v1.png" alt="" draggable="false"></div></div>`;
+      if (deck === "french") return `<div class="collection-art" aria-hidden="true"><div class="poker-composite-stage"><img class="poker-composite-photo" src="assets/catalog-covers/poker-composite-v1.png" alt="" draggable="false"></div></div>`;
+      if (deck === "italian") return `<div class="collection-art" aria-hidden="true"><div class="italian-composite-stage"><img class="italian-composite-photo" src="assets/catalog-covers/italian-composite-v1.png" alt="" draggable="false"></div></div>`;
+      if (deck === "dice") return `<div class="collection-art" aria-hidden="true"><div class="dice-composite-stage"><img class="dice-composite-photo" src="assets/catalog-covers/dice-composite-v1.png" alt="" draggable="false"></div></div>`;
+      return `<div class="collection-art" aria-hidden="true"><div class="extra-composite-stage"><img class="extra-composite-photo" src="assets/catalog-covers/extra-games-composite-v1.png" alt="" draggable="false"></div></div>`;
+    }
+
+    function collectionTile(deck) {
+      const labels = deckLabels[state.lang];
+      const count = allGames().filter(game => gameMaterials(game).includes(deck)).length;
+      const suffix = deck === "extra" ? (state.lang === "it" ? "salvati sul dispositivo" : "saved on this device") : deck === "colored" ? `${count - 10} ${copy[state.lang].compatible} T` : copy[state.lang].official;
+      return `<article class="collection-tile" data-collection="${deck}" data-active="${state.deck === deck}">
+        <button class="collection-select" type="button" data-collection-select="${deck}" aria-pressed="${state.deck === deck}">
+          ${collectionArt(deck)}
+          <span class="collection-copy"><strong>${escapeHtml(labels[deck])}</strong><small>${count} - ${escapeHtml(suffix)}</small></span>
+        </button>
+        ${deck === "extra" ? `<button class="extra-add" type="button" data-add-extra>${escapeHtml(copy[state.lang].addExtra)}</button>` : ""}
+      </article>`;
+    }
+
+    function renderDecks(gamesToRender) {
+      const labels = deckLabels[state.lang];
+      const gallery = `<div class="collection-gallery">
+        <div class="deck-stage">${["colored", "french", "italian"].map(collectionTile).join("")}</div>
+        <div class="support-stage">${["dice", "extra"].map(collectionTile).join("")}</div>
+      </div>`;
+      const heading = state.deck === "all" ? (state.lang === "it" ? "Tutti i giochi" : "All games") : labels[state.deck];
+      const list = gamesToRender.length
+        ? `<div class="deck-game-grid">${gamesToRender.map((game, index) => gameButton(game, index, "deck-game")).join("")}</div>`
+        : `<div class="empty-state"><h3>${escapeHtml(copy[state.lang].emptyTitle)}</h3><p>${escapeHtml(state.deck === "extra" ? copy[state.lang].extraEmpty : copy[state.lang].emptyCopy)}</p></div>`;
+      return `${gallery}<section class="collection-results"><header class="collection-results-head"><h3>${escapeHtml(heading)}</h3><span>${escapeHtml(copy[state.lang].found(gamesToRender.length))}</span></header>${list}</section>`;
+    }
+
+    function renderExtraForm() {
+      const c = copy[state.lang];
+      const optionList = values => values.map((value, index) => `<option value="${index}">${escapeHtml(value)}</option>`).join("");
+      return `<form class="extra-form" id="extra-game-form" novalidate>
+        <div class="form-heading">
+          <div><h2>${escapeHtml(c.formTitle)}</h2><p>${escapeHtml(c.formIntro)}</p></div>
+          <button class="form-back" type="button" data-cancel-extra>${escapeHtml(c.cancel)}</button>
+        </div>
+        <p class="form-error" id="extra-form-error" role="alert" ${state.formError ? "" : "hidden"}>${escapeHtml(c.formRequired)}</p>
+        ${state.storageError ? `<p class="form-error" role="alert">${escapeHtml(state.lang === "it" ? "Il salvataggio locale non è disponibile. Controlla le impostazioni del browser e riprova." : "Local storage is unavailable. Check browser settings and retry.")}</p>` : ""}
+        <div class="form-grid">
+          <div class="field"><label for="extra-name">${escapeHtml(c.name)}</label><input id="extra-name" name="title" required autocomplete="off"><small>${escapeHtml(state.lang === "it" ? "Esempio: Exploding Kittens, Risiko, un mazzo regionale." : "Example: Exploding Kittens, Risk or a regional deck.")}</small></div>
+          <div class="field"><label for="extra-players">${escapeHtml(c.playersField)}</label><input id="extra-players" name="players" required autocomplete="off" inputmode="text"><small>${escapeHtml(state.lang === "it" ? "Esempio: 2-5 oppure 4 a squadre." : "Example: 2-5 or 4 in teams.")}</small></div>
+          <div class="field full"><label for="extra-material">${escapeHtml(c.materialField)}</label><input id="extra-material" name="material" required autocomplete="off"><small>${escapeHtml(state.lang === "it" ? "Scrivi la scatola, il tipo di carte o tutti i componenti da portare." : "List the box, card type or every component players must bring.")}</small></div>
+          <div class="field full"><label for="extra-rules">${escapeHtml(c.rulesField)}</label><textarea id="extra-rules" name="rules" required></textarea><small>${escapeHtml(state.lang === "it" ? "Una regola essenziale per riga. Ruckus mostrerà i primi tre passaggi durante la partita." : "One essential rule per line. Ruckus will show the first three steps during play.")}</small></div>
+          <div class="field"><label for="extra-duration">${escapeHtml(c.durationField)}</label><input id="extra-duration" name="duration" autocomplete="off"><small>${escapeHtml(state.lang === "it" ? "Facoltativo, per esempio 15-25 min." : "Optional, for example 15-25 min.")}</small></div>
+        </div>
+        <details class="advanced-rules">
+          <summary>${escapeHtml(c.advanced)}</summary>
+          <div class="advanced-inner form-grid">
+            <div class="field"><label for="extra-points">${escapeHtml(c.points)}</label><input id="extra-points" name="points" type="number" min="1" max="5" value="1"><small>${escapeHtml(state.lang === "it" ? "Più di 1 rende questo gioco più importante nella classifica." : "More than 1 gives this game extra weight in the ranking.")}</small></div>
+            <div class="field"><label for="extra-result">${escapeHtml(c.resultType)}</label><select id="extra-result" name="resultType">${optionList(c.resultOptions)}</select></div>
+            <div class="field"><label for="extra-consequence">${escapeHtml(c.consequence)}</label><select id="extra-consequence" name="consequence">${optionList(c.consequenceOptions)}</select></div>
+            <div class="field"><span class="field-label">${escapeHtml(c.repeatable)}</span><label class="availability"><input type="checkbox" name="repeatable"> ${escapeHtml(state.lang === "it" ? "Sì, può uscire di nuovo" : "Yes, it may be selected again")}</label></div>
+          </div>
+        </details>
+        <div class="form-actions"><button class="save-extra" type="submit">${escapeHtml(c.saveExtra)}</button></div>
+      </form>`;
+    }
+
+    function renderCatalog() {
+      const visibleGames = filteredGames();
+      if (state.extraEditor) {
+        elements.catalog.innerHTML = renderExtraForm();
+        elements.detail.hidden = true;
+        return;
+      }
+      if (state.demo === "loading") {
+        const c = copy[state.lang];
+        if (state.loadingPhase === "error") {
+          elements.catalog.innerHTML = `<div class="state-panel"><div class="state-panel-inner"><h2>${escapeHtml(c.errorTitle)}</h2><p>${escapeHtml(c.errorCopy)}</p><button class="recovery-button" type="button" data-retry>${escapeHtml(c.retry)}</button></div></div>`;
+        } else {
+          elements.catalog.innerHTML = `<div class="state-panel"><div class="state-panel-inner"><h2>${escapeHtml(c.loadingTitle)}</h2><p>${escapeHtml(c.loadingCopy)}</p><div class="skeleton-list" aria-label="${escapeHtml(c.loadingTitle)}"><div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div></div></div></div>`;
+        }
+        elements.detail.hidden = true;
+        return;
+      }
+
+      elements.detail.hidden = false;
+      const body = renderDecks(visibleGames);
+      elements.catalog.innerHTML = catalogIntro(visibleGames.length) + body;
+    }
+
+    function renderDetail() {
+      const game = allGames().find(item => item.id === state.selected) || games[0];
+      const content = localizedGame(game);
+      const c = copy[state.lang];
+      const activeMaterial = state.deck !== "all" && gameMaterials(game).includes(state.deck) ? state.deck : game.deck;
+      const compatibilityLabel = activeMaterial !== game.deck ? ` - ${escapeHtml(c.compatible)}` : "";
+      const materialChip = game.kind === "X" ? c.physicalOriginal : c.physicalVirtual;
+      const phoneHeading = game.kind === "X" ? c.phoneExtra : c.phone;
+      elements.detail.innerHTML = `<div class="detail-sticky">
+        <button class="mobile-back" type="button" data-mobile-back>${escapeHtml(c.back)}</button>
+        <div class="detail-deck">${escapeHtml(deckLabels[state.lang][activeMaterial])}${compatibilityLabel}${game.kind === "X" ? ` - ${escapeHtml(c.personalContent)}` : ""}</div>
+        <h2>${escapeHtml(content.title)}</h2>
+        <p class="detail-objective">${escapeHtml(content.objective)}</p>
+        <div class="meta-strip">
+          <span class="meta-chip kind">${game.kind === "T" ? "T - Traditional" : game.kind === "R" ? "R - Ruckus" : "EXTRA - Physical"}</span>
+          <span class="meta-chip">${escapeHtml(game.players)} ${escapeHtml(c.players)}</span>
+          <span class="meta-chip">${escapeHtml(game.duration)}</span>
+          <span class="meta-chip">${escapeHtml(content.mechanicLabel)}</span>
+          <span class="meta-chip">${escapeHtml(materialChip)}</span>
+        </div>
+        <h3 class="rules-heading">${escapeHtml(c.rules)}</h3>
+        <ol class="rules-list">${content.rules.map(rule => `<li>${escapeHtml(rule)}</li>`).join("")}</ol>
+        <div class="result-block"><strong>${escapeHtml(c.win)}</strong><p>${escapeHtml(content.win)}</p></div>
+        <div class="phone-block"><strong>${escapeHtml(phoneHeading)}</strong><p>${escapeHtml(content.phone)}</p></div>
+        <button class="primary-action" type="button" data-play>${escapeHtml(c.play)}</button>
+      </div>`;
+    }
+
+    function applyMobileView() {
+      const mobile = window.matchMedia("(max-width: 1040px)").matches;
+      if (!mobile) {
+        elements.sidebar.hidden = false;
+        elements.catalog.hidden = false;
+        elements.detail.hidden = state.demo === "loading" || state.extraEditor;
+        return;
+      }
+      elements.sidebar.hidden = state.mobileDetail || state.extraEditor;
+      elements.catalog.hidden = state.mobileDetail;
+      elements.detail.hidden = !state.mobileDetail || state.demo === "loading" || state.extraEditor;
+      if (state.mobileDetail) window.scrollTo({ top: document.querySelector(".app-shell").offsetTop, behavior: "auto" });
+    }
+
+    function render() {
+      renderStaticCopy();
+      document.getElementById("catalog-layout").dataset.editor = String(state.extraEditor);
+      renderFilters();
+      renderCatalog();
+      renderDetail();
+      applyMobileView();
+      document.querySelectorAll("[data-direction]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.direction === state.direction)));
+      document.querySelectorAll("[data-demo-state]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.demoState === state.demo)));
+    }
+
+    function showToast(title, message) {
+      if (title) document.getElementById("toast-title").textContent = title;
+      if (message) document.getElementById("toast-copy").textContent = message;
+      elements.toast.dataset.visible = "true";
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => { elements.toast.dataset.visible = "false"; }, 4200);
+    }
+
+    document.addEventListener("click", event => {
+      const direction = event.target.closest("[data-direction]");
+      if (direction) {
+        state.direction = direction.dataset.direction;
+        state.demo = "catalog";
+        render();
+        return;
+      }
+
+      const demo = event.target.closest("[data-demo-state]");
+      if (demo) {
+        if (demo.dataset.demoState === "loading" && state.demo === "loading") {
+          state.loadingPhase = state.loadingPhase === "loading" ? "error" : "loading";
+        } else {
+          state.demo = demo.dataset.demoState;
+          state.loadingPhase = "loading";
+        }
+        render();
+        return;
+      }
+
+      const deck = event.target.closest("[data-deck]");
+      if (deck && deck.classList.contains("deck-filter")) {
+        state.deck = deck.dataset.deck;
+        state.extraEditor = false;
+        state.mobileDetail = false;
+        render();
+        return;
+      }
+
+      const collection = event.target.closest("[data-collection-select]");
+      if (collection) {
+        state.deck = collection.dataset.collectionSelect;
+        state.extraEditor = false;
+        state.mobileDetail = false;
+        render();
+        document.querySelector(".collection-results")?.scrollIntoView({ block: "start", behavior: "smooth" });
+        return;
+      }
+
+      if (event.target.closest("[data-add-extra]")) {
+        state.extraEditor = true;
+        state.formError = false;
+        state.mobileDetail = false;
+        render();
+        document.getElementById("extra-name")?.focus();
+        return;
+      }
+
+      if (event.target.closest("[data-cancel-extra]")) {
+        state.extraEditor = false;
+        state.formError = false;
+        render();
+        return;
+      }
+
+      const gameButton = event.target.closest("[data-game-id]");
+      if (gameButton) {
+        state.selected = gameButton.dataset.gameId;
+        state.mobileDetail = window.matchMedia("(max-width: 1040px)").matches;
+        render();
+        return;
+      }
+
+      if (event.target.closest("[data-mobile-back]")) {
+        state.mobileDetail = false;
+        render();
+        return;
+      }
+
+      if (event.target.closest("[data-play]")) {
+        showToast();
+        return;
+      }
+
+      if (event.target.closest("[data-retry]")) {
+        state.demo = "catalog";
+        state.loadingPhase = "loading";
+        render();
+      }
+    });
+
+    document.addEventListener("change", event => {
+      const availability = event.target.closest("[data-extra-available]");
+      if (!availability) return;
+      const extra = extraGames.find(item => item.id === availability.dataset.extraAvailable);
+      if (!extra) return;
+      extra.available = availability.checked;
+      try {
+        localStorage.setItem("ruckus-extra-games-v1", JSON.stringify(extraGames));
+      } catch (error) {
+        console.error("Impossibile aggiornare Disponibile stasera:", error);
+        state.storageError = true;
+        availability.checked = !availability.checked;
+      }
+    });
+
+    document.addEventListener("submit", event => {
+      if (event.target.id !== "extra-game-form") return;
+      event.preventDefault();
+      const form = event.target;
+      const required = [...form.querySelectorAll("[required]")];
+      const firstInvalid = required.find(field => !field.value.trim());
+      const error = form.querySelector("#extra-form-error");
+      required.forEach(field => field.setAttribute("aria-invalid", String(!field.value.trim())));
+      if (firstInvalid) {
+        error.hidden = false;
+        firstInvalid.focus();
+        return;
+      }
+      const data = new FormData(form);
+      const extra = {
+        id: `extra-${crypto.randomUUID()}`,
+        title: data.get("title").trim(),
+        players: data.get("players").trim(),
+        material: data.get("material").trim(),
+        rules: data.get("rules").trim(),
+        duration: data.get("duration").trim(),
+        points: Math.max(1, Math.min(5, Number(data.get("points")) || 1)),
+        resultType: data.get("resultType"),
+        consequence: data.get("consequence"),
+        repeatable: data.get("repeatable") === "on",
+        available: true
+      };
+      try {
+        extraGames.push(extra);
+        localStorage.setItem("ruckus-extra-games-v1", JSON.stringify(extraGames));
+      } catch (storageFailure) {
+        extraGames = extraGames.filter(item => item.id !== extra.id);
+        console.error("Impossibile salvare il Gioco Extra:", storageFailure);
+        state.storageError = true;
+        renderCatalog();
+        return;
+      }
+      state.extraEditor = false;
+      state.deck = "extra";
+      state.selected = extra.id;
+      state.mobileDetail = false;
+      render();
+      showToast(copy[state.lang].saved, copy[state.lang].savedCopy);
+    });
+
+    elements.search.addEventListener("input", event => {
+      state.query = event.target.value;
+      state.mobileDetail = false;
+      renderCatalog();
+      renderDetail();
+      applyMobileView();
+    });
+
+    elements.language.addEventListener("click", () => {
+      state.lang = state.lang === "it" ? "en" : "it";
+      render();
+    });
+
+    window.matchMedia("(max-width: 1040px)").addEventListener("change", applyMobileView);
+
+    render();
+  </script>
+</body>
+</html>

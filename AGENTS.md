@@ -68,7 +68,7 @@ Esempi: un overflow UI richiede `AGENTS.md`, `docs/DESIGN.md` e il componente; u
 - Non rileggere nello stesso workstream fonti appena analizzate, invariate e ancora affidabili. Non sostituire una verifica necessaria con memoria vaga.
 - Rimuovi spreco, non rigore. Proporziona piano, analisi e controlli al task; la procedura completa è in `docs/WORKFLOW.md`.
 - Il repository conserva regole, prodotto, decisioni, comportamento e test. Chat, checkpoint e attachment temporanei descrivono solo lo stato di passaggio e non devono diventare fonti durevoli.
-- Mantieni una conversazione per workstream coerente. Cambia chat e crea checkpoint solo quando il beneficio supera il costo di restore e rilettura.
+- Per il cambio chat applica `Keep useful context. Drop stale context.` e `Recommend the switch and package the restart.` secondo `docs/WORKFLOW.md`; non interrompere debugging o workstream ancora attivi.
 - Il reasoning predefinito è Medium. Prima di ogni task non banale valuta internamente se è sufficiente; High è un'eccezione motivata secondo `docs/WORKFLOW.md`. Se Medium basta, non parlarne.
 
 ## Fonti di verità

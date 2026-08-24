@@ -50,7 +50,7 @@ Confronto motion verificabile: `mockups/06-petrolio-festa-motion.html`. Il relat
 - Icona Home: R Honey dominante su Petrol Deep, con due innesti laterali Mint e Mandarin. Non comprime il lockup completo nel quadrato.
 - Motion: evento singolo senza loop, con stato finale stabile. In reduced motion logo, R e `PARTY` sono visibili immediatamente.
 - Riduzioni verificate: 16, 32, 64 e 96 CSS px.
-- Stato: approvato dall'owner il 2026-08-23 in D-021. Il trasferimento nel prototipo high-fidelity resta il prossimo workstream; l'approvazione del logo non approva automaticamente D-020.
+- Stato: approvato dall'owner il 2026-08-23 in D-021 e trasferito nel prototipo high-fidelity. L'approvazione e il trasferimento del logo non approvano automaticamente D-020.
 
 Mockup approvato: `mockups/11-passa-la-r-motion-focused.html`. QA automatico: `mockups/11-passa-la-r-motion-focused.test.cjs`.
 
@@ -113,6 +113,29 @@ I titoli devono usare `text-wrap: balance`; corpo e istruzioni `text-wrap: prett
 - `Result moment`: superficie Gold o Coral con nome dominante e punteggio separato.
 - `Error state`: fascia Danger, spiegazione concreta e recupero primario senza fallback silenzioso.
 
+### Setup Party Night - direzione di lavoro
+
+- Struttura A+B: chiarezza operativa e avanzamento leggibile, con titoli espressivi ma istruzioni e pulsanti letterali.
+- Testata operativa pulita: nessun logo decorativo ridotto nell'angolo; il brand resta riconoscibile tramite palette, tipografia e forme.
+- `Personalizza` resta una schermata secondaria separata dal percorso principale.
+- La scelta dei materiali distingue `Solo Telefono` dai materiali fisici e usa queste etichette concrete: `Mazzo da Poker`, `Mazzo da Briscola`, `Carte da Uno`, `Dadi`, `Carta e Penna`.
+- Ogni schermata principale usa un solo controllo `?` nella stessa posizione. La guida contestuale spiega sempre `Cosa devi fare`, `Perché te lo chiediamo` e `Cosa farà l'app`, con accesso alla guida generale di Ruckus Party.
+- Stato: direzione accettata dall'owner il 2026-08-23 come base per proseguire il confronto delle altre sezioni; non è ancora il gate finale di Phase 2B.
+
+### Identità delle proposte gioco - direzione di lavoro
+
+- La proposta usa il gioco e le informazioni come protagonisti, senza copertine o illustrazioni obbligatorie.
+- Direzione selezionata: `Titolo in testa`, con tipografia forte, una frase sociale, metadati compatti, obiettivo e ruolo del telefono.
+- I materiali sono etichette concrete e non diventano disegni decorativi dominanti. Filigrane o piccoli segni restano possibili soltanto come supporto secondario e non sono approvati in questa iterazione.
+- Stato: direzione A accettata dall'owner il 2026-08-23 come base temporanea per proseguire il flusso; non è ancora il gate finale di Phase 2B.
+
+### Preparazione dei giochi - direzione di lavoro
+
+- La preparazione usa la stessa gerarchia per giochi fisici e digitali: obiettivo, metadati, tre passaggi essenziali e ruolo esplicito del telefono.
+- Nei giochi fisici il telefono prepara e registra, ma il tavolo resta protagonista. Nei giochi digitali l'app anticipa con chiarezza passaggi privati e fase condivisa.
+- Il controllo `?` mantiene le tre sezioni `Cosa devi fare`, `Perché te lo chiediamo` e `Cosa farà l'app`, adattate al tipo di gioco.
+- Stato: struttura condivisa accettata dall'owner il 2026-08-23 come base per proseguire con le schermate di partita; non è ancora il gate finale di Phase 2B.
+
 ### Motion
 
 - Ingresso schermata: 240 ms, opacità e traslazione verticale di 8 px.
@@ -170,6 +193,15 @@ Il QA completo end-to-end del prototipo corrente resta da rieseguire prima della
 - `PARTY` resta nascosto fino al completamento dell'impatto.
 - Icona Home verificata a 16, 32, 64 e 96 CSS px con R dominante e margini interni misurati.
 - Viewport 390, 430 e 1440 CSS px, focus, replay, console e reduced motion verificati.
+
+## QA del trasferimento logo nel prototipo
+
+- Lockup e icona Home D-021 trasferiti senza cambiare palette, oggetti scenici o stato owner del candidato D-020.
+- Collisione, nascita della R e reveal di `PARTY` verificati causalmente nel prototipo; il finale resta stabile e senza loop.
+- Home verificata a 375, 430, 844 landscape e 1440 CSS px senza overflow, sovrapposizioni, tap target sotto 44 CSS px o errori JavaScript.
+- Icona Home verificata con colori, `viewBox` e margini interni della R approvati; italiano e inglese mantengono logo e gerarchia.
+- Reduced motion mostra subito R e `PARTY`; ruota, dado e carte mantengono risultati leggibili senza animazioni attive.
+- Il menu di sessione continua a bloccare lo sfondo e a ripristinarlo alla chiusura.
 
 ## Limiti e prossimi controlli
 

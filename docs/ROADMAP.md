@@ -108,11 +108,11 @@ Backend, account, multiplayer online e implementazione dell'app restano fuori da
 - `Petrolio festa` prodotto come candidato successivo e verificato nel motion lab: `mockups/06-petrolio-festa-motion.html`.
 - Sistema logo `Passa la R` e icona Home approvati dall'owner in D-021: `mockups/11-passa-la-r-motion-focused.html`.
 - Design system e limiti: `docs/PHASE_2B_DESIGN.md`.
-- Prototipo high-fidelity corrente con Home `Petrolio festa`: `prototypes/phase-2b-high-fidelity.html`.
+- Prototipo high-fidelity corrente con Home `Petrolio festa` e sistema logo D-021 trasferito: `prototypes/phase-2b-high-fidelity.html`.
 - QA mirato della Home corrente completato su mobile, desktop, interazioni, lingue e reduced motion; QA end-to-end completo da rieseguire prima del gate finale.
 
 ## Gate Phase 2B ancora aperto
 
 L'owner deve approvare `Petrolio festa` nel prototipo high-fidelity oppure richiedere correzioni. Solo dopo questa risposta e il QA end-to-end sullo stato corrente si può dichiarare conclusa Phase 2B e definire il workstream successivo senza implementarlo automaticamente.
 
-Il prossimo workstream coerente è trasferire il sistema logo `Passa la R` già approvato nel prototipo high-fidelity, senza interpretare questo trasferimento come approvazione di `Petrolio festa` o chiusura della Phase.
+Il trasferimento del sistema logo `Passa la R` nel prototipo high-fidelity è completato e verificato. Il prossimo gate resta la decisione owner su `Petrolio festa`; soltanto dopo un'eventuale approvazione si riesegue il QA end-to-end richiesto per chiudere Phase 2B.

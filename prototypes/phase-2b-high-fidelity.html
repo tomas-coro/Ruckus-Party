@@ -1416,7 +1416,8 @@
     /* Home: Petrolio festa is the expressive brand stage. */
     .home-header {
       min-height: 54px;
-      grid-template-columns: 1fr 58px;
+      grid-template-columns: 38px minmax(0, 1fr) 58px;
+      gap: 10px;
       padding-inline: 17px;
       color: var(--surface);
       background: var(--canvas);
@@ -1425,11 +1426,28 @@
     .home-header::after { display: none; }
 
     .home-call {
+      justify-self: start;
       color: var(--primary);
       font-size: .66rem !important;
       font-weight: 800;
       letter-spacing: .14em !important;
       text-transform: uppercase;
+    }
+
+    .home-brand-icon {
+      width: 36px;
+      height: 36px;
+      display: block;
+      overflow: hidden;
+      border-radius: 9px;
+      background: var(--ink);
+      box-shadow: 0 3px 0 #081d1b;
+    }
+
+    .home-brand-icon svg {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .language-toggle {
@@ -1456,61 +1474,68 @@
 
     .home-screen .content::after { display: none; }
 
-    .chorus-zone {
+    .ruckus-logo-zone {
       position: relative;
-      min-height: 164px;
+      min-height: 170px;
+      display: grid;
+      place-items: center;
       overflow: hidden;
     }
 
-    .chorus-logo {
-      position: absolute;
-      inset: 5px 0 auto;
-      min-height: 145px;
+    .ruckus-logo {
+      width: min(100%, 310px);
+      display: grid;
+      justify-items: center;
+      gap: 0;
+    }
+
+    .ruckus-signal {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .ruckus-carrier { animation: logo-carrier-in 560ms cubic-bezier(.45, 0, .55, 1) both; }
+    .ruckus-challenger { animation: logo-challenger-in 560ms cubic-bezier(.45, 0, .55, 1) both; }
+    .ruckus-r-tile {
+      animation: logo-r-at-impact 390ms cubic-bezier(.16, .84, .18, 1.15) 330ms both;
+      transform-origin: 195px 75px;
+    }
+
+    .ruckus-impact {
+      animation: logo-impact-flash 250ms ease 325ms both;
+      transform-origin: 195px 75px;
+    }
+
+    .ruckus-wordmark {
+      margin-top: -10px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+      animation: logo-word-reveal 360ms cubic-bezier(.16, .84, .18, 1) 720ms both;
+    }
+
+    .ruckus-wordmark strong {
+      color: var(--surface);
       font-family: "Archivo Black", sans-serif !important;
-      font-size: 3.45rem;
-      line-height: .86;
+      font-size: 3.08rem;
+      line-height: .84;
       letter-spacing: -.04em;
       text-transform: uppercase;
     }
 
-    .chorus-voice {
-      position: absolute;
-      left: 0;
-      color: transparent;
-      -webkit-text-stroke: 2px var(--surface);
-      opacity: .13;
-      animation: voice-arrive 520ms cubic-bezier(.2, .82, .2, 1) var(--delay) both;
-    }
-
-    .chorus-voice:nth-child(1) { top: 0; left: -24px; --voice-x: -52px; --delay: 0ms; }
-    .chorus-voice:nth-child(2) { top: 34px; left: 31px; --voice-x: 62px; --delay: 90ms; }
-    .chorus-voice:nth-child(3) { top: 68px; left: -8px; --voice-x: -58px; --delay: 180ms; }
-
-    .chorus-main {
-      position: absolute;
-      z-index: 2;
-      top: 35px;
-      left: 7px;
-      color: var(--primary);
-      font-family: "Archivo Black", sans-serif !important;
-      text-shadow: 4px 4px 0 var(--sun);
-      animation: chorus-hit 470ms cubic-bezier(.18, .82, .18, 1) 260ms both;
-    }
-
-    .chorus-party {
-      position: absolute;
-      z-index: 3;
-      right: 3px;
-      bottom: 0;
-      padding: 7px 13px 6px;
-      color: var(--surface);
-      background: var(--ink);
+    .ruckus-party {
+      padding: 6px 8px 5px;
+      color: var(--ink);
+      background: var(--sun);
       font-size: .68rem;
       font-weight: 800;
-      letter-spacing: .23em;
-      opacity: 1;
-      transform-origin: 50% 50%;
-      animation: party-arrival 470ms cubic-bezier(.16, .86, .2, 1) 780ms both;
+      line-height: 1;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      animation: logo-party-reveal 280ms ease 930ms both;
     }
 
     .home-promise {
@@ -1827,20 +1852,39 @@
     .cards-stage.is-revealed .ace-card:nth-child(4) { transform: translate(24px, -2px) rotate(24deg); }
     .ace-card.is-revealed .card-inner { transform: rotateY(180deg); }
 
-    @keyframes voice-arrive {
-      from { transform: translateX(var(--voice-x)) scale(.92); }
-      to { transform: translateX(0) scale(1); }
+    @keyframes logo-carrier-in {
+      from { opacity: 0; transform: translateX(-135px); }
+      72% { opacity: 1; transform: translateX(9px); }
+      to { opacity: 1; transform: none; }
     }
 
-    @keyframes chorus-hit {
-      from { transform: scale(1.16) rotate(-3deg); }
-      to { transform: scale(1) rotate(0); }
+    @keyframes logo-challenger-in {
+      from { opacity: 0; transform: translateX(135px); }
+      72% { opacity: 1; transform: translateX(-9px); }
+      to { opacity: 1; transform: none; }
     }
 
-    @keyframes party-arrival {
-      0% { transform: translate(48px, -20px) rotate(12deg) scale(.78); }
-      68% { transform: translate(-6px, 2px) rotate(-6deg) scale(1.06); }
-      100% { transform: translate(0, 0) rotate(-3deg) scale(1); }
+    @keyframes logo-r-at-impact {
+      0% { opacity: 0; transform: scale(.25) rotate(-7deg); }
+      32% { opacity: 1; transform: scaleX(1.13) scaleY(.9) rotate(2deg); }
+      68% { opacity: 1; transform: scaleX(.95) scaleY(1.05) rotate(-1deg); }
+      100% { opacity: 1; transform: none; }
+    }
+
+    @keyframes logo-impact-flash {
+      0% { opacity: 0; transform: scale(.35) rotate(-12deg); }
+      42% { opacity: 1; transform: scale(1.12); }
+      100% { opacity: 0; transform: scale(1.35); }
+    }
+
+    @keyframes logo-word-reveal {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @keyframes logo-party-reveal {
+      from { opacity: 0; clip-path: inset(0 100% 0 0); }
+      to { opacity: 1; clip-path: inset(0); }
     }
 
     @keyframes shuffle-one {
@@ -1868,15 +1912,24 @@
     }
 
     @media (max-width: 390px) {
-      .chorus-logo { font-size: 3.18rem; }
+      .ruckus-logo { width: min(100%, 292px); }
+      .ruckus-wordmark strong { font-size: 2.86rem; }
       .home-mode { grid-template-columns: minmax(0, 1fr) 84px; }
       .home-object-action { min-width: 80px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .chorus-voice,
-      .chorus-main,
-      .chorus-party { transform: none; }
+      .ruckus-carrier,
+      .ruckus-challenger,
+      .ruckus-r-tile,
+      .ruckus-wordmark,
+      .ruckus-party {
+        opacity: 1;
+        transform: none;
+        clip-path: none;
+      }
+
+      .ruckus-impact { display: none; }
     }
   </style>
 </head>
@@ -2134,9 +2187,22 @@
       window.scrollTo({ top: 0, behavior: "auto" });
     }
 
+    function homeBrandIcon() {
+      return `<span class="home-brand-icon" role="img" aria-label="Ruckus Party">
+        <svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true" focusable="false">
+          <rect width="100" height="100" fill="#132824"></rect>
+          <path class="home-logo-carrier" d="M0 28h31l16 22-16 22H0l18-22Z" fill="#6fd2b8"></path>
+          <path class="home-logo-challenger" d="M100 28H69L53 50l16 22h31L82 50Z" fill="#ff643b"></path>
+          <rect class="home-logo-tile" x="22" y="14" width="56" height="72" rx="11" fill="#f7c64b" stroke="#132824" stroke-width="4"></rect>
+          <text class="home-logo-r" x="50" y="68" text-anchor="middle" fill="#132824" font-family="Archivo Black, sans-serif" font-size="50">R</text>
+        </svg>
+      </span>`;
+    }
+
     function header(title, options = {}) {
       if (options.home) {
         return `<header class="app-header home-header">
+          ${homeBrandIcon()}
           <strong class="home-call">Make it happen</strong>
           <button class="language-toggle" data-action="language" aria-label="Change language">${state.language === "it" ? "ITA" : "EN"}</button>
         </header>`;
@@ -2175,13 +2241,21 @@
         ? `<button class="home-mode-route" data-action="resume"><strong>Resume Party</strong><small>2 players - Game ${Math.max(state.currentGame, 1)} in progress</small><span class="home-mode-status" data-wheel-status aria-live="polite">Spin the wheel</span></button>`
         : `<button class="home-mode-route" data-action="start-party"><strong>Start Party</strong><small>Multiple games, standings and a proper finale</small><span class="home-mode-status" data-wheel-status aria-live="polite">Spin the wheel</span></button>`;
       return header("Ruckus Party", { home: true }) + screen(contentBlock(`
-        <div class="chorus-zone">
-          <h1 class="chorus-logo" aria-label="Ruckus Party">
-            <span class="chorus-voice" aria-hidden="true">Ruckus</span>
-            <span class="chorus-voice" aria-hidden="true">Ruckus</span>
-            <span class="chorus-voice" aria-hidden="true">Ruckus</span>
-            <strong class="chorus-main">Ruckus</strong>
-            <b class="chorus-party">Party</b>
+        <div class="ruckus-logo-zone">
+          <h1 class="ruckus-logo" aria-label="Ruckus Party" data-ruckus-logo>
+            <svg class="ruckus-signal" viewBox="0 0 390 150" width="390" height="150" aria-hidden="true" focusable="false">
+              <path class="ruckus-carrier" d="M8 31h132l54 44-54 44H8l51-44Z" fill="#6fd2b8"></path>
+              <path class="ruckus-challenger" d="M382 31H250l-54 44 54 44h132l-51-44Z" fill="#ff643b"></path>
+              <g class="ruckus-r-tile">
+                <rect x="151" y="31" width="88" height="88" rx="12" fill="#f7c64b" stroke="#132824" stroke-width="6"></rect>
+                <text class="ruckus-r-letter" x="195" y="98" text-anchor="middle" fill="#132824" font-family="Archivo Black, sans-serif" font-size="64">R</text>
+              </g>
+              <g class="ruckus-impact" fill="none" stroke="#fff0d1" stroke-width="5" stroke-linecap="square">
+                <path d="M195 13v-9M195 146v-9M130 75h-12M272 75h-12"></path>
+                <path d="m146 27-9-10M253 132l-9-10M244 27l9-10M137 132l9-10"></path>
+              </g>
+            </svg>
+            <span class="ruckus-wordmark" aria-hidden="true"><strong>Ruckus</strong><b class="ruckus-party">Party</b></span>
           </h1>
         </div>
         <p class="home-promise">One voice calls. The group answers. The night gets louder.</p>
