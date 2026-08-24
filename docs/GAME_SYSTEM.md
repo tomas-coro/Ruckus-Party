@@ -52,6 +52,23 @@ La distinzione è utile perché cambia istruzioni e flusso. Non viene presentata
 
 `Mixed` non è un livello del singolo gioco. Descrive una Party Night che alterna versioni Physical e Virtual.
 
+## Mazzi digitali originali
+
+Una raccolta può raggruppare giochi che usano carte digitali progettate appositamente, senza trasformare `Game` in `CardGame`. Ogni gioco mantiene un mazzo dedicato e non deve condividere struttura, tono o meccanica con gli altri titoli della raccolta.
+
+La raccolta con nome di lavoro `Mazzi Originali` applica queste regole:
+
+- 3-8 giocatori, con esperienza ideale da validare tra 4 e 6;
+- 5-10 minuti per gioco;
+- otto giochi individuali e due con alleanze temporanee;
+- nessuna eliminazione e partecipazione attiva fino alla fine;
+- votazioni pubbliche o segrete secondo la meccanica;
+- contenuti 14+ disponibili di base e mazzi 18+ separati, sempre opt-in;
+- possibilità illimitata di saltare una carta senza penalità;
+- `Carta bianca` manuale e sempre disponibile al posto di una carta preparata.
+
+`Carta bianca` conserva la funzione richiesta dal gioco, come situazione, prova, risposta, complicazione o obiettivo. Il contenuto creato dal giocatore non riceve classificazione 14+/18+, moderazione o traduzione automatica.
+
 ## Varianti quick e standalone
 
 Una variante resta parte dello stesso `Game` quando mantiene identità, obiettivo e regole centrali, modificando durata o profondità. La selezione può scegliere la variante più adatta al tempo restante.
@@ -110,6 +127,42 @@ Party Night propone automaticamente il prossimo gioco. L'utente può:
 - terminare la sessione.
 
 Quick Play offre `Choose game` e `Surprise me`. La scelta casuale normale è immediata.
+
+## Formato Torneo generale
+
+`Torneo` è un formato configurabile dentro Party Night, distinto dalla `Serata libera` adattiva e dal torneo autonomo di `Doppio`. È Later e questa definizione non ne autorizza l'implementazione nella V1.
+
+### Composizione e blocco
+
+- quantità predefinite da 5, 10 o 15 giochi;
+- quantità manuale da un minimo di 5 fino al numero di giochi unici compatibili;
+- selezione automatica filtrata per raccolte, materiali e contenuti oppure scelta manuale dei singoli titoli;
+- calendario completo con ordine e materiali mostrato prima della partenza;
+- possibilità di rigenerare o modificare il calendario prima della conferma;
+- partecipanti, quantità, giochi e ordine bloccati dopo l'avvio;
+- nessuna ripetizione nel calendario iniziale.
+
+Se i filtri non producono abbastanza giochi unici, il torneo non parte. Ruckus nomina il vincolo e chiede di ridurre la quantità oppure ampliare raccolte, materiali o contenuti, senza modificare le scelte in silenzio.
+
+Dopo l'avvio non sono disponibili `Replace` o `Choose game`. Le sole eccezioni al calendario bloccato sono una sostituzione necessaria dopo un ritiro e i giochi supplementari di spareggio.
+
+### Punteggio e spareggio
+
+Ogni vincitore di un gioco riceve 1 punto torneo. Un pareggio nel singolo gioco assegna 1 punto a ciascun vincitore. Al termine deve esistere un solo campione:
+
+1. partecipano allo spareggio soltanto i pari merito in testa;
+2. scelgono tra estrazione casuale e selezione esplicita di un gioco compatibile non ancora disputato;
+3. se il nuovo gioco produce un altro pareggio, lo spareggio continua;
+4. esauriti i giochi compatibili non disputati, Ruckus può estrarre casualmente un gioco già giocato dai finalisti;
+5. non sono previsti co-campioni.
+
+### Conseguenze, ritiro e storico
+
+Le conseguenze immediate sono opzionali e disattivate per default. Gli handicap per il gioco successivo non sono compatibili con il Torneo, perché alterano il percorso competitivo.
+
+Un partecipante può dichiarare `Ritiro`: esce dalla classifica e i suoi punti vengono esclusi. Ruckus sostituisce soltanto i giochi futuri diventati incompatibili con il nuovo numero di partecipanti e registra il ritiro nel riepilogo.
+
+La V1 conserva soltanto il riepilogo finale della sessione. Lo storico persistente futuro comprenderà almeno vincitore, partecipanti, giochi, punti, spareggi e ritiri.
 
 ## Ruote e casualità
 

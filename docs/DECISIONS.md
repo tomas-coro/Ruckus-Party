@@ -219,5 +219,41 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Recommendation: aggiungere `Complicità`, sottotitolo `Cooperativi e sfide a squadre`. I giochi a squadre della V1 richiedono esattamente 6 persone in due squadre da 3. Il primo titolo è `Controcanto`: cooperativo, 3-6 giocatori, telefono, carta e penne, con indizi divisi in `Solisti` e `Coro` e due tentativi da 2 o 1 punto.
 - Why: apre una famiglia sociale distinta mantenendo limitato lo scope delle squadre.
 - Tradeoff: il preset Team resta Later; la V1 ammette solo regole a squadre locali ai singoli giochi, senza estensione oltre 6 persone. Controcanto richiede playtest su equivalenza degli indizi e bilanciamento.
-- Status: `Recommended`, confermata dall'owner il 2026-08-24.
+- Status: `Superseded` da D-024 per quantità del roster e compatibilità delle squadre; `Complicità`, `Controcanto` e la copertina restano confermati.
 - Owner answer: approvati `Complicità`, `Controcanto` e la copertina C `Tavolo`.
+
+### D-024 - Roster Complicità V1 e squadre scalabili
+
+- Problem: portare `Complicità` alla stessa profondità delle altre raccolte senza limitare ogni gioco a sei persone o produrre cloni riconoscibili dei party game usati come riferimento.
+- Recommendation: puntare a dieci giochi totali in `Complicità`, incluso `Controcanto`, con una sola copertina di raccolta. I giochi a squadre usano gruppi da 2-3 persone e possono ammettere più squadre, mentre ogni scheda dichiara la propria compatibilità. Il prototipo MVP resta ottimizzato per 2-6 persone finché setup, layout e punteggio oltre sei non vengono progettati. I nove concept candidati sono `Parola per Parola`, `Coordinate Comuni`, `Segnale Sporco`, `In Che Ordine?`, `Tre Icone, Una Bugia`, `Tutti Ora`, `Scena Spezzata`, `Lampo Comune` e `Stessa Frequenza`.
+- Why: il roster combina comunicazione vincolata, lettura del gruppo, sincronizzazione, mimo, velocità verbale e intercettazione. Le meccaniche note diventano punti di partenza, mentre nomi, contenuti, combinazioni di regole e interazioni digitali restano originali Ruckus Party.
+- Tradeoff: i nomi sono provvisori, non tutti i giochi supportano la stessa composizione e ogni concept richiede playtest. Il supporto reale oltre sei persone non è ancora progettato nel setup della V1.
+- Status: `Recommended`, confermata dall'owner il 2026-08-24.
+- Owner answer: confermati dieci giochi totali, nessuna copertina individuale, squadre da 2-3 senza tetto generale di sei persone e un mix di ispirazioni note, rivisitazioni e invenzioni originali. Apprezzate in particolare le direzioni derivate da comunicazione cifrata, coordinate di intesa e velocità per categorie.
+
+### D-025 - Raccolta Doppio e torneo storico delle coppie
+
+- Problem: offrire a due persone una raccolta cooperativa distinta da `Complicità`, con varietà tra partite e un risultato confrontabile nel tempo senza trasformare il dispositivo nel tavolo principale.
+- Recommendation: aggiungere `Doppio`, sottotitolo `Cooperativi per due`, riservata esattamente a due giocatori. Il torneo autonomo estrae senza ripetizioni cinque giochi originali, ordinati in due facili, due medi e uno difficile; ogni gioco assegna 0-100 punti per un massimo di 500. La classifica locale ordina ogni coppia per il miglior torneo completato e conserva i pareggi. I singoli giochi sono avviabili come allenamento senza record. Il roster candidato comprende dieci giochi, quattro facili, quattro medi e due difficili, con un arco di sincronizzazione, comunicazione limitata, risorse condivise e decisioni sotto pressione. All'avvio la coppia dichiara i materiali disponibili; ogni gioco mantiene obiettivo e nucleo tra una versione fisica preferita e un adattamento accessibile senza quel materiale. Il dispositivo prepara, estrae e conta, ma lascia il gioco al tavolo quando possibile.
+- Why: il formato rende confrontabili tornei casuali, distingue la cooperazione a due dalle sfide sociali di `Complicità` e sfrutta carta, penne, mazzi e dadi senza escludere chi possiede soltanto il dispositivo.
+- Tradeoff: punteggi normalizzati, equivalenza delle varianti e qualità dei fallback digitali richiedono playtest. Torneo, classifica storica, profili di coppia e statistiche dipendono da persistenza locale e restano fuori dalla V1 finché il relativo workstream non viene progettato.
+- Status: `Recommended`, confermata dall'owner il 2026-08-24 come definizione di prodotto da sviluppare e playtestare in futuro.
+- Owner answer: approvati nome `Doppio`, formato ufficiale da cinque giochi, punteggio 0-100, record migliore per coppia, allenamento senza classifica, roster originale da dieci concept e supporto universale tramite varianti fisiche e digitali con lo stesso nucleo. Le statistiche future includeranno almeno partite, punti totali, tempo e minigiochi più giocati.
+
+### D-026 - Raccolta futura di mazzi digitali originali
+
+- Problem: aggiungere giochi di carte sociali e competitivi che non dipendano dai mazzi tradizionali e non replichino una sola meccanica di giudizio, dilemma o completamento comico.
+- Recommendation: definire una raccolta phone-only con nome di lavoro non definitivo `Mazzi Originali`, composta da dieci giochi per 3-8 persone e 5-10 minuti. Ogni gioco usa un mazzo digitale dedicato; il roster comprende otto titoli individuali e due con alleanze temporanee, senza eliminazioni. I contenuti 14+ sono la base e i mazzi 18+ restano opt-in. Ogni gioco offre una `Carta bianca` manuale, facoltativa e illimitata. Il roster candidato è `Scommetti sul Gruppo`, `Punto di Rottura`, `Difesa Indifendibile`, `Peggior Consiglio`, `Classifica Clandestina`, `Quasi Vero`, `Due Versioni`, `Vendilo Male`, `Alibi a Due` e `Patto Impossibile`.
+- Why: la raccolta estende il catalogo con carte progettate per il singolo gioco, conserva varietà tra lettura sociale, bluff, persuasione, creatività e negoziazione e permette ai giocatori di creare contenuti senza rendere obbligatoria l'improvvisazione.
+- Tradeoff: nome della raccolta, nomi dei giochi, contenuti, punteggi interni e numero di round richiedono naming e playtest. Prompt personali e contenuti creati dagli utenti richiedono attenzione a ritmo, accanimento e classificazione.
+- Status: `Recommended`, confermata dall'owner il 2026-08-24 come definizione di prodotto futura.
+- Owner answer: approvati roster, meccaniche candidate, fascia 3-8, durata 5-10 minuti, livelli 14+/18+, assenza di eliminazioni, mix tra voti pubblici e segreti, otto giochi individuali, due ad alleanze e `Carta bianca` sempre disponibile. Il nome resta esplicitamente in standby.
+
+### D-027 - Formato Torneo configurabile dentro Party Night
+
+- Problem: offrire una competizione lunga e vincolante senza duplicare Party Night con una seconda modalità quasi identica o modificare il torneo autonomo di `Doppio`.
+- Recommendation: trattare Party Night come contenitore con i formati `Serata libera` e `Torneo`. Il Torneo usa 5, 10, 15 giochi oppure una quantità manuale minima di 5, selezionati automaticamente tramite filtri o manualmente. Mostra calendario, ordine e materiali prima della conferma, poi blocca partecipanti e percorso senza ripetizioni iniziali. Ogni vittoria vale 1 punto. I pari merito disputano spareggi successivi fino a un campione unico, usando prima giochi compatibili non disputati e poi, se esauriti, ripetizioni casuali. Le conseguenze immediate sono opzionali e spente per default; gli handicap sono esclusi. Un ritiro elimina giocatore e punti e sostituisce solo i giochi futuri incompatibili.
+- Why: il giocatore percepisce un impegno competitivo reale, può controllare raccolte, materiali e giochi ammessi e ottiene un vincitore unico senza togliere flessibilità alla Serata libera.
+- Tradeoff: durata, generazione del calendario, sostituzioni dopo un ritiro, compatibilità degli spareggi e storico persistente richiedono un workstream autonomo. Lo storico resta Future e il Torneo generale resta Later.
+- Status: `Recommended`, confermata dall'owner il 2026-08-24 come definizione di prodotto futura.
+- Owner answer: approvati scelta del formato all'avvio di Party Night, quantità 5/10/15 e manuale da 5, filtri o selezione esatta, calendario visibile e poi bloccato, un punto per vittoria, nessun co-campione, spareggi a oltranza, conseguenze immediate opzionali, esclusione degli handicap, gestione del ritiro e storico futuro. `Doppio` non viene modificato.

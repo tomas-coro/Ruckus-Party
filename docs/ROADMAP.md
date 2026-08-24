@@ -34,6 +34,8 @@ Il numero esatto dei giochi iniziali non è deciso in Phase 1. Il catalogo MVP d
 ## Later
 
 - giochi standalone e varianti più lunghe;
+- raccolta phone-only con nome di lavoro `Mazzi Originali` e dieci concept da playtestare;
+- formato `Torneo` configurabile dentro Party Night, senza modificare il torneo di `Doppio`;
 - preset e punteggio team;
 - streak, bonus, milestone ed eventi speciali;
 - conseguenze persistenti;
@@ -45,7 +47,7 @@ Il numero esatto dei giochi iniziali non è deciso in Phase 1. Il catalogo MVP d
 - account, profili e statistiche persistenti;
 - multiplayer su più dispositivi e online;
 - custom penalties e contenuti creati dagli utenti;
-- tornei, social, community e condivisione;
+- storico persistente dei tornei, social, community e condivisione;
 - branding commerciale, monetizzazione, shop, abbonamenti e achievement complessi.
 
 ## Phase 2A - UX / information architecture / low-fidelity prototype

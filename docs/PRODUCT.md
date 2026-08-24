@@ -32,6 +32,13 @@ Ruckus Party non è una raccolta statica di regole, un clone di UNO, un'app solt
 
 La sessione non promette in anticipo un numero rigido di giochi. Usa la durata scelta per proporre una sequenza adattiva e non interrompe mai una partita già iniziata. Prima di proporre il gioco successivo considera tempo restante, compatibilità e varietà.
 
+La Party Night prevede due formati di prodotto:
+
+- **Serata libera**: conserva il percorso adattivo della V1, permette sostituzioni e può terminare dopo il gioco in corso.
+- **Torneo**: è un formato competitivo Later. Blocca partecipanti, quantità, calendario e ordine dei giochi dopo la conferma iniziale. Le regole complete sono in `docs/GAME_SYSTEM.md`.
+
+Il formato viene scelto all'avvio della Party Night. `Torneo` non è una modalità principale separata e non sostituisce il torneo autonomo di `Doppio`, che resta invariato.
+
 ### Quick Play
 
 Avvia un solo gioco senza classifica di serata, progressione o finale Party Night. L'utente può:
@@ -44,6 +51,14 @@ Avvia un solo gioco senza classifica di serata, progressione o finale Party Nigh
 ### Games
 
 È il catalogo esplorabile. Permette di capire requisiti e varianti di un gioco e avviarlo in Quick Play. Non sostituisce Party Night.
+
+### Mazzi Originali
+
+`Mazzi Originali` è il nome di lavoro, non definitivo, di una raccolta futura di dieci giochi competitivi phone-only per 3-8 persone. Ogni titolo usa un mazzo digitale dedicato, dura indicativamente 5-10 minuti e può entrare in Quick Play, Serata libera o Torneo.
+
+La raccolta non replica giochi tradizionali con carte colorate, francesi o italiane. Le carte contengono situazioni, prove, complicazioni, obiettivi e vincoli progettati per la singola meccanica. Gli stessi dieci giochi offrono contenuti 14+ come base e carte 18+ separate, sempre opt-in.
+
+Ogni gioco include `Carta bianca`, alternativa manuale e illimitata con cui il giocatore può creare il testo richiesto dalla carta corrente. Il contenuto inserito dal giocatore non viene classificato, moderato o tradotto automaticamente. Il roster e le regole candidate sono documentati in `docs/GAME_IDEAS.md`.
 
 ### Standalone Games
 
@@ -58,15 +73,16 @@ I giochi più profondi e lunghi, come una futura versione completa di `Scala Fla
 ### Required
 
 - almeno 2 giocatori identificati da un display name locale;
-- durata: `Short`, `Standard`, `Long` oppure `Endless`;
 - risorse disponibili, con `Phone only` come scelta immediata.
 
-`Standard` e `Phone only` possono essere preselezionati: sono dati necessari alla selezione, non passaggi che l'utente deve sempre compiere. I valori temporali precisi saranno validati nel prototipo e nei playtest, senza chiedere un numero esatto di giochi.
+La `Serata libera` richiede la durata `Short`, `Standard`, `Long` oppure `Endless`. Il formato Later `Torneo` richiede invece quantità e calendario secondo `docs/GAME_SYSTEM.md`; non usa i preset di durata.
+
+In `Serata libera`, `Standard` e `Phone only` possono essere preselezionati: sono dati necessari alla selezione, non passaggi che l'utente deve sempre compiere. I valori temporali precisi saranno validati nel prototipo e nei playtest, senza chiedere un numero esatto di giochi.
 
 ### Default applicati
 
 - contenuti generali;
-- conseguenze `Playful`;
+- conseguenze `Playful` in Serata libera; nel Torneo sono disattivate per default;
 - giochi fisici e digitali compatibili con le risorse dichiarate;
 - nessuna categoria sensibile attiva;
 - selezione automatica orientata alla varietà.
@@ -99,7 +115,7 @@ Il sistema rende eleggibili le versioni compatibili dei giochi:
 
 Il riepilogo del singolo gioco mostra sempre cosa serve prima di iniziare. Se un materiale manca, l'utente può cambiare variante o sostituire il gioco.
 
-## Core loop finale
+## Core loop finale della Serata libera V1
 
 ```text
 Start Party
@@ -194,6 +210,8 @@ Rilevamento automatico della lingua, account e sincronizzazione delle preferenze
 ## Later
 
 - varianti standalone più lunghe;
+- raccolta phone-only `Mazzi Originali`, con nome definitivo ancora aperto;
+- formato `Torneo` configurabile dentro Party Night;
 - preset e punteggio team;
 - streak, bonus, milestone ed eventi speciali;
 - effetti persistenti;
@@ -205,7 +223,7 @@ Rilevamento automatico della lingua, account e sincronizzazione delle preferenze
 - account e profili persistenti;
 - multiplayer con più dispositivi o online;
 - custom penalties e contenuti creati dagli utenti;
-- tornei, community, social e condivisione;
+- storico persistente dei tornei, community, social e condivisione;
 - monetizzazione, shop, abbonamenti e achievement complessi.
 
 ## Revisione critica di Phase 1

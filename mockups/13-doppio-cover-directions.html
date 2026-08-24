@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doppio - confronto copertina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Libre+Franklin:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --petrol: #0d3432;
+      --petrol-deep: #132824;
+      --mint: #6fd2b8;
+      --mandarin: #ff643b;
+      --honey: #f7c64b;
+      --shell: #fff0d1;
+      --focus: #fff3a6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--petrol-deep); }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--petrol-deep);
+      color: var(--shell);
+      font-family: "Libre Franklin", sans-serif;
+      line-height: 1.5;
+    }
+
+    ::selection { background: var(--honey); color: var(--petrol-deep); }
+
+    main {
+      width: min(1480px, 100%);
+      margin: 0 auto;
+      padding: clamp(24px, 4vw, 64px);
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, 440px);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: clamp(28px, 4vw, 52px);
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      color: var(--shell);
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(42px, 7vw, 92px);
+      font-weight: 400;
+      letter-spacing: -0.035em;
+      line-height: 0.92;
+      text-wrap: balance;
+    }
+
+    header p {
+      max-width: 44ch;
+      margin: 0;
+      color: #c9eadf;
+      font-size: clamp(16px, 2vw, 20px);
+      text-wrap: pretty;
+    }
+
+    .directions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(18px, 2.2vw, 30px);
+    }
+
+    .direction {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-width: 0;
+      padding: 0;
+      overflow: hidden;
+      border: 2px solid #45736c;
+      border-radius: 16px;
+      background: #173f3b;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 18px 42px rgb(0 0 0 / 22%);
+      transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .direction:hover {
+      border-color: var(--mint);
+      transform: translateY(-3px);
+      box-shadow: 0 24px 52px rgb(0 0 0 / 28%);
+    }
+
+    .direction:focus-visible {
+      outline: 4px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    .direction[aria-pressed="true"] {
+      border-color: var(--honey);
+      box-shadow: 0 0 0 4px rgb(247 198 75 / 22%), 0 24px 52px rgb(0 0 0 / 28%);
+    }
+
+    .cover {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1672 / 941;
+      object-fit: cover;
+      border-bottom: 2px solid #45736c;
+      background: var(--petrol);
+    }
+
+    .copy {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      padding: 22px;
+    }
+
+    .name-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--shell);
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(23px, 2.2vw, 34px);
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1;
+      text-wrap: balance;
+    }
+
+    .tag {
+      flex: none;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--honey);
+      color: var(--petrol-deep);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .copy p {
+      margin: 0;
+      color: #c9eadf;
+      font-size: 15px;
+      text-wrap: pretty;
+    }
+
+    .status {
+      min-height: 48px;
+      margin: 30px 0 0;
+      padding: 13px 16px;
+      border: 1px solid #45736c;
+      border-radius: 12px;
+      color: #c9eadf;
+      text-align: center;
+    }
+
+    .status strong { color: var(--honey); }
+
+    @media (max-width: 1020px) {
+      header { grid-template-columns: 1fr; }
+      .directions { grid-template-columns: 1fr; }
+      .direction { grid-template-columns: minmax(260px, 0.95fr) minmax(260px, 1.05fr); grid-template-rows: auto; }
+      .cover { height: 100%; min-height: 240px; border-right: 2px solid #45736c; border-bottom: 0; }
+    }
+
+    @media (max-width: 660px) {
+      main { padding: 24px 16px 32px; }
+      header { gap: 18px; }
+      .direction { grid-template-columns: 1fr; }
+      .cover { min-height: 0; border-right: 0; border-bottom: 2px solid #45736c; }
+      .copy { padding: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .direction { transition: none; }
+      .direction:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Doppio, una copertina per due.</h1>
+      <p>Confronta le tre direzioni nel formato reale del catalogo. Clicca quella che rappresenta meglio due persone che giocano insieme contro il sistema.</p>
+    </header>
+
+    <section class="directions" aria-label="Direzioni per la copertina Doppio">
+      <button class="direction" type="button" data-choice="Incastro comune" aria-pressed="false">
+        <img class="cover" src="assets/catalog-covers/doppio-incastro-candidate.png" alt="Due mani uniscono due tessere per completare un unico cerchio">
+        <span class="copy">
+          <span class="name-row"><h2>Incastro comune</h2><span class="tag">Consigliata</span></span>
+          <p>Il concetto più immediato: due contributi diversi completano un solo obiettivo.</p>
+        </span>
+      </button>
+
+      <button class="direction" type="button" data-choice="Percorso a due" aria-pressed="false">
+        <img class="cover" src="assets/catalog-covers/doppio-percorso-candidate.png" alt="Due mani guidano pedine diverse lungo percorsi che convergono">
+        <span class="copy">
+          <span class="name-row"><h2>Percorso a due</h2></span>
+          <p>Rende visibile il torneo: due percorsi coordinati convergono verso lo stesso traguardo.</p>
+        </span>
+      </button>
+
+      <button class="direction" type="button" data-choice="Passaggio decisivo" aria-pressed="false">
+        <img class="cover" src="assets/catalog-covers/doppio-passaggio-candidate.png" alt="Una mano passa all'altra la carta necessaria per completare una sequenza">
+        <span class="copy">
+          <span class="name-row"><h2>Passaggio decisivo</h2></span>
+          <p>La più narrativa: una persona consegna all'altra il pezzo che permette di proseguire.</p>
+        </span>
+      </button>
+    </section>
+
+    <p class="status" id="status" role="status" aria-live="polite">Nessuna direzione selezionata.</p>
+  </main>
+
+  <script>
+    const directions = Array.from(document.querySelectorAll(".direction"));
+    const status = document.getElementById("status");
+
+    directions.forEach((direction) => {
+      direction.addEventListener("click", () => {
+        directions.forEach((item) => item.setAttribute("aria-pressed", String(item === direction)));
+        const choice = direction.dataset.choice;
+        localStorage.setItem("ruckus-doppio-cover-choice", choice);
+        status.innerHTML = `Hai selezionato: <strong>${choice}</strong>. Scrivimi la scelta in chat per approvarla.`;
+      });
+    });
+
+    const savedChoice = localStorage.getItem("ruckus-doppio-cover-choice");
+    const savedDirection = directions.find((direction) => direction.dataset.choice === savedChoice);
+    if (savedDirection) savedDirection.click();
+  </script>
+</body>
+</html>
