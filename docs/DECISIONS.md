@@ -182,7 +182,7 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Status: `Recommended`, confermata dall'owner il 2026-08-22 come base migliorabile.
 - Owner answer: proseguire con `Manifesto Sociale`; approvati ruota centrale animabile, dado e carte scenici, Home più suggestiva, interni più calmi, Montserrat unica e palette funzionale proposta.
 
-## Decisione owner aperta in Phase 2B
+## Affinamento confermato in Phase 2B
 
 ### D-020 - Affinamento Petrolio festa
 
@@ -190,8 +190,8 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Recommendation: valutare `Petrolio festa` nel prototipo high-fidelity corrente. Usa Petrol, Mandarin, Honey, Shell e Mint; abbina `Archivo Black` a `Libre Franklin`; assegna a ruota, dado e carte tre interazioni indipendenti e prive di loop.
 - Why: il candidato rende la Home più calda, materica e riconoscibile, mentre le interazioni restano leggibili e rispettano reduced motion.
 - Tradeoff: cambia due elementi esplicitamente approvati in D-019, palette e Montserrat unica, quindi non può essere promosso a nuova baseline senza una risposta owner.
-- Status: `Needs owner decision`.
-- Owner answer: non ancora ricevuta.
+- Status: `Recommended`, confermata dall'owner il 2026-08-29.
+- Owner answer: approvata la combinazione `Petrolio festa` + `Passa la R` come sistema visuale del prototipo high-fidelity completo.
 
 ## Decisione confermata dall'owner sul sistema logo
 

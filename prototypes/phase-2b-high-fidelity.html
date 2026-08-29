@@ -1931,6 +1931,32 @@
 
       .ruckus-impact { display: none; }
     }
+
+    .catalog-search {
+      width: 100%; min-height: 52px; margin: 4px 0 14px; padding: 0 15px;
+      color: var(--ink); background: #fffaf0; border: 2px solid var(--ink); border-radius: 12px;
+      font: 750 1rem/1.2 "Libre Franklin", sans-serif;
+    }
+    .catalog-search::placeholder { color: #52645e; opacity: 1; }
+    .catalog-filters { display: flex; gap: 8px; margin: 0 -4px 18px; padding: 4px; overflow-x: auto; scrollbar-width: thin; }
+    .catalog-filter { min-height: 44px; padding: 8px 13px; flex: 0 0 auto; color: var(--ink); background: var(--surface-2); border: 2px solid var(--ink); border-radius: 999px; font-weight: 850; }
+    .catalog-filter[aria-pressed="true"] { color: #fff; background: var(--ink); outline: 3px solid var(--focus); outline-offset: 2px; }
+    .collection-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-bottom: 18px; }
+    .collection-cover { position: relative; min-height: 92px; overflow: hidden; border: 2px solid var(--ink); border-radius: 13px; background: var(--sun); }
+    .collection-cover img { width: 100%; height: 92px; display: block; object-fit: cover; }
+    .collection-cover span { position: absolute; right: 5px; bottom: 5px; left: 5px; padding: 4px 5px; color: #fff; background: rgba(19, 40, 36, .9); border-radius: 6px; font-size: .66rem; font-weight: 900; text-align: center; }
+    .catalog-list { display: grid; gap: 10px; }
+    .catalog-game { width: 100%; min-height: 80px; padding: 13px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; color: var(--ink); text-align: left; background: #fffaf0; border: 2px solid var(--ink); border-radius: 14px; }
+    .catalog-game strong, .catalog-game small { display: block; }
+    .catalog-game strong { font-family: "Archivo Black", sans-serif; font-size: 1.05rem; line-height: 1.05; text-transform: uppercase; }
+    .catalog-game small { margin-top: 6px; color: #52645e; font-size: .75rem; font-weight: 750; }
+    .catalog-game-mark { min-width: 44px; min-height: 44px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; font-weight: 950; }
+    .catalog-game[data-selected-game="true"] { color: #fff; background: var(--ink); outline: 3px solid var(--focus); outline-offset: 2px; }
+    .catalog-game[data-selected-game="true"] small { color: #c7d9d2; }
+
+    @media (max-width: 390px) {
+      .collection-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
   </style>
 </head>
 <body>
@@ -1949,6 +1975,8 @@
         <button class="route-button" data-route="no-match">8. Nessun gioco</button>
         <button class="route-button" data-route="error">9. Errore recuperabile</button>
         <button class="route-button" data-route="final">10. Finale</button>
+        <button class="route-button" data-route="tournament-retirement">11. Ritiro Torneo</button>
+        <button class="route-button" data-route="tiebreak">12. Spareggio</button>
       </div>
       <div class="legend">Prototipo locale con dati finti. Il percorso non invia dati e non usa alcun backend.</div>
     </aside>
@@ -1988,12 +2016,32 @@
     const defaultState = {
       screen: "home",
       previousScreen: null,
+      flowContext: "browse",
+      partyFormat: "free",
       players: ["Alex", "Marta"],
       duration: "Standard",
       resources: ["Phone only"],
       sensitive: [],
+      partyPreset: "general",
+      consequenceMode: "playful",
+      gameplayPreference: "varied",
+      supportPreference: "both",
+      tournamentCount: 5,
+      tournamentMethod: "auto",
+      tournamentSchedule: ["Secret Signals", "Mirror Moves", "Rapid Categories", "Table Sprint", "Common Ground"],
+      tournamentLocked: false,
+      tournamentSelectedGames: [],
+      catalogCollection: "all",
+      catalogQuery: "",
+      selectedGameId: "secret-signals",
       activeSession: false,
       selectedWinner: null,
+      freezeCalled: false,
+      retirementCandidate: "Marta",
+      retiredPlayers: [],
+      tiebreakRound: 0,
+      finalConsequenceVersion: 1,
+      finalConsequenceSkipped: false,
       score: { Alex: 0, Marta: 0 },
       currentGame: 1,
       completedGames: 0,
@@ -2007,6 +2055,16 @@
       wheelSpin: 0,
       language: "it"
     };
+
+    const CATALOG_GAMES = [
+      { id: "secret-signals", title: "Secret Signals", players: "2-6", duration: "8-12 min", material: "Phone only", collection: "digital", support: "Full Digital", description: "Memorize a private signal, bluff in public and make the first correct accusation." },
+      { id: "mirror-moves", title: "Mirror Moves", players: "2-6", duration: "5-8 min", material: "Phone only", collection: "active", support: "Assisted", description: "Copy the leader, freeze on the signal and catch the first movement." },
+      { id: "rapid-categories", title: "Rapid Categories", players: "2-6", duration: "5-8 min", material: "Phone only", collection: "digital", support: "Assisted", description: "Name answers in turn before the changing timer catches you." },
+      { id: "table-sprint", title: "Table Sprint", players: "2-6", duration: "6-10 min", material: "Paper and pens", collection: "extra", support: "Physical", description: "Race through tiny drawing and writing prompts around the table." },
+      { id: "common-ground", title: "Common Ground", players: "3-6", duration: "8-12 min", material: "Paper and pens", collection: "complicity", support: "Physical", description: "Find the answer shared by the group without giving the same clue." },
+      { id: "bluff", title: "Bluff", players: "3-6", duration: "10-15 min", material: "French deck", collection: "french", support: "Physical", description: "Lay cards, make a claim and decide when another player is lying." },
+      { id: "four-suits", title: "Four Suits", players: "2-4", duration: "8-12 min", material: "Italian deck", collection: "italian", support: "Physical", description: "Build the strongest collection by reading the shared table." }
+    ];
 
     let state = loadState();
     const app = document.getElementById("app");
@@ -2187,6 +2245,16 @@
       window.scrollTo({ top: 0, behavior: "auto" });
     }
 
+    function completeGameWithWinner(winner) {
+      const names = state.players.filter(name => name.trim());
+      state.selectedWinner = winner;
+      state.score = Object.fromEntries(names.map(name => [name, (state.score[name] || 0) + (name === winner ? 1 : 0)]));
+      state.completedGames = Math.max(state.completedGames, state.currentGame);
+      state.freezeCalled = false;
+      saveState();
+      go("result-reveal");
+    }
+
     function homeBrandIcon() {
       return `<span class="home-brand-icon" role="img" aria-label="Ruckus Party">
         <svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true" focusable="false">
@@ -2317,6 +2385,24 @@
       `), primary("Continue", "players-next", validPlayers < 2));
     }
 
+    function renderPartyFormat() {
+      return header("Party Night", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">How are we playing?</h1>
+        <p class="screen-copy">Choose the structure of this Party Night. You can start a flexible night or commit to a fixed tournament.</p>
+        <div class="stack-lg">
+          <button class="choice" data-format="free" aria-pressed="${state.partyFormat === "free"}">
+            <strong>Free Night</strong>
+            <small>Adaptive games, replacements and a finale whenever the group is ready.</small>
+          </button>
+          <button class="choice" data-format="tournament" aria-pressed="${state.partyFormat === "tournament"}">
+            <strong>Tournament</strong>
+            <small>A fixed calendar, one point per win and tie-breakers until one champion remains.</small>
+          </button>
+        </div>
+        <p class="prototype-note">Tournament is a format inside Party Night, not a separate mode.</p>
+      `), primary("Continue", "format-next"));
+    }
+
     function renderSetup() {
       const durations = [
         ["Short", "Test copy: 20-30 min"],
@@ -2369,9 +2455,71 @@
       return header("Customize", { back: true }) + screen(contentBlock(`
         <h1 class="screen-title">Optional filters.</h1>
         <p class="screen-copy">General content always stays available. Sensitive categories never turn on by themselves.</p>
-        <div class="info-block"><h3>General content</h3><p>Active for this Party Night.</p></div>
-        <div class="stack" style="margin-top:16px">${buttons}</div>
+        <div class="stack-lg">
+          <section><h2>Preset</h2><div class="choice-grid">
+            <button class="choice" data-preset="general" aria-pressed="${state.partyPreset === "general"}"><strong>General</strong><small>Balanced default</small></button>
+            <button class="choice" data-preset="couple" aria-pressed="${state.partyPreset === "couple"}"><strong>Couple</strong><small>Still editable</small></button>
+            <button class="choice" data-preset="party" aria-pressed="${state.partyPreset === "party"}"><strong>Party</strong><small>Still editable</small></button>
+          </div></section>
+          <section><h2>Consequences</h2><div class="choice-grid">
+            <button class="choice" data-consequence="off" aria-pressed="${state.consequenceMode === "off"}"><strong>Off</strong><small>No consequence moments</small></button>
+            <button class="choice" data-consequence="playful" aria-pressed="${state.consequenceMode === "playful"}"><strong>Playful</strong><small>Default intensity</small></button>
+            <button class="choice" data-consequence="bold" aria-pressed="${state.consequenceMode === "bold"}"><strong>Bold</strong><small>Uses enabled content only</small></button>
+          </div></section>
+          <section><h2>Gameplay</h2><div class="choice-grid">
+            <button class="choice" data-gameplay="varied" aria-pressed="${state.gameplayPreference === "varied"}"><strong>Varied</strong><small>Change rhythm often</small></button>
+            <button class="choice" data-gameplay="social" aria-pressed="${state.gameplayPreference === "social"}"><strong>Social</strong><small>Talking and reading people</small></button>
+            <button class="choice" data-gameplay="active" aria-pressed="${state.gameplayPreference === "active"}"><strong>Active</strong><small>Movement and speed</small></button>
+          </div></section>
+          <section><h2>Game support</h2><div class="choice-grid">
+            <button class="choice" data-support="both" aria-pressed="${state.supportPreference === "both"}"><strong>Both</strong><small>Physical and Virtual</small></button>
+            <button class="choice" data-support="physical" aria-pressed="${state.supportPreference === "physical"}"><strong>Physical</strong><small>Room-first games</small></button>
+            <button class="choice" data-support="virtual" aria-pressed="${state.supportPreference === "virtual"}"><strong>Virtual</strong><small>Phone-led games</small></button>
+          </div></section>
+          <section><h2>Sensitive content</h2><div class="stack">${buttons}</div></section>
+        </div>
       `), primary("Save customization", "save-customize"));
+    }
+
+    function renderTournamentSetup() {
+      const counts = [5, 10, 15].map(count => `
+        <button class="choice" data-tournament-count="${count}" aria-pressed="${state.tournamentCount === count}"><strong>${count} games</strong><small>${count === 5 ? "Best for this prototype" : "Long tournament"}</small></button>
+      `).join("");
+      const resources = ["Phone only", "French deck", "Italian deck", "Paper and pens"].map(name => `
+        <button class="choice" data-resource="${name}" aria-pressed="${state.resources.includes(name)}"><strong>${name}</strong><small>${name === "Phone only" ? "Always available" : "Optional material"}</small></button>
+      `).join("");
+      return header("Tournament setup", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Build the calendar.</h1>
+        <p class="screen-copy">Choose the commitment first. Players, games and order become fixed only after the calendar is confirmed.</p>
+        <div class="stack-lg">
+          <section><h2>Number of games</h2><div class="choice-grid">${counts}</div></section>
+          <section><h2>Game selection</h2><div class="choice-grid">
+            <button class="choice" data-tournament-method="auto" aria-pressed="${state.tournamentMethod === "auto"}"><strong>Automatic</strong><small>Compatible and varied</small></button>
+            <button class="choice" data-tournament-method="manual" aria-pressed="${state.tournamentMethod === "manual"}"><strong>Choose games</strong><small>Select exactly what enters</small></button>
+          </div></section>
+          <section><h2>Available materials</h2><div class="choice-grid">${resources}</div></section>
+          <div class="info-block"><h3>Competitive defaults</h3><p>Consequences are off. Handicaps are unavailable because the calendar must stay fair.</p></div>
+        </div>
+      `), primary(state.tournamentMethod === "manual" ? "Choose games" : "Generate calendar", "tournament-calendar", state.resources.length === 0));
+    }
+
+    function renderTournamentCalendar() {
+      const schedule = state.tournamentSchedule.slice(0, state.tournamentCount).map((game, index) => `
+        <li><span>${index + 1}. ${escapeHtml(game)}</span><strong>${index % 2 ? "Physical" : "Virtual"}</strong></li>
+      `).join("");
+      if (state.tournamentLocked) {
+        return header("Tournament", { menu: true }) + screen(contentBlock(`
+          <div data-calendar-locked="true" class="context-label">Calendar locked</div>
+          <h1 class="screen-title">The tournament is ready.</h1>
+          <p class="screen-copy">Players, games and order are fixed. A withdrawal can replace only future games that become incompatible.</p>
+          <ul class="summary-list">${schedule}</ul>
+        `), primary("Play game 1", "begin-tournament"));
+      }
+      return header("Tournament calendar", { back: true }) + screen(contentBlock(`
+        <h1 class="screen-title">Check every round.</h1>
+        <p class="screen-copy">This is the last moment to change games or order before the tournament begins.</p>
+        <ul class="summary-list">${schedule}</ul>
+      `), primary("Lock calendar", "lock-calendar") + secondary("Regenerate", "regenerate-calendar") + textButton("Choose games", "tournament-games"));
     }
 
     function renderProposal(next = false) {
@@ -2388,7 +2536,7 @@
         <div class="tag-row">${tags}</div>
         ${state.consequenceAccepted && next ? `<div class="info-block" style="margin-top:16px"><h3>Active handicap</h3><p>Alex must answer using only three words. Expires after this game.</p></div>` : ""}
         <p class="reason"><strong>Why this fits:</strong> ${reason}</p>
-      `), primary(next ? "Play next game" : "Play", next ? "play-next" : "prepare-virtual") + secondary("Replace", next ? "replace-next" : "replace") + textButton("Choose game", "games"), "proposal-screen");
+      `), primary(next ? "Play next game" : "Play", next ? "play-next" : "prepare-virtual") + secondary("Replace", next ? "replace-next" : "replace") + textButton("Choose game", "session-games"), "proposal-screen");
     }
 
     function renderVirtualPrep() {
@@ -2449,12 +2597,29 @@
     }
 
     function renderActiveGame(physical = false) {
-      return header(physical ? "Mirror Moves" : "Secret Signals", { menu: true }) + screen(contentBlock(`
-        <div class="context-label">Game in progress</div>
-        <h1 class="screen-title">${physical ? "Eyes up. Follow the leader." : "Watch the signals."}</h1>
-        <p class="screen-copy">${physical ? "The phone handles the freeze signals. Tap Finish game when only one player remains." : "Tap Finish game after the first correct accusation."}</p>
-        <div class="info-block"><h3>Session status</h3><p>Game ${state.currentGame} - Standard Party Night - 2 players</p></div>
-      `, true), primary("Finish game", "finish-game") + secondary("Cancel game", "cancel-game", "danger-button"), physical ? "physical-active-screen" : "virtual-active-screen");
+      const names = state.players.filter(name => name.trim());
+      if (physical) {
+        const freezeChoices = names.map(name => `
+          <button class="player-choice" data-eliminated="${escapeHtml(name)}"><span>${escapeHtml(name)}</span><strong>Still moving</strong></button>
+        `).join("");
+        return header("Mirror Moves", { menu: true }) + screen(contentBlock(`
+          <div class="context-label">Assisted physical game</div>
+          <h1 class="screen-title">${state.freezeCalled ? "Who moved after freeze?" : "Eyes up. Follow the leader."}</h1>
+          <p class="screen-copy">${state.freezeCalled ? "Choose the first person still moving. With two players, the other player wins this prototype round." : `${escapeHtml(names[0] || "The first player")} leads. Everyone mirrors the movement until the shared freeze signal.`}</p>
+          ${state.freezeCalled ? `<div class="stack">${freezeChoices}</div>` : `<div class="info-block"><h3>Phone role</h3><p>Keep the phone visible. Tap the signal only after the group has settled into the movement.</p></div>`}
+        `, true), state.freezeCalled ? secondary("Call another freeze", "call-freeze") + secondary("Cancel game", "cancel-game", "danger-button") : primary("Call freeze", "call-freeze") + secondary("Cancel game", "cancel-game", "danger-button"), "physical-active-screen");
+      }
+
+      const accusationChoices = names.map(name => `
+        <button class="player-choice" data-accuser="${escapeHtml(name)}" aria-pressed="${state.selectedWinner === name}"><span>${escapeHtml(name)}</span><strong>${state.selectedWinner === name ? "Correct accuser" : "Choose"}</strong></button>
+      `).join("");
+      return header("Secret Signals", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">Shared accusation</div>
+        <h1 class="screen-title">Who caught the false signal?</h1>
+        <p class="screen-copy">The first correct accusation ends the round. Choose the player who made it.</p>
+        <div class="stack">${accusationChoices}</div>
+        <div class="info-block" style="margin-top:16px"><h3>Secrets stay private</h3><p>The signals are no longer available on this shared screen or in session history.</p></div>
+      `, true), primary("Confirm accusation", "resolve-secret-signals", !state.selectedWinner) + secondary("Cancel game", "cancel-game", "danger-button"), "virtual-active-screen");
     }
 
     function renderCancelled() {
@@ -2479,16 +2644,35 @@
 
     function renderResultReveal() {
       const winner = state.selectedWinner || state.players[0];
-      return header("Result", { menu: true }) + screen(contentBlock(`
+      const quick = state.flowContext === "quick";
+      const tournament = state.flowContext === "tournament" || state.partyFormat === "tournament";
+      const pointLabel = quick ? "Quick Play result" : tournament ? "+1 tournament point" : "+1 Party Night point";
+      const resultCopy = quick
+        ? "This result stays inside this single game. No Party Night standings or finale were created."
+        : "The result is now in session history and the standings have been updated.";
+      const actions = quick
+        ? primary("Play again", "quick-play-again") + secondary("Choose another game", "quick-games") + textButton("Return Home", "quick-home")
+        : primary(tournament ? "See tournament table" : "See standings", "standings");
+      return header("Result", { menu: !quick }) + screen(contentBlock(`
         <div class="context-label">Game ${state.currentGame} complete</div>
-        <div class="big-result"><strong>${escapeHtml(winner)} wins.</strong><span>+1 Party Night point</span></div>
-        <p class="screen-copy">The result is now in session history and the standings have been updated.</p>
-      `, true), primary("See standings", "standings"), "result-screen");
+        <div class="big-result"><strong>${escapeHtml(winner)} wins.</strong><span>${pointLabel}</span></div>
+        <p class="screen-copy">${resultCopy}</p>
+      `, true), actions, "result-screen");
     }
 
     function renderStandings() {
       const names = state.players.filter(name => name.trim()).sort((a, b) => (state.score[b] || 0) - (state.score[a] || 0));
       const rows = names.map((name, index) => `<li><span>${index + 1}. ${escapeHtml(name)}</span><strong>${state.score[name] || 0} pt</strong></li>`).join("");
+      const tournament = state.flowContext === "tournament" || state.partyFormat === "tournament";
+      if (tournament) {
+        const round = Math.max(state.completedGames, 1);
+        return header("Tournament table", { menu: true }) + screen(contentBlock(`
+          <div class="context-label">Round ${round} of ${state.tournamentCount}</div>
+          <h1 class="screen-title">Every point stays visible.</h1>
+          <ul class="score-list">${rows}</ul>
+          <div class="info-block" style="margin-top:20px"><h3>Calendar locked</h3><p>The next scheduled game cannot be replaced or chosen again. Only a withdrawal can repair future incompatibilities.</p></div>
+        `), primary("Play next scheduled game", "tournament-next") + secondary("Review withdrawal", "tournament-retirement") + textButton("Preview tie-break", "tiebreak"), "standings-screen");
+      }
       const progress = state.completedGames >= 2 ? 100 : 46;
       const nextAction = state.completedGames >= 2
         ? primary("See the finale", "final")
@@ -2499,6 +2683,32 @@
         <ul class="score-list">${rows}</ul>
         <div style="margin-top:24px"><div class="progress-track" aria-label="Indicative session progress"><span style="width:${progress}%"></span></div><p class="prototype-note">Progress is indicative. It does not promise a fixed number of games.</p></div>
       `), nextAction, "standings-screen");
+    }
+
+    function renderTournamentRetirement() {
+      const activePlayers = state.players.filter(name => name.trim() && !state.retiredPlayers.includes(name));
+      const choices = activePlayers.map(name => `
+        <button class="player-choice" data-retire="${escapeHtml(name)}" aria-pressed="${state.retirementCandidate === name}"><span>${escapeHtml(name)}</span><strong>${state.retirementCandidate === name ? "Will retire" : "Choose"}</strong></button>
+      `).join("");
+      return header("Tournament withdrawal", { back: true, menu: true }) + screen(contentBlock(`
+        <div class="context-label">Calendar exception</div>
+        <h1 class="screen-title">Who is leaving?</h1>
+        <p class="screen-copy">Their points leave the table. Ruckus replaces only future games that no longer support the remaining group.</p>
+        <div class="stack">${choices}</div>
+        <div class="info-block" style="margin-top:16px"><h3>Already played rounds</h3><p>Confirmed results stay in session history, but the retired player no longer appears in tournament standings.</p></div>
+      `), primary("Confirm withdrawal", "confirm-retirement", !state.retirementCandidate) + secondary("Keep everyone", "standings"));
+    }
+
+    function renderTiebreak() {
+      const names = state.players.filter(name => name.trim() && !state.retiredPlayers.includes(name));
+      const topScore = Math.max(...names.map(name => state.score[name] || 0), 0);
+      const tied = names.filter(name => (state.score[name] || 0) === topScore);
+      return header("Tournament tie-break", { menu: true }) + screen(contentBlock(`
+        <div class="context-label">One champion required</div>
+        <h1 class="screen-title">The lead is tied.</h1>
+        <p class="screen-copy">${escapeHtml(tied.join(" and "))} continue. Players outside the tie do not enter this round.</p>
+        <div class="info-block"><h3>Next game</h3><p>Secret Signals - compatible, not yet used by these finalists. Another tie creates a new tie-break.</p></div>
+      `, true), primary("Play tie-break", "play-tiebreak") + secondary("Choose another compatible game", "session-games"));
     }
 
     function consequenceText() {
@@ -2543,36 +2753,76 @@
         <p class="screen-copy">No shared standings, session progress or Party Night finale.</p>
         <div class="stack-lg">
           <button class="home-primary" data-action="quick-surprise"><strong>Surprise me</strong><span>Get one compatible suggestion</span></button>
-          <button class="home-secondary" data-action="games"><strong>Choose game</strong><span>Browse requirements before playing</span></button>
+          <button class="home-secondary" data-action="quick-games"><strong>Choose game</strong><span>Browse requirements before playing</span></button>
         </div>
       `));
     }
 
     function renderGames() {
-      const games = [
-        ["Secret Signals", "2-6 players - Phone only - Private reveal"],
-        ["Rapid Categories", "2-6 players - Phone only - Social"],
-        ["Card Tower", "2-4 players - French deck - Physical"]
-      ];
+      const context = state.flowContext || "browse";
+      const contextCopy = {
+        browse: ["Explore every game.", "Open rules and requirements. Starting a game creates a separate Quick Play."],
+        quick: ["Choose one game.", "Only this result will be recorded. No Party Night standings are created."],
+        free: ["Choose for this Party Night.", "Compatible games return directly to the current session."],
+        tournament: ["Choose the tournament games.", `Select at least ${state.tournamentCount} compatible games before reviewing the calendar.`]
+      }[context];
+      const query = state.catalogQuery.trim().toLowerCase();
+      const visibleGames = CATALOG_GAMES.filter(game => {
+        const collectionMatch = state.catalogCollection === "all" || game.collection === state.catalogCollection;
+        const queryMatch = !query || `${game.title} ${game.description} ${game.material}`.toLowerCase().includes(query);
+        return collectionMatch && queryMatch;
+      });
+      const filters = [
+        ["all", "All"], ["digital", "Phone"], ["french", "Poker"], ["italian", "Italian"], ["active", "Active"], ["complicity", "Complicity"], ["extra", "Extra"]
+      ].map(([id, label]) => `<button class="catalog-filter" data-catalog-filter="${id}" aria-pressed="${state.catalogCollection === id}">${label}</button>`).join("");
+      const covers = [
+        ["digital", "Phone", "../mockups/assets/catalog-covers/ruckus-colored-cards-v1.png"],
+        ["french", "Poker", "../mockups/assets/catalog-covers/poker-composite-v1.png"],
+        ["italian", "Italian", "../mockups/assets/catalog-covers/italian-composite-v1.png"],
+        ["active", "Active", "../mockups/assets/catalog-covers/dice-composite-v1.png"],
+        ["complicity", "Complicity", "../mockups/assets/catalog-covers/complicity-table-v1.png"]
+      ].map(([id, label, src]) => `<button class="collection-cover" data-catalog-filter="${id}" aria-label="Open ${label} collection"><img src="${src}" alt=""><span>${label}</span></button>`).join("");
+      const rows = visibleGames.map(game => {
+        const selected = state.tournamentSelectedGames.includes(game.id);
+        const action = context === "tournament" ? "toggle-tournament-game" : "game-detail";
+        return `<button class="catalog-game" data-action="${action}" data-game="${game.id}" data-selected-game="${selected}">
+          <span><strong>${escapeHtml(game.title)}</strong><small>${game.players} players - ${escapeHtml(game.material)} - ${escapeHtml(game.duration)}</small></span>
+          <span class="catalog-game-mark" aria-hidden="true">${context === "tournament" ? (selected ? "✓" : "+") : "→"}</span>
+        </button>`;
+      }).join("");
+      const tournamentFooter = context === "tournament"
+        ? primary(`Review ${state.tournamentSelectedGames.length}/${state.tournamentCount} games`, "review-tournament-games", state.tournamentSelectedGames.length < state.tournamentCount)
+        : "";
       return header("Games", { back: true }) + screen(contentBlock(`
-        <h1 class="screen-title">Find one game.</h1>
-        <p class="screen-copy">Catalog entries show requirements before opening Quick Play.</p>
-        <div class="stack">${games.map(([name, meta]) => `<button class="home-secondary" data-action="game-detail" data-game="${name}"><strong>${name}</strong><span>${meta}</span></button>`).join("")}</div>
-      `));
+        <div data-catalog-context="${context}" class="context-label">${context === "browse" ? "Full catalog" : context === "quick" ? "Quick Play" : context === "free" ? "Party Night" : "Tournament selection"}</div>
+        <h1 class="screen-title">${contextCopy[0]}</h1>
+        <p class="screen-copy">${contextCopy[1]}</p>
+        <label for="catalog-search"><strong>Search by name or material</strong></label>
+        <input class="catalog-search" id="catalog-search" data-catalog-search type="search" value="${escapeHtml(state.catalogQuery)}" placeholder="Try bluff, phone or cards" autocomplete="off">
+        <div class="catalog-filters" aria-label="Filter games">${filters}</div>
+        <div class="collection-strip">${covers}</div>
+        <div class="catalog-list">${rows || `<div class="info-block" role="status"><h3>No matching game</h3><p>Change the search or return to All. No session filter was changed.</p></div>`}</div>
+      `), tournamentFooter, "catalog-screen");
     }
 
     function renderGameDetail() {
+      const game = CATALOG_GAMES.find(item => item.id === state.selectedGameId) || CATALOG_GAMES[0];
+      const context = state.flowContext || "browse";
+      const primaryAction = context === "free"
+        ? primary("Choose for Party Night", "select-session-game")
+        : primary("Play in Quick Play", "select-quick-game");
       return header("Game detail", { back: true }) + screen(contentBlock(`
         <div class="context-label">Catalog entry</div>
-        <h1 class="screen-title">Secret Signals</h1>
-        <p class="screen-copy">A short bluff game with one private signal per player.</p>
+        <h1 class="screen-title">${escapeHtml(game.title)}</h1>
+        <p class="screen-copy">${escapeHtml(game.description)}</p>
         <ul class="summary-list">
-          <li><span>Players</span><strong>2-6</strong></li>
-          <li><span>Duration</span><strong>8-12 min</strong></li>
-          <li><span>Materials</span><strong>Phone only</strong></li>
-          <li><span>Digital support</span><strong>Full Digital</strong></li>
+          <li><span>Players</span><strong>${game.players}</strong></li>
+          <li><span>Duration</span><strong>${game.duration}</strong></li>
+          <li><span>Materials</span><strong>${escapeHtml(game.material)}</strong></li>
+          <li><span>Phone role</span><strong>${escapeHtml(game.support)}</strong></li>
         </ul>
-      `), primary("Play in Quick Play", "quick-surprise") + secondary("Back to Games", "games"));
+        <div class="info-block" style="margin-top:16px"><h3>How to win</h3><p>Complete the game objective first. The prototype derives the result from the shared interaction.</p></div>
+      `), primaryAction + secondary("Back to Games", "return-games"));
     }
 
     function renderHistory() {
@@ -2626,10 +2876,17 @@
 
     function renderFinal() {
       const names = state.players.filter(name => name.trim());
+      if (state.completedGames === 0) {
+        return header("Party Night complete") + screen(contentBlock(`
+          <div data-final-kind="neutral" class="context-label">No confirmed results</div>
+          <div class="big-result"><strong>No champion tonight.</strong><span>The session ended before a valid result was recorded.</span></div>
+          <p class="screen-copy">Players, filters and cancelled games did not create scores. Ruckus Party does not invent a winner or a last place.</p>
+        `, true), primary("Start another Party Night", "new-party") + secondary("Return Home", "end-home"), "final-screen");
+      }
       const ranking = [...names].sort((a, b) => (state.score[b] || 0) - (state.score[a] || 0));
       const bestScore = Math.max(...ranking.map(name => state.score[name] || 0), 0);
       const leaders = ranking.filter(name => (state.score[name] || 0) === bestScore);
-      const gamesDone = Math.max(state.completedGames, 2);
+      const gamesDone = state.completedGames;
       const leaderNames = state.language === "it" ? leaders.join(" e ") : leaders.join(" and ");
       const champion = state.language === "it"
         ? (leaders.length > 1 ? `${leaderNames} sono campioni.` : `${leaderNames} è il campione.`)
@@ -2641,11 +2898,16 @@
       const recap = state.language === "it"
         ? "Segnali segreti e Specchio umano completati. Nessun gioco annullato ha modificato la classifica."
         : "Secret Signals and Mirror Moves completed. No cancelled game affected the standings.";
+      const lastPlace = ranking[ranking.length - 1];
+      const finalConsequence = state.consequenceMode !== "off" && leaders.length < ranking.length && !state.finalConsequenceSkipped
+        ? `<div class="info-block" style="margin-top:16px"><h3>Final consequence for ${escapeHtml(lastPlace)}</h3><p>${state.finalConsequenceVersion % 2 ? "Lead the group in a ten-second victory chant for the champion." : "Give the champion an absurd ceremonial title before leaving."}</p><div style="margin-top:10px">${secondary("Replace", "replace-final-consequence")}${textButton("Skip", "skip-final-consequence")}</div></div>`
+        : "";
       return header("Party Night complete") + screen(contentBlock(`
-        <div class="context-label">Final standings</div>
+        <div data-final-kind="scored" class="context-label">Final standings</div>
         <div class="big-result"><strong>${escapeHtml(champion)}</strong><span>${escapeHtml(resultMeta)}</span></div>
         <ul class="score-list">${rows}</ul>
         <div class="info-block" style="margin-top:24px"><h3>Night recap</h3><p>${escapeHtml(recap)}</p></div>
+        ${finalConsequence}
       `), primary("Start another Party Night", "new-party") + secondary("Return Home", "end-home"), "final-screen");
     }
 
@@ -2912,7 +3174,114 @@
       "Finish Party Night?": "Terminare la Party Night?",
       "Only confirmed results will be included in the final standings.": "Solo i risultati confermati saranno inclusi nella classifica finale.",
       "Finish and see results": "Termina e mostra i risultati",
-      "Keep playing": "Continua a giocare"
+      "Keep playing": "Continua a giocare",
+      "How are we playing?": "Come giochiamo?",
+      "Choose the structure of this Party Night. You can start a flexible night or commit to a fixed tournament.": "Scegli la struttura di questa Party Night. Puoi iniziare una serata flessibile oppure impegnarti in un torneo fisso.",
+      "Free Night": "Serata libera",
+      "Adaptive games, replacements and a finale whenever the group is ready.": "Giochi adattivi, sostituzioni e un finale quando il gruppo è pronto.",
+      "Tournament": "Torneo",
+      "A fixed calendar, one point per win and tie-breakers until one champion remains.": "Un calendario fisso, un punto per vittoria e spareggi finché resta un solo campione.",
+      "Tournament is a format inside Party Night, not a separate mode.": "Il Torneo è un formato di Party Night, non una modalità separata.",
+      "Preset": "Preset",
+      "General": "Generale",
+      "Balanced default": "Impostazione bilanciata",
+      "Couple": "Coppia",
+      "Still editable": "Sempre modificabile",
+      "Party": "Festa",
+      "Off": "Disattivate",
+      "No consequence moments": "Nessun momento conseguenza",
+      "Default intensity": "Intensità predefinita",
+      "Uses enabled content only": "Usa solo i contenuti attivati",
+      "Gameplay": "Stile di gioco",
+      "Change rhythm often": "Cambia spesso ritmo",
+      "Talking and reading people": "Conversazione e intuito sociale",
+      "Active": "Attivo",
+      "Movement and speed": "Movimento e velocità",
+      "Game support": "Supporto del gioco",
+      "Both": "Entrambi",
+      "Physical and Virtual": "Fisico e Virtuale",
+      "Room-first games": "Giochi centrati sulla stanza",
+      "Phone-led games": "Giochi guidati dal telefono",
+      "Sensitive content": "Contenuti sensibili",
+      "Tournament setup": "Configurazione Torneo",
+      "Build the calendar.": "Costruisci il calendario.",
+      "Choose the commitment first. Players, games and order become fixed only after the calendar is confirmed.": "Scegli prima la durata. Giocatori, giochi e ordine diventano fissi solo dopo la conferma del calendario.",
+      "Number of games": "Numero di giochi",
+      "Best for this prototype": "Ideale per questo prototipo",
+      "Long tournament": "Torneo lungo",
+      "Game selection": "Selezione dei giochi",
+      "Automatic": "Automatica",
+      "Compatible and varied": "Compatibile e varia",
+      "Choose games": "Scegli i giochi",
+      "Select exactly what enters": "Scegli esattamente cosa includere",
+      "Available materials": "Materiali disponibili",
+      "Always available": "Sempre disponibile",
+      "Competitive defaults": "Impostazioni competitive",
+      "Consequences are off. Handicaps are unavailable because the calendar must stay fair.": "Le conseguenze sono disattivate. Gli handicap non sono disponibili perché il calendario deve restare equo.",
+      "Generate calendar": "Genera calendario",
+      "Tournament calendar": "Calendario Torneo",
+      "Check every round.": "Controlla ogni round.",
+      "This is the last moment to change games or order before the tournament begins.": "Questo è l'ultimo momento per cambiare giochi o ordine prima dell'inizio del torneo.",
+      "Lock calendar": "Blocca calendario",
+      "Regenerate": "Rigenera",
+      "Calendar locked": "Calendario bloccato",
+      "The tournament is ready.": "Il torneo è pronto.",
+      "Players, games and order are fixed. A withdrawal can replace only future games that become incompatible.": "Giocatori, giochi e ordine sono fissi. Un ritiro può sostituire solo i giochi futuri diventati incompatibili.",
+      "Play game 1": "Gioca il gioco 1",
+      "Explore every game.": "Esplora tutti i giochi.",
+      "Open rules and requirements. Starting a game creates a separate Quick Play.": "Apri regole e requisiti. Avviare un gioco crea una Partita veloce separata.",
+      "Choose one game.": "Scegli un gioco.",
+      "Only this result will be recorded. No Party Night standings are created.": "Verrà registrato solo questo risultato. Non verrà creata una classifica Party Night.",
+      "Choose for this Party Night.": "Scegli per questa Party Night.",
+      "Compatible games return directly to the current session.": "I giochi compatibili tornano direttamente alla sessione corrente.",
+      "Choose the tournament games.": "Scegli i giochi del torneo.",
+      "Full catalog": "Catalogo completo",
+      "Tournament selection": "Selezione Torneo",
+      "Search by name or material": "Cerca per nome o materiale",
+      "Try bluff, phone or cards": "Prova bluff, telefono o carte",
+      "Filter games": "Filtra i giochi",
+      "All": "Tutti",
+      "Phone": "Telefono",
+      "Complicity": "Complicità",
+      "No matching game": "Nessun gioco trovato",
+      "Change the search or return to All. No session filter was changed.": "Modifica la ricerca o torna a Tutti. Nessun filtro della sessione è stato cambiato.",
+      "Choose for Party Night": "Scegli per Party Night",
+      "How to win": "Come si vince",
+      "Complete the game objective first. The prototype derives the result from the shared interaction.": "Completa per primo l'obiettivo del gioco. Il prototipo ricava il risultato dall'interazione condivisa.",
+      "Quick Play result": "Risultato Partita veloce",
+      "This result stays inside this single game. No Party Night standings or finale were created.": "Questo risultato resta nella singola partita. Non sono stati creati classifica o finale Party Night.",
+      "Play again": "Gioca di nuovo",
+      "Choose another game": "Scegli un altro gioco",
+      "+1 tournament point": "+1 punto Torneo",
+      "See tournament table": "Vedi classifica Torneo",
+      "Tournament table": "Classifica Torneo",
+      "Every point stays visible.": "Ogni punto resta visibile.",
+      "The next scheduled game cannot be replaced or chosen again. Only a withdrawal can repair future incompatibilities.": "Il prossimo gioco in calendario non può essere sostituito o scelto di nuovo. Solo un ritiro può risolvere incompatibilità future.",
+      "Play next scheduled game": "Gioca il prossimo in calendario",
+      "Review withdrawal": "Gestisci un ritiro",
+      "Preview tie-break": "Anteprima spareggio",
+      "Tournament withdrawal": "Ritiro dal Torneo",
+      "Calendar exception": "Eccezione al calendario",
+      "Who is leaving?": "Chi si ritira?",
+      "Their points leave the table. Ruckus replaces only future games that no longer support the remaining group.": "I suoi punti escono dalla classifica. Ruckus sostituisce solo i giochi futuri non più compatibili con il gruppo rimasto.",
+      "Already played rounds": "Round già giocati",
+      "Confirmed results stay in session history, but the retired player no longer appears in tournament standings.": "I risultati confermati restano nella cronologia, ma chi si ritira non appare più nella classifica del torneo.",
+      "Will retire": "Si ritirerà",
+      "Choose": "Scegli",
+      "Confirm withdrawal": "Conferma ritiro",
+      "Keep everyone": "Mantieni tutti",
+      "Tournament tie-break": "Spareggio Torneo",
+      "One champion required": "Serve un solo campione",
+      "The lead is tied.": "La testa della classifica è in parità.",
+      "Secret Signals - compatible, not yet used by these finalists. Another tie creates a new tie-break.": "Segnali segreti - compatibile e non ancora usato da questi finalisti. Un'altra parità crea un nuovo spareggio.",
+      "Play tie-break": "Gioca lo spareggio",
+      "Choose another compatible game": "Scegli un altro gioco compatibile",
+      "No confirmed results": "Nessun risultato confermato",
+      "No champion tonight.": "Nessun campione stasera.",
+      "The session ended before a valid result was recorded.": "La sessione è terminata prima di registrare un risultato valido.",
+      "Players, filters and cancelled games did not create scores. Ruckus Party does not invent a winner or a last place.": "Giocatori, filtri e giochi annullati non hanno creato punteggi. Ruckus Party non inventa vincitore o ultimo posto.",
+      "Lead the group in a ten-second victory chant for the champion.": "Guida il gruppo in un coro di vittoria di dieci secondi per il campione.",
+      "Give the champion an absurd ceremonial title before leaving.": "Assegna al campione un assurdo titolo cerimoniale prima di andare via."
     };
 
     const ENGLISH = Object.fromEntries(Object.entries(ITALIAN).map(([english, italian]) => [italian, english]));
@@ -2931,6 +3300,17 @@
         [/^(\d+) players - Game (\d+) in progress$/, "$1 giocatori - Gioco $2 in corso"],
         [/^Game (\d+) - Standard Party Night - (\d+) players$/, "Gioco $1 - Party Night Standard - $2 giocatori"],
         [/^Game (\d+) complete$/, "Gioco $1 completato"],
+        [/^STEP (\d+) OF (\d+)$/, "PASSO $1 DI $2"],
+        [/^(\d+) games$/, "$1 giochi"],
+        [/^Round (\d+) of (\d+)$/, "Round $1 di $2"],
+        [/^Review (\d+)\/(\d+) games$/, "Controlla $1/$2 giochi"],
+        [/^Select at least (\d+) compatible games before reviewing the calendar\.$/, "Seleziona almeno $1 giochi compatibili prima di controllare il calendario."],
+        [/^(.+) and (.+) continue\. Players outside the tie do not enter this round\.$/, "$1 e $2 continuano. Chi non è in parità non partecipa a questo round."],
+        [/^Final consequence for (.+)$/, "Conseguenza finale per $1"],
+        [/^(\d+)-(\d+) players - Phone only - (.+)$/, "$1-$2 giocatori - Solo telefono - $3"],
+        [/^(\d+)-(\d+) players - Paper and pens - (.+)$/, "$1-$2 giocatori - Carta e penne - $3"],
+        [/^(\d+)-(\d+) players - French deck - (.+)$/, "$1-$2 giocatori - Mazzo francese - $3"],
+        [/^(\d+)-(\d+) players - Italian deck - (.+)$/, "$1-$2 giocatori - Mazzo italiano - $3"],
         [/^(\d+) pt$/, "$1 pt"]
       ];
       const toEnglish = [
@@ -2945,7 +3325,18 @@
         [/^(\d+) giocatori$/, "$1 players"],
         [/^(\d+) giocatori - Gioco (\d+) in corso$/, "$1 players - Game $2 in progress"],
         [/^Gioco (\d+) - Party Night Standard - (\d+) giocatori$/, "Game $1 - Standard Party Night - $2 players"],
-        [/^Gioco (\d+) completato$/, "Game $1 complete"]
+        [/^Gioco (\d+) completato$/, "Game $1 complete"],
+        [/^PASSO (\d+) DI (\d+)$/, "STEP $1 OF $2"],
+        [/^(\d+) giochi$/, "$1 games"],
+        [/^Round (\d+) di (\d+)$/, "Round $1 of $2"],
+        [/^Controlla (\d+)\/(\d+) giochi$/, "Review $1/$2 games"],
+        [/^Seleziona almeno (\d+) giochi compatibili prima di controllare il calendario\.$/, "Select at least $1 compatible games before reviewing the calendar."],
+        [/^(.+) e (.+) continuano\. Chi non è in parità non partecipa a questo round\.$/, "$1 and $2 continue. Players outside the tie do not enter this round."],
+        [/^Conseguenza finale per (.+)$/, "Final consequence for $1"],
+        [/^(\d+)-(\d+) giocatori - Solo telefono - (.+)$/, "$1-$2 players - Phone only - $3"],
+        [/^(\d+)-(\d+) giocatori - Carta e penne - (.+)$/, "$1-$2 players - Paper and pens - $3"],
+        [/^(\d+)-(\d+) giocatori - Mazzo francese - (.+)$/, "$1-$2 players - French deck - $3"],
+        [/^(\d+)-(\d+) giocatori - Mazzo italiano - (.+)$/, "$1-$2 players - Italian deck - $3"]
       ];
       const patterns = language === "it" ? toItalian : toEnglish;
       for (const [pattern, replacement] of patterns) {
@@ -2979,10 +3370,13 @@
     function render() {
       const views = {
         home: renderHome,
+        format: renderPartyFormat,
         players: renderPlayers,
         setup: renderSetup,
         summary: renderSummary,
         customize: renderCustomize,
+        "tournament-setup": renderTournamentSetup,
+        "tournament-calendar": renderTournamentCalendar,
         proposal: () => renderProposal(false),
         "next-proposal": () => renderProposal(true),
         "virtual-prep": renderVirtualPrep,
@@ -3008,6 +3402,8 @@
         language: renderLanguage,
         loading: renderLoading,
         error: renderError,
+        "tournament-retirement": renderTournamentRetirement,
+        tiebreak: renderTiebreak,
         final: renderFinal
       };
       const view = views[state.screen] || renderHome;
@@ -3042,9 +3438,9 @@
       if (route) {
         if (["proposal", "virtual-prep", "private-pass"].includes(route.dataset.route)) state.currentGame = 1;
         if (["next-proposal", "physical", "physical-active"].includes(route.dataset.route)) state.currentGame = 2;
-        if (route.dataset.route === "final" && state.completedGames < 2) {
-          state.completedGames = 2;
-          state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, 1]));
+        if (["tournament-retirement", "tiebreak"].includes(route.dataset.route)) {
+          state.flowContext = "tournament";
+          state.partyFormat = "tournament";
         }
         saveState();
         go(route.dataset.route);
@@ -3058,6 +3454,36 @@
         render();
         return;
       }
+
+      const format = event.target.closest("[data-format]");
+      if (format) {
+        state.partyFormat = format.dataset.format;
+        state.flowContext = format.dataset.format === "tournament" ? "tournament" : "free";
+        saveState();
+        render();
+        return;
+      }
+
+      const preset = event.target.closest("[data-preset]");
+      if (preset) { state.partyPreset = preset.dataset.preset; saveState(); render(); return; }
+
+      const consequence = event.target.closest("[data-consequence]");
+      if (consequence) { state.consequenceMode = consequence.dataset.consequence; saveState(); render(); return; }
+
+      const gameplay = event.target.closest("[data-gameplay]");
+      if (gameplay) { state.gameplayPreference = gameplay.dataset.gameplay; saveState(); render(); return; }
+
+      const support = event.target.closest("[data-support]");
+      if (support) { state.supportPreference = support.dataset.support; saveState(); render(); return; }
+
+      const tournamentCount = event.target.closest("[data-tournament-count]");
+      if (tournamentCount) { state.tournamentCount = Number(tournamentCount.dataset.tournamentCount); saveState(); render(); return; }
+
+      const tournamentMethod = event.target.closest("[data-tournament-method]");
+      if (tournamentMethod) { state.tournamentMethod = tournamentMethod.dataset.tournamentMethod; saveState(); render(); return; }
+
+      const catalogFilter = event.target.closest("[data-catalog-filter]");
+      if (catalogFilter) { state.catalogCollection = catalogFilter.dataset.catalogFilter; saveState(); render(); return; }
 
       const resource = event.target.closest("[data-resource]");
       if (resource) {
@@ -3089,42 +3515,82 @@
         return;
       }
 
+      const accuser = event.target.closest("[data-accuser]");
+      if (accuser) { state.selectedWinner = accuser.dataset.accuser; saveState(); render(); return; }
+
+      const eliminated = event.target.closest("[data-eliminated]");
+      if (eliminated) {
+        const winnerName = state.players.filter(name => name.trim() && name !== eliminated.dataset.eliminated)[0];
+        if (winnerName) completeGameWithWinner(winnerName);
+        return;
+      }
+
+      const retire = event.target.closest("[data-retire]");
+      if (retire) { state.retirementCandidate = retire.dataset.retire; saveState(); render(); return; }
+
       const action = event.target.closest("[data-action]");
       if (!action) return;
+      if (action.dataset.game) state.selectedGameId = action.dataset.game;
+      if (action.dataset.action === "toggle-tournament-game") {
+        const gameId = action.dataset.game;
+        state.tournamentSelectedGames = state.tournamentSelectedGames.includes(gameId)
+          ? state.tournamentSelectedGames.filter(id => id !== gameId)
+          : [...state.tournamentSelectedGames, gameId];
+        saveState();
+        render();
+        return;
+      }
       handleAction(action.dataset.action);
     });
 
     document.addEventListener("input", event => {
-      if (!event.target.matches("[data-player-index]")) return;
-      state.players[Number(event.target.dataset.playerIndex)] = event.target.value;
-      saveState();
-      const valid = state.players.filter(name => name.trim()).length >= 2;
-      const continueButton = document.querySelector('[data-action="players-next"]');
-      if (continueButton) continueButton.disabled = !valid;
-      event.target.setAttribute("aria-invalid", event.target.value.trim() ? "false" : "true");
+      if (event.target.matches("[data-catalog-search]")) {
+        state.catalogQuery = event.target.value;
+        saveState();
+        render();
+        document.querySelector("[data-catalog-search]")?.focus();
+        return;
+      }
+      if (event.target.matches("[data-player-index]")) {
+        state.players[Number(event.target.dataset.playerIndex)] = event.target.value;
+        saveState();
+        const valid = state.players.filter(name => name.trim()).length >= 2;
+        const continueButton = document.querySelector('[data-action="players-next"]');
+        if (continueButton) continueButton.disabled = !valid;
+        event.target.setAttribute("aria-invalid", event.target.value.trim() ? "false" : "true");
+      }
     });
 
     function handleAction(action) {
       const actions = {
         back: () => go(state.previousScreen || "home"),
         menu: () => openDialog(sessionDialog),
-        "start-party": () => go("players"),
+        "start-party": () => { state.flowContext = "free"; saveState(); go("format"); },
+        "format-next": () => go("players"),
         resume: () => go(state.currentGame >= 2 ? "physical" : "proposal"),
         "spin-wheel": spinHomeWheel,
         "roll-die": rollHomeDie,
         "shuffle-cards": revealHomeAces,
-        "quick-play": () => go("quick-play"),
-        games: () => go("games"),
+        "quick-play": () => { state.flowContext = "quick"; saveState(); go("quick-play"); },
+        games: () => { state.flowContext = state.screen === "home" ? "browse" : state.flowContext; saveState(); go("games"); },
+        "quick-games": () => { state.flowContext = "quick"; saveState(); go("games"); },
+        "session-games": () => { state.flowContext = state.partyFormat === "tournament" ? "tournament" : "free"; saveState(); go("games"); },
+        "return-games": () => go("games"),
         language: () => go("language"),
         "set-language-it": () => { state.language = "it"; saveState(); render(); },
         "set-language-en": () => { state.language = "en"; saveState(); render(); },
         "language-back": () => go(state.previousScreen === "settings" ? "settings" : "home"),
         "add-player": () => { if (state.players.length < 6) state.players.push(""); saveState(); render(); },
-        "players-next": () => go("setup"),
+        "players-next": () => go(state.partyFormat === "tournament" ? "tournament-setup" : "setup"),
         "setup-next": () => go("summary"),
         "summary-back": () => go("setup"),
         customize: () => go("customize"),
         "save-customize": () => go("summary"),
+        "tournament-calendar": () => go(state.tournamentMethod === "manual" ? "games" : "tournament-calendar"),
+        "lock-calendar": () => { state.tournamentLocked = true; saveState(); render(); },
+        "regenerate-calendar": () => { state.tournamentSchedule = [...state.tournamentSchedule.slice(1), state.tournamentSchedule[0]]; saveState(); render(); },
+        "tournament-games": () => { state.flowContext = "tournament"; saveState(); go("games"); },
+        "begin-tournament": () => { state.activeSession = true; state.currentGame = 1; state.completedGames = 0; state.score = Object.fromEntries(state.players.filter(name => name.trim()).map(name => [name, 0])); saveState(); go("proposal"); },
         "begin-session": () => {
           state.activeSession = true;
           state.currentGame = 1;
@@ -3153,8 +3619,10 @@
             go("group-ready");
           }
         },
-        "active-game": () => go("active-game"),
-        "physical-active": () => go("physical-active"),
+        "active-game": () => { state.selectedWinner = null; saveState(); go("active-game"); },
+        "physical-active": () => { state.freezeCalled = false; saveState(); go("physical-active"); },
+        "call-freeze": () => { state.freezeCalled = true; saveState(); render(); },
+        "resolve-secret-signals": () => { if (state.selectedWinner) completeGameWithWinner(state.selectedWinner); },
         "finish-game": () => { state.selectedWinner = null; saveState(); go("result-entry"); },
         "cancel-game": () => go("cancelled"),
         "confirm-result": () => {
@@ -3170,14 +3638,37 @@
         "accept-consequence": () => { state.consequenceAccepted = true; saveState(); go("next-proposal"); },
         "replace-consequence": () => { state.consequenceVersion += 1; saveState(); render(); },
         "skip-consequence": () => { state.consequenceAccepted = false; saveState(); go("next-proposal"); },
+        "replace-final-consequence": () => { state.finalConsequenceVersion += 1; saveState(); render(); },
+        "skip-final-consequence": () => { state.finalConsequenceSkipped = true; saveState(); render(); },
         "play-next": () => { state.currentGame = 2; saveState(); go("physical"); },
+        "tournament-next": () => { state.currentGame += 1; state.selectedGameId = state.currentGame % 2 ? "secret-signals" : "mirror-moves"; saveState(); go(state.selectedGameId === "mirror-moves" ? "physical" : "virtual-prep"); },
+        "tournament-retirement": () => go("tournament-retirement"),
+        "confirm-retirement": () => {
+          if (!state.retirementCandidate) return;
+          state.retiredPlayers = [...new Set([...state.retiredPlayers, state.retirementCandidate])];
+          delete state.score[state.retirementCandidate];
+          state.retirementCandidate = state.players.find(name => name.trim() && !state.retiredPlayers.includes(name)) || "";
+          saveState();
+          go("standings");
+        },
+        tiebreak: () => go("tiebreak"),
+        "play-tiebreak": () => { state.tiebreakRound += 1; state.currentGame += 1; state.selectedGameId = "secret-signals"; saveState(); go("virtual-prep"); },
         "edit-materials": () => go("setup"),
         "private-interrupted": () => go("private-interrupted"),
         "restart-private": () => { state.privatePlayer = 0; state.hasRevealed = false; saveState(); go("private-pass"); },
         "fix-no-match": () => { if (!state.resources.includes("Phone only")) state.resources.push("Phone only"); saveState(); go("proposal"); },
         "open-finish": () => openDialog(confirmDialog),
-        "quick-surprise": () => go("proposal"),
+        "quick-surprise": () => { state.flowContext = "quick"; state.selectedGameId = "secret-signals"; saveState(); go("proposal"); },
+        "quick-play-again": () => { state.selectedWinner = null; saveState(); go(state.selectedGameId === "mirror-moves" ? "physical" : "virtual-prep"); },
+        "quick-home": () => { state.activeSession = false; saveState(); go("home"); },
         "game-detail": () => go("game-detail"),
+        "select-quick-game": () => { state.flowContext = "quick"; saveState(); go(state.selectedGameId === "mirror-moves" ? "physical" : "virtual-prep"); },
+        "select-session-game": () => { state.flowContext = "free"; saveState(); go(state.selectedGameId === "mirror-moves" ? "physical" : "virtual-prep"); },
+        "review-tournament-games": () => {
+          state.tournamentSchedule = state.tournamentSelectedGames.slice(0, state.tournamentCount).map(id => CATALOG_GAMES.find(game => game.id === id)?.title).filter(Boolean);
+          saveState();
+          go("tournament-calendar");
+        },
         "correct-result": () => { state.selectedWinner = state.selectedWinner || "Alex"; saveState(); go("correction"); },
         "save-correction": () => {
           const winner = state.selectedWinner;
@@ -3186,7 +3677,7 @@
           go("history");
         },
         final: () => go("final"),
-        "new-party": () => { state = { ...defaultState, score: { ...defaultState.score }, screen: "players" }; saveState(); render(); },
+        "new-party": () => { state = { ...defaultState, score: { ...defaultState.score }, screen: "format" }; saveState(); render(); },
         "end-home": () => { state.activeSession = false; saveState(); go("home"); },
         home: () => go("home")
       };

@@ -10,7 +10,23 @@ const screenshotDirectory = process.env.RUCKUS_QA_DIR;
 async function screenshot(page, name) {
   if (!screenshotDirectory) return;
   fs.mkdirSync(screenshotDirectory, { recursive: true });
+  await page.waitForTimeout(300);
   await page.screenshot({ path: path.join(screenshotDirectory, `${name}.png`), fullPage: true });
+}
+
+async function assertCurrentLayout(page, label) {
+  const overflow = await page.evaluate(() => ({
+    document: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    device: document.querySelector(".device").scrollWidth - document.querySelector(".device").clientWidth
+  }));
+  assert.ok(overflow.document <= 1, `${label}: overflow pagina ${overflow.document}px`);
+  assert.ok(overflow.device <= 1, `${label}: overflow device ${overflow.device}px`);
+
+  const undersizedTargets = await page.locator(".screen button:visible, .app-header button:visible").evaluateAll(buttons => buttons.map(button => {
+    const rect = button.getBoundingClientRect();
+    return { action: button.dataset.action || button.textContent.trim(), height: rect.height, width: rect.width };
+  }).filter(target => target.height < 44 || target.width < 44));
+  assert.deepEqual(undersizedTargets, [], `${label}: controlli sotto 44x44 CSS px`);
 }
 
 async function openHome(browser, viewport, options = {}) {
@@ -75,15 +91,22 @@ async function verifyStaticHome(page) {
 
 async function verifyLogoMotion(page) {
   await page.locator('[data-route="home"]').click();
-  await page.waitForTimeout(150);
+  await page.evaluate(() => {
+    document.getAnimations().forEach(animation => {
+      animation.pause();
+      animation.currentTime = 0;
+    });
+  });
   assert.ok(Number(await page.locator(".ruckus-party").evaluate(element => getComputedStyle(element).opacity)) < 0.1, "PARTY deve restare nascosto prima dell'urto");
   assert.ok(Number(await page.locator(".ruckus-r-tile").evaluate(element => getComputedStyle(element).opacity)) < 0.1, "La R deve essere invisibile prima dello scontro");
   const earlyGap = await page.evaluate(() => document.querySelector(".ruckus-challenger").getBoundingClientRect().left - document.querySelector(".ruckus-carrier").getBoundingClientRect().right);
   assert.ok(earlyGap > 4, `Le aree non devono toccarsi prima del reveal: gap ${earlyGap}`);
 
+  await page.evaluate(() => document.getAnimations().forEach(animation => animation.play()));
+
   let collisionAt = null;
   let revealAt = null;
-  for (let elapsed = 150; elapsed <= 650; elapsed += 20) {
+  for (let elapsed = 0; elapsed <= 650; elapsed += 20) {
     const state = await page.evaluate(() => ({
       gap: document.querySelector(".ruckus-challenger").getBoundingClientRect().left - document.querySelector(".ruckus-carrier").getBoundingClientRect().right,
       opacity: Number(getComputedStyle(document.querySelector(".ruckus-r-tile")).opacity)
@@ -136,7 +159,7 @@ async function verifyMotion(page) {
 
 async function verifyHomeRoutesAndLanguage(page) {
   await page.locator('.home-mode-party [data-action="start-party"]').click();
-  await assert.doesNotReject(() => page.locator('[data-action="players-next"]').waitFor({ state: "visible" }));
+  await assert.doesNotReject(() => page.locator('[data-action="format-next"]').waitFor({ state: "visible" }));
   await page.locator('[data-route="home"]').click();
 
   await page.locator('.home-mode-quick [data-action="quick-play"]').click();
@@ -147,11 +170,184 @@ async function verifyHomeRoutesAndLanguage(page) {
   await assert.doesNotReject(() => page.locator('[data-action="game-detail"]').first().waitFor({ state: "visible" }));
   await page.locator('[data-route="home"]').click();
 
+  await page.locator('[data-route="home"]').click();
   await page.locator('[data-action="language"]').click();
   await page.locator('[data-action="set-language-en"]').click();
   await page.locator('[data-action="language-back"]').click();
   assert.equal(await page.locator("html").getAttribute("lang"), "en");
   await assert.match(await page.locator(".home-promise").innerText(), /One voice calls/);
+}
+
+async function verifyPartyFormatChoice(page) {
+  await page.locator('[data-route="home"]').click();
+  await page.locator('.home-mode-party [data-action="start-party"]').click();
+  await assert.doesNotReject(() => page.locator('[data-format="free"]').waitFor({ state: "visible" }));
+  await assert.doesNotReject(() => page.locator('[data-format="tournament"]').waitFor({ state: "visible" }));
+
+  await page.locator('[data-format="free"]').click();
+  await page.locator('[data-action="format-next"]').click();
+  await assert.doesNotReject(() => page.locator('[data-action="players-next"]').waitFor({ state: "visible" }));
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  const savedFormat = await page.evaluate(() => JSON.parse(localStorage.getItem("ruckus-phase-2b-prototype")).partyFormat);
+  assert.equal(savedFormat, "free", "Il formato Party Night deve restare nello stato locale del prototipo");
+}
+
+async function verifyFreeAndTournamentSetup(page) {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('[data-action="start-party"]').click();
+  await page.locator('[data-format="free"]').click();
+  await page.locator('[data-action="format-next"]').click();
+  await page.locator('[data-action="players-next"]').click();
+  await assert.doesNotReject(() => page.locator('[data-action="setup-next"]').waitFor({ state: "visible" }));
+  await page.locator('[data-action="setup-next"]').click();
+  await page.locator('[data-action="customize"]').click();
+  await assert.doesNotReject(() => page.locator('[data-preset="party"]').waitFor({ state: "visible" }));
+  await assert.doesNotReject(() => page.locator('[data-consequence="off"]').waitFor({ state: "visible" }));
+  await assertCurrentLayout(page, "customize-mobile");
+  await screenshot(page, "customize-mobile-430");
+
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('[data-action="start-party"]').click();
+  await page.locator('[data-format="tournament"]').click();
+  await page.locator('[data-action="format-next"]').click();
+  await page.locator('[data-action="players-next"]').click();
+  await assert.doesNotReject(() => page.locator('[data-tournament-count="5"]').waitFor({ state: "visible" }));
+  await assertCurrentLayout(page, "tournament-setup-mobile");
+  await screenshot(page, "tournament-setup-mobile-430");
+  await page.locator('[data-tournament-count="5"]').click();
+  await page.locator('[data-tournament-method="auto"]').click();
+  await page.locator('[data-action="tournament-calendar"]').click();
+  await assert.doesNotReject(() => page.locator('[data-action="lock-calendar"]').waitFor({ state: "visible" }));
+  await assertCurrentLayout(page, "tournament-calendar-mobile");
+  await screenshot(page, "tournament-calendar-mobile-430");
+  await page.locator('[data-action="lock-calendar"]').click();
+  assert.equal(await page.locator('[data-calendar-locked="true"]').count(), 1, "Il calendario Torneo deve diventare non modificabile dopo la conferma");
+}
+
+async function verifyCatalogContexts(page) {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('.home-mode-games [data-action="games"]').click();
+  assert.equal(await page.locator('[data-catalog-context="browse"]').count(), 1);
+  await assert.match(await page.locator(".catalog-game small").first().innerText(), /giocatori - Solo telefono/);
+  const brokenImages = await page.locator(".catalog-screen img").evaluateAll(images => images.filter(image => !image.complete || image.naturalWidth === 0).map(image => image.src));
+  assert.deepEqual(brokenImages, [], "Le copertine del catalogo devono caricarsi tutte");
+  await assertCurrentLayout(page, "catalog-browse-mobile");
+  await screenshot(page, "catalog-browse-mobile-430");
+
+  await page.locator('[data-action="back"]').click();
+  await page.locator('.home-mode-quick [data-action="quick-play"]').click();
+  await page.locator('[data-action="quick-games"]').click();
+  assert.equal(await page.locator('[data-catalog-context="quick"]').count(), 1);
+  await page.locator('[data-action="game-detail"]').first().click();
+  assert.equal(await page.locator('[data-action="select-quick-game"]').count(), 1);
+
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('[data-action="start-party"]').click();
+  await page.locator('[data-format="tournament"]').click();
+  await page.locator('[data-action="format-next"]').click();
+  await page.locator('[data-action="players-next"]').click();
+  await page.locator('[data-tournament-method="manual"]').click();
+  await page.locator('[data-action="tournament-calendar"]').click();
+  assert.equal(await page.locator('[data-catalog-context="tournament"]').count(), 1);
+  await page.locator('[data-action="toggle-tournament-game"]').first().click();
+  assert.ok(await page.locator('[data-selected-game="true"]').count() >= 1, "Il catalogo Torneo deve supportare la selezione multipla");
+}
+
+async function verifyPlayableGames(page) {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('[data-route="proposal"]').click();
+  await page.locator('[data-action="prepare-virtual"]').click();
+  await page.locator('[data-action="start-private"]').click();
+
+  for (let player = 0; player < 2; player += 1) {
+    await page.locator('[data-action="private-ready"]').click();
+    await page.locator('[data-action="toggle-reveal-mode"]').click();
+    await page.locator('[data-reveal-zone]').click();
+    await page.locator('[data-action="memorized"]').click();
+  }
+
+  await page.locator('[data-action="active-game"]').click();
+  assert.equal(await page.locator('[data-action="finish-game"]').count(), 0, "Secret Signals non deve terminare con un pulsante generico");
+  await page.locator('[data-accuser]').first().click();
+  await page.locator('[data-action="resolve-secret-signals"]').click();
+  await assert.doesNotReject(() => page.locator('.result-screen').waitFor({ state: "visible" }));
+  await assert.match(await page.locator('.big-result strong').innerText(), /Alex/i);
+
+  await page.locator('[data-route="physical"]').click();
+  await page.locator('[data-action="physical-active"]').click();
+  assert.equal(await page.locator('[data-action="finish-game"]').count(), 0, "Mirror Moves non deve terminare con un pulsante generico");
+  await page.locator('[data-action="call-freeze"]').click();
+  await page.locator('[data-eliminated="Marta"]').click();
+  await assert.doesNotReject(() => page.locator('.result-screen').waitFor({ state: "visible" }));
+  await assert.match(await page.locator('.big-result strong').innerText(), /Alex/i);
+}
+
+async function verifyQuickAndFinalStates(page) {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('[data-route="final"]').click();
+  assert.equal(await page.locator('[data-final-kind="neutral"]').count(), 1, "Una sessione senza risultati deve chiudersi senza inventare campioni");
+
+  await page.locator('[data-route="home"]').click();
+  await page.locator('[data-action="quick-play"]').click();
+  await page.locator('[data-action="quick-surprise"]').click();
+  await page.locator('[data-route="result-entry"]').click();
+  await page.locator('[data-winner="Alex"]').click();
+  await page.locator('[data-action="confirm-result"]').click();
+  assert.equal(await page.locator('[data-action="quick-home"]').count(), 1, "Quick Play deve chiudere fuori dalla classifica Party Night");
+  assert.equal(await page.locator('[data-action="standings"]').count(), 0);
+
+  await page.locator('[data-route="tournament-retirement"]').click();
+  await assert.doesNotReject(() => page.locator('[data-action="confirm-retirement"]').waitFor({ state: "visible" }));
+  await page.locator('[data-route="tiebreak"]').click();
+  await assert.doesNotReject(() => page.locator('[data-action="play-tiebreak"]').waitFor({ state: "visible" }));
+}
+
+async function verifyNewFlowLocalization(page) {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.locator('[data-action="start-party"]').click();
+  assert.equal(await page.locator("html").getAttribute("lang"), "it");
+  await assert.match(await page.locator(".screen-title").innerText(), /Come giochiamo/);
+  await assert.match(await page.locator('[data-format="free"] strong').innerText(), /Serata libera/);
+
+  await page.locator('[data-format="tournament"]').click();
+  await page.locator('[data-action="format-next"]').click();
+  await page.locator('[data-action="players-next"]').click();
+  await assert.match(await page.locator(".screen-title").innerText(), /Costruisci il calendario/);
+  await assert.match(await page.locator('[data-action="tournament-calendar"]').innerText(), /Genera calendario/);
+
+  await page.locator('[data-route="tournament-retirement"]').click();
+  await assert.match(await page.locator(".screen-title").innerText(), /Chi si ritira/);
+  await page.locator('[data-route="tiebreak"]').click();
+  await assert.match(await page.locator(".screen-title").innerText(), /parità/);
+  await page.locator('[data-route="final"]').click();
+  await assert.match(await page.locator("[data-final-kind=neutral]").innerText(), /Nessun risultato confermato/i);
+
+  await page.locator('[data-route="home"]').click();
+  await page.locator('[data-action="language"]').click();
+  await page.locator('[data-action="set-language-en"]').click();
+  await page.locator('[data-action="language-back"]').click();
+  await page.locator('[data-route="final"]').click();
+  assert.equal(await page.locator("html").getAttribute("lang"), "en");
+  await assert.match(await page.locator("[data-final-kind=neutral]").innerText(), /No confirmed results/i);
+}
+
+async function verifyCoreRouteLayout(page, label) {
+  const routes = [
+    "players", "proposal", "next-proposal", "physical", "private-pass", "result-entry",
+    "tournament-retirement", "tiebreak", "final", "no-match", "error"
+  ];
+  for (const route of routes) {
+    await page.locator(`[data-route="${route}"]`).click();
+    await assertCurrentLayout(page, `${label} ${route}`);
+  }
 }
 
 async function verifyModalLock(page) {
@@ -183,7 +379,18 @@ async function run() {
   const mobileWide = await openHome(browser, { width: 430, height: 932 });
   await verifyStaticHome(mobileWide.page);
   await verifyHomeRoutesAndLanguage(mobileWide.page);
+  await verifyPartyFormatChoice(mobileWide.page);
+  await verifyFreeAndTournamentSetup(mobileWide.page);
+  await verifyCatalogContexts(mobileWide.page);
+  await verifyPlayableGames(mobileWide.page);
+  await verifyQuickAndFinalStates(mobileWide.page);
+  await verifyNewFlowLocalization(mobileWide.page);
   await verifyModalLock(mobileWide.page);
+  await verifyCoreRouteLayout(mobileWide.page, "mobile-430");
+  await mobileWide.page.locator('[data-route="tiebreak"]').click();
+  await screenshot(mobileWide.page, "tiebreak-mobile-430");
+  await mobileWide.page.locator('[data-route="final"]').click();
+  await screenshot(mobileWide.page, "final-mobile-430");
   await mobileWide.page.locator('[data-route="home"]').click();
   await mobileWide.page.waitForTimeout(1300);
   await screenshot(mobileWide.page, "home-mobile-430");
@@ -198,6 +405,12 @@ async function run() {
 
   const desktop = await openHome(browser, { width: 1440, height: 1000 });
   await verifyStaticHome(desktop.page);
+  await verifyCoreRouteLayout(desktop.page, "desktop-1440");
+  await desktop.page.locator('[data-route="tiebreak"]').click();
+  await screenshot(desktop.page, "tiebreak-desktop-1440");
+  await desktop.page.locator('[data-route="final"]').click();
+  await screenshot(desktop.page, "final-desktop-1440");
+  await desktop.page.locator('[data-route="home"]').click();
   await screenshot(desktop.page, "home-desktop-1440");
   assert.deepEqual(desktop.errors, [], "La Home desktop non deve generare errori JavaScript");
   await desktop.context.close();
@@ -217,10 +430,10 @@ async function run() {
   await reduced.context.close();
 
   await browser.close();
-  console.log("PASS high-fidelity Home + D-021: mobile, landscape, desktop, motion, modal e reduced motion verificati");
+  console.log("PASS prototipo high-fidelity: flussi, giochi, responsive, lingue, motion, modal e reduced motion verificati");
 }
 
-run().catch(error => {
+run().then(() => process.exit(0)).catch(error => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });

@@ -2,7 +2,7 @@
 
 ## Stato
 
-`Manifesto Sociale` è stata approvata dall'owner il 2026-08-22 come base della V1. `Petrolio festa` è il candidato di affinamento più recente: trasferisce nel prototipo high-fidelity una palette petrolio, una nuova coppia tipografica e motion indipendente per ruota, dado e carte. Non è ancora approvato dall'owner e non sostituisce automaticamente la baseline di D-019.
+`Manifesto Sociale` è stata approvata dall'owner il 2026-08-22 come base della V1. `Petrolio festa` è stata approvata dall'owner il 2026-08-29 come affinamento high-fidelity: trasferisce nel prototipo una palette petrolio, una nuova coppia tipografica e motion indipendente per ruota, dado e carte. Il sistema logo `Passa la R` resta quello approvato in D-021.
 
 ## Obiettivo
 
@@ -148,15 +148,15 @@ I titoli devono usare `text-wrap: balance`; corpo e istruzioni `text-wrap: prett
 
 Il percorso principale dimostra:
 
-1. Home Session-first e setup Party Night in tre passaggi.
-2. Primo gioco Virtual, `Secret Signals`, con due private reveal sul telefono condiviso.
-3. Risultato, classifica e conseguenza opzionale come momenti separati.
-4. Secondo gioco Physical, `Mirror Moves`, senza materiali e con telefono usato come supporto.
-5. Secondo risultato e finale, incluso il caso di più campioni a pari merito.
+1. Home Session-first, scelta tra `Serata libera` e `Torneo` dentro Party Night e setup completo dei due formati.
+2. Catalogo integrato nei contesti consultazione, Quick Play, Serata libera e selezione multipla Torneo.
+3. Primo gioco Virtual, `Secret Signals`, con private reveal e accusa condivisa fino al risultato.
+4. Secondo gioco Physical, `Mirror Moves`, con freeze, scelta di chi si è mosso e risultato.
+5. Classifiche, conseguenze, finale neutro o con punteggio, ritiro e spareggio Torneo.
 
 Gli shortcut laterali rendono verificabili anche no-match, errore recuperabile, uscita anticipata e finale senza ripercorrere ogni volta il flusso completo.
 
-Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`. Lo stato corrente incorpora `Petrolio festa` come candidato da valutare, senza registrarlo come approvato.
+Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`. Lo stato corrente incorpora la combinazione approvata `Petrolio festa` + `Passa la R`.
 
 ## Lingue
 
@@ -185,7 +185,14 @@ Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`. Lo stato corrent
 - Accessi separati verso Party Night, Quick Play e Games e cambio italiano-inglese verificati senza perdere la funzione scenica degli oggetti.
 - Reduced motion verificato senza animazioni attive e senza bloccare i risultati.
 
-Il QA completo end-to-end del prototipo corrente resta da rieseguire prima della consegna finale di Phase 2B, perché il controllo di questo workstream è intenzionalmente limitato alla Home trasferita.
+## QA end-to-end del prototipo completo
+
+- Flussi Serata libera, Torneo, quattro contesti del catalogo, Quick Play e due giochi simulabili verificati fino al risultato.
+- Viewport 375, 430, 844 landscape e 1440 CSS px verificati senza overflow orizzontale; controlli visibili verificati ad almeno 44x44 CSS px.
+- Italiano e inglese verificati sui nuovi flussi senza perdita di stato; metadati dinamici del catalogo inclusi.
+- Finale senza risultati verificato senza vincitore inventato; ritiro e spareggio Torneo verificati come percorsi accessibili.
+- Modal verificato con sfondo bloccato; reduced motion verificato senza animazioni attive e con risultati immediatamente leggibili.
+- Nessun errore JavaScript rilevato durante i percorsi automatici. Test: `prototypes/phase-2b-high-fidelity.test.cjs`.
 
 ## QA del sistema logo Passa la R
 
@@ -209,5 +216,5 @@ Il QA completo end-to-end del prototipo corrente resta da rieseguire prima della
 - Font remoti sono accettabili nel prototipo, ma la strategia di caricamento appartiene all'implementazione.
 - Durate, nomi e contenuti dei giochi sono dati finti per verificare il flusso.
 - Il prototipo usa `localStorage` soltanto come stato finto; il dominio prodotto non deve dipendere direttamente da questa API.
-- L'owner deve scegliere se approvare `Petrolio festa` come affinamento della baseline o richiedere correzioni; la sua presenza nel prototipo non vale come approvazione.
-- L'approvazione del prototipo high-fidelity corrente resta il gate finale di Phase 2B.
+- L'approvazione visuale di `Petrolio festa` non rende definitivi durata, naming o contenuti finti del catalogo.
+- La revisione owner del prototipo high-fidelity completo resta il gate finale di Phase 2B.

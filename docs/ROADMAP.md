@@ -4,7 +4,7 @@
 
 `Phase 2B - visual direction / design system / high-fidelity prototype: in corso`
 
-Il repository contiene definizione di prodotto, UX architecture, prototipo low-fidelity, direzione visiva selezionata e candidato high-fidelity rivisto, ma nessuna implementazione prodotto. `Manifesto Sociale` resta la baseline approvata. Il prototipo corrente incorpora `Petrolio festa` come affinamento candidato con nuova palette, tipografia e motion della Home; attende il gate finale dell'owner e non costituisce approvazione implicita.
+Il repository contiene definizione di prodotto, UX architecture, prototipo low-fidelity e prototipo high-fidelity completo, ma nessuna implementazione prodotto. `Petrolio festa` + `Passa la R` è il sistema visuale approvato per il prototipo. Restano il gate owner sul prototipo completo e la successiva pianificazione dell'app vera.
 
 ## Phase 1 - Product Definition
 
@@ -111,10 +111,11 @@ Backend, account, multiplayer online e implementazione dell'app restano fuori da
 - Sistema logo `Passa la R` e icona Home approvati dall'owner in D-021: `mockups/11-passa-la-r-motion-focused.html`.
 - Design system e limiti: `docs/PHASE_2B_DESIGN.md`.
 - Prototipo high-fidelity corrente con Home `Petrolio festa` e sistema logo D-021 trasferito: `prototypes/phase-2b-high-fidelity.html`.
-- QA mirato della Home corrente completato su mobile, desktop, interazioni, lingue e reduced motion; QA end-to-end completo da rieseguire prima del gate finale.
+- Prototipo completato con setup Serata libera e Torneo, catalogo contestuale, Quick Play, due giochi simulabili, risultati, finali e stati Torneo.
+- QA end-to-end completato su mobile, landscape e desktop, flussi, lingue, tap target, modal, errori e reduced motion.
 
 ## Gate Phase 2B ancora aperto
 
-L'owner deve approvare `Petrolio festa` nel prototipo high-fidelity oppure richiedere correzioni. Solo dopo questa risposta e il QA end-to-end sullo stato corrente si può dichiarare conclusa Phase 2B e definire il workstream successivo senza implementarlo automaticamente.
+L'owner deve provare e approvare il prototipo high-fidelity completo oppure richiedere correzioni. Solo dopo questa risposta si può dichiarare conclusa Phase 2B e definire il workstream dell'app vera senza implementarlo automaticamente.
 
-Il trasferimento del sistema logo `Passa la R` nel prototipo high-fidelity è completato e verificato. Il prossimo gate resta la decisione owner su `Petrolio festa`; soltanto dopo un'eventuale approvazione si riesegue il QA end-to-end richiesto per chiudere Phase 2B.
+Il sistema visuale, il logo e il QA end-to-end sono completati e verificati. Il prossimo gate è esclusivamente la revisione owner del prototipo completo.
