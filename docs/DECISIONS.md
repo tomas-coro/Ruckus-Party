@@ -257,3 +257,12 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Tradeoff: durata, generazione del calendario, sostituzioni dopo un ritiro, compatibilità degli spareggi e storico persistente richiedono un workstream autonomo. Lo storico resta Future e il Torneo generale resta Later.
 - Status: `Recommended`, confermata dall'owner il 2026-08-24 come definizione di prodotto futura.
 - Owner answer: approvati scelta del formato all'avvio di Party Night, quantità 5/10/15 e manuale da 5, filtri o selezione esatta, calendario visibile e poi bloccato, un punto per vittoria, nessun co-campione, spareggi a oltranza, conseguenze immediate opzionali, esclusione degli handicap, gestione del ritiro e storico futuro. `Doppio` non viene modificato.
+
+### D-028 - Approvazione finale del prototipo high-fidelity
+
+- Problem: stabilire se il prototipo completo rappresenti una base sufficientemente verificata per chiudere Phase 2B e progettare l'app vera.
+- Recommendation: approvare il prototipo come riferimento visuale e di flusso per il prossimo workstream, mantenendo dati, durate, naming e contenuti di gioco come elementi ancora soggetti a implementazione e playtest.
+- Why: setup Serata libera e Torneo, catalogo contestuale, Quick Play, due giochi completi, risultati, finali e stati critici sono navigabili e hanno superato il QA end-to-end previsto.
+- Tradeoff: l'approvazione chiude il design del prototipo, non approva automaticamente stack tecnico, architettura, persistence reale o scope esecutivo della V1.
+- Status: `Recommended`, confermata dall'owner il 2026-08-30.
+- Owner answer: prototipo high-fidelity approvato; autorizzato l'avvio del workstream di progettazione dell'app vera.

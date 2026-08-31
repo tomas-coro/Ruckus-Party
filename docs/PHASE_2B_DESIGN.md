@@ -217,4 +217,4 @@ Prototipo cliccabile: `prototypes/phase-2b-high-fidelity.html`. Lo stato corrent
 - Durate, nomi e contenuti dei giochi sono dati finti per verificare il flusso.
 - Il prototipo usa `localStorage` soltanto come stato finto; il dominio prodotto non deve dipendere direttamente da questa API.
 - L'approvazione visuale di `Petrolio festa` non rende definitivi durata, naming o contenuti finti del catalogo.
-- La revisione owner del prototipo high-fidelity completo resta il gate finale di Phase 2B.
+- Il prototipo high-fidelity completo è stato approvato dall'owner il 2026-08-30. Phase 2B è conclusa; stack e architettura dell'app vera richiedono un workstream separato.

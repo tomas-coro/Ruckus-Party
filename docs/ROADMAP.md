@@ -2,9 +2,9 @@
 
 ## Stato attuale
 
-`Phase 2B - visual direction / design system / high-fidelity prototype: in corso`
+`Phase 2B - visual direction / design system / high-fidelity prototype: completata`
 
-Il repository contiene definizione di prodotto, UX architecture, prototipo low-fidelity e prototipo high-fidelity completo, ma nessuna implementazione prodotto. `Petrolio festa` + `Passa la R` è il sistema visuale approvato per il prototipo. Restano il gate owner sul prototipo completo e la successiva pianificazione dell'app vera.
+Il repository contiene definizione di prodotto, UX architecture e prototipo high-fidelity completo approvato, ma nessuna implementazione prodotto. `Petrolio festa` + `Passa la R` è il sistema visuale approvato. Il workstream successivo definisce stack, architettura e prima vertical slice dell'app vera.
 
 ## Phase 1 - Product Definition
 
@@ -89,7 +89,7 @@ Branding definitivo, monetizzazione, account, backend, multiplayer online e quan
 
 ## Phase 2B - visual direction / design system / high-fidelity prototype
 
-`In corso - gate high-fidelity in attesa di approvazione owner`
+`Completata - prototipo high-fidelity approvato dall'owner il 2026-08-30`
 
 Un solo obiettivo: trasformare i flussi approvati in una direzione visiva distintiva e in un prototipo mobile high-fidelity, senza iniziare ancora il codice prodotto.
 
@@ -114,8 +114,8 @@ Backend, account, multiplayer online e implementazione dell'app restano fuori da
 - Prototipo completato con setup Serata libera e Torneo, catalogo contestuale, Quick Play, due giochi simulabili, risultati, finali e stati Torneo.
 - QA end-to-end completato su mobile, landscape e desktop, flussi, lingue, tap target, modal, errori e reduced motion.
 
-## Gate Phase 2B ancora aperto
+## Gate Phase 2B chiuso
 
-L'owner deve provare e approvare il prototipo high-fidelity completo oppure richiedere correzioni. Solo dopo questa risposta si può dichiarare conclusa Phase 2B e definire il workstream dell'app vera senza implementarlo automaticamente.
+L'owner ha approvato il prototipo high-fidelity completo il 2026-08-30. Phase 2B è conclusa.
 
-Il sistema visuale, il logo e il QA end-to-end sono completati e verificati. Il prossimo gate è esclusivamente la revisione owner del prototipo completo.
+Il prossimo workstream è la progettazione architetturale dell'app vera. Nessuno stack o codice prodotto è approvato automaticamente da questo gate.
