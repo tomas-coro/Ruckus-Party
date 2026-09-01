@@ -1,0 +1,12 @@
+.feedback {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.feedback p {
+  margin: 0;
+  color: var(--color-petrol-deep);
+  font-weight: 700;
+  line-height: 1.45;
+  text-wrap: pretty;
+}

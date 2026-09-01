@@ -1,0 +1,12 @@
+.body {
+  margin: 0;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.actions {
+  margin-top: var(--space-6);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}

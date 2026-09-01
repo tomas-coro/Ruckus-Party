@@ -1,0 +1,23 @@
+.status {
+  min-height: 28px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--offline-status-color, #d7ebe2);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.status[data-ready="true"] .indicator {
+  background: var(--color-mint);
+}

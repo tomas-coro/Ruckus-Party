@@ -1,0 +1,231 @@
+.screen {
+  position: relative;
+  min-height: calc(100dvh - 76px);
+  display: grid;
+  align-content: center;
+  gap: clamp(1.5rem, 5vh, 3.5rem);
+  padding-block: var(--space-4) var(--space-8);
+  isolation: isolate;
+}
+
+.brandStage {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.logo {
+  width: min(100%, 24rem);
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.signal {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.carrier {
+  animation: carrier-in 560ms cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+.challenger {
+  animation: challenger-in 560ms cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+.tile {
+  transform-origin: 195px 75px;
+  animation: tile-at-impact 390ms var(--ease-out) 330ms both;
+}
+
+.impact {
+  transform-origin: 195px 75px;
+  animation: impact-flash 250ms ease 325ms both;
+}
+
+.wordmark {
+  margin-top: -0.7rem;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 0.5rem;
+  animation: word-reveal 360ms var(--ease-out) 720ms both;
+}
+
+.wordmarkStrong {
+  color: var(--color-shell);
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 14vw, 4.4rem);
+  line-height: 0.84;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.party {
+  padding: 0.42rem 0.55rem 0.35rem;
+  color: var(--color-petrol-deep);
+  background: var(--color-honey);
+  font-size: clamp(0.68rem, 2.5vw, 0.84rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  animation: party-reveal 280ms ease 930ms both;
+}
+
+.promise {
+  max-width: 31ch;
+  margin: var(--space-4) auto 0;
+  color: #d7ebe2;
+  font-size: clamp(0.95rem, 3.7vw, 1.08rem);
+  font-weight: 550;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.actionZone {
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.primaryAction {
+  width: 100%;
+  min-height: 104px;
+  padding: 1.15rem 1.25rem;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  border-width: 3px;
+  border-radius: 6px 22px 6px 22px;
+  text-align: left;
+  transform: rotate(-0.3deg);
+}
+
+.actionTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 7vw, 2.35rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+.actionDescription {
+  margin-top: var(--space-2);
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.offline {
+  min-height: 28px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: #d7ebe2;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.offline::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: var(--color-mint);
+}
+
+.localeError {
+  margin: 0;
+  color: var(--color-shell);
+  font-size: 0.82rem;
+  font-weight: 750;
+  line-height: 1.45;
+  text-align: center;
+}
+
+@keyframes carrier-in {
+  from { opacity: 0; transform: translateX(-135px); }
+  72% { opacity: 1; transform: translateX(9px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes challenger-in {
+  from { opacity: 0; transform: translateX(135px); }
+  72% { opacity: 1; transform: translateX(-9px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes tile-at-impact {
+  0% { opacity: 0; transform: scale(0.25) rotate(-7deg); }
+  32% { opacity: 1; transform: scaleX(1.13) scaleY(0.9) rotate(2deg); }
+  68% { opacity: 1; transform: scaleX(0.95) scaleY(1.05) rotate(-1deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes impact-flash {
+  0% { opacity: 0; transform: scale(0.35) rotate(-12deg); }
+  42% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
+@keyframes word-reveal {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes party-reveal {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .screen {
+    min-height: calc(100dvh - 76px);
+    grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 6rem);
+  }
+
+  .logo {
+    width: min(100%, 32rem);
+  }
+
+  .promise {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .wordmark {
+    gap: 0.35rem;
+  }
+
+  .wordmarkStrong {
+    font-size: 2.4rem;
+  }
+
+  .party {
+    padding-inline: 0.4rem;
+    font-size: 0.61rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carrier,
+  .challenger,
+  .tile,
+  .impact,
+  .wordmark,
+  .party {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}

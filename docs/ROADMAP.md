@@ -2,9 +2,9 @@
 
 ## Stato attuale
 
-`Phase 2B - visual direction / design system / high-fidelity prototype: completata`
+`Vertical slice PWA interna: implementata, in attesa del gate owner`
 
-Il repository contiene definizione di prodotto, UX architecture e prototipo high-fidelity completo approvato, ma nessuna implementazione prodotto. `Petrolio festa` + `Passa la R` è il sistema visuale approvato. Il workstream successivo definisce stack, architettura e prima vertical slice dell'app vera.
+Il repository contiene definizione di prodotto, UX architecture, prototipo high-fidelity approvato e una prima vertical slice PWA testata. La slice copre setup locale, `Segnali segreti`, private reveal, risultato, classifica, ripresa IndexedDB, recovery, due lingue, installabilità, offline e aggiornamenti a prompt. Non è ancora una V1 pubblica e non amplia lo scope a catalogo, Quick Play, Torneo, account o multiplayer online.
 
 ## Phase 1 - Product Definition
 
@@ -118,4 +118,14 @@ Backend, account, multiplayer online e implementazione dell'app restano fuori da
 
 L'owner ha approvato il prototipo high-fidelity completo il 2026-08-30. Phase 2B è conclusa.
 
-Il prossimo workstream è la progettazione architetturale dell'app vera. Nessuno stack o codice prodotto è approvato automaticamente da questo gate.
+Il workstream successivo ha prodotto la specifica architetturale approvata e la vertical slice interna descritta sotto. Questo non promuove automaticamente la slice a V1 pubblica.
+
+## Vertical slice PWA interna
+
+`Implementata il 2026-09-01 - gate owner e commit ancora aperti`
+
+- Stack approvato: React, TypeScript strict, Vite, CSS Modules e IndexedDB tramite `idb`.
+- Test: Vitest e React Testing Library per dominio/componenti, Playwright per Chromium e WebKit mobile.
+- Deploy predisposto per GitHub Pages solo da `main` dopo i gate verdi.
+- Limite del runner: Playwright WebKit non supporta stabilmente il reload offline con service worker; WebKit copre installabilità e flussi, mentre l'offline reale è verificato in Chromium.
+- Restano fuori dalla slice catalogo completo, Quick Play, conseguenze, secondo gioco, Torneo, backend, account e multiplayer online.

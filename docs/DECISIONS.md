@@ -266,3 +266,12 @@ Nessuna decisione owner è necessaria per chiudere Phase 1. Le raccomandazioni D
 - Tradeoff: l'approvazione chiude il design del prototipo, non approva automaticamente stack tecnico, architettura, persistence reale o scope esecutivo della V1.
 - Status: `Recommended`, confermata dall'owner il 2026-08-30.
 - Owner answer: prototipo high-fidelity approvato; autorizzato l'avvio del workstream di progettazione dell'app vera.
+
+### D-029 - Architettura della prima vertical slice PWA
+
+- Problem: implementare un percorso reale verificabile senza accoppiare UI, dominio, casualità e persistence o anticipare l'intera V1.
+- Recommendation: usare React con TypeScript strict e Vite, CSS Modules, dominio puro separato dalla UI, casualità centralizzata e seedabile, porte applicative per IndexedDB e lifecycle PWA, `idb` per la persistence locale e test Vitest, React Testing Library e Playwright.
+- Why: la slice resta deterministica, riprendibile, testabile senza browser nella business logic e installabile su GitHub Pages, mantenendo reversibili i confini ancora non implementati.
+- Tradeoff: il primo rilascio interno copre un solo gioco e un percorso verticale; catalogo, Quick Play, conseguenze, Torneo, backend, account e multiplayer online restano workstream separati. Il reload offline automatizzato di WebKit resta limitato dal runner Playwright ed è coperto in Chromium.
+- Status: `Recommended`, confermata dall'owner il 2026-08-31 con approvazione della specifica `docs/superpowers/specs/2026-08-31-pwa-vertical-slice-design.md` e del relativo piano test-first.
+- Owner answer: approvati stack, architettura PWA, specifica e piano; autorizzata l'implementazione locale, senza commit o push automatici.

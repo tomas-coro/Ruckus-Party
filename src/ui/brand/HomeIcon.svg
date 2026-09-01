@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Ruckus Party</title>
+  <rect width="512" height="512" rx="96" fill="#0d3432"/>
+  <path d="M64 174h134l58 82-58 82H64l70-82Z" fill="#6fd2b8"/>
+  <path d="M448 174H314l-58 82 58 82h134l-70-82Z" fill="#ff643b"/>
+  <rect x="164" y="112" width="184" height="288" rx="38" fill="#f7c64b" stroke="#132824" stroke-width="16"/>
+  <path d="M214 330V184h58c42 0 68 22 68 61 0 24-11 42-31 52l36 33h-55l-28-26h-2v26Zm46-66h12c16 0 24-7 24-20 0-13-8-19-24-19h-12Z" fill="#132824"/>
+</svg>

@@ -1,0 +1,85 @@
+.screen {
+  width: min(100%, 42rem);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: max(var(--space-4), env(safe-area-inset-top)) var(--space-4) var(--space-8);
+  display: grid;
+  align-content: start;
+  gap: var(--space-6);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.header h1,
+.header p {
+  margin: 0;
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 10vw, 3.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.header p {
+  margin-top: var(--space-2);
+  color: #d7ebe2;
+  line-height: 1.45;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.player {
+  padding: var(--space-3);
+  border-radius: 8px 18px 8px 18px;
+  color: var(--color-petrol-deep);
+  background: var(--color-shell);
+}
+
+.player label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 48px;
+  gap: var(--space-2);
+}
+
+.row input {
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.7rem 0.85rem;
+  border: 2px solid var(--color-petrol-deep);
+  border-radius: var(--radius-control);
+  color: var(--color-petrol-deep);
+  background: white;
+  font: inherit;
+  font-weight: 700;
+}
+
+.message {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--color-shell);
+  font-weight: 750;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}

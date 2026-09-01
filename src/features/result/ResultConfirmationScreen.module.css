@@ -1,0 +1,77 @@
+.screen {
+  width: min(100%, 38rem);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-4);
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+}
+
+.resultCard {
+  min-height: 18rem;
+  padding: var(--space-6);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-3);
+  border-radius: 50%;
+  color: var(--color-petrol-deep);
+  background: var(--color-honey);
+  text-align: center;
+}
+
+.resultCard p,
+.resultCard h1 {
+  margin: 0;
+}
+
+.resultCard p {
+  font-weight: 800;
+}
+
+.resultCard h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 15vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.resultCard strong {
+  font-size: 1.1rem;
+}
+
+.correction {
+  margin: 0;
+  padding: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-surface);
+  color: var(--color-petrol-deep);
+  background: var(--color-shell);
+}
+
+.correction legend {
+  font-weight: 850;
+}
+
+.correction label {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 750;
+}
+
+.correction button {
+  grid-column: 1 / -1;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}

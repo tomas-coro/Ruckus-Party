@@ -1,0 +1,82 @@
+.screen {
+  min-height: 100dvh;
+  padding: var(--space-6) var(--space-4);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.mark {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  border: 5px solid var(--color-petrol-deep);
+  border-radius: 18px;
+  color: var(--color-petrol-deep);
+  background: var(--color-honey);
+  font-family: var(--font-display);
+  font-size: 3rem;
+  transform: rotate(-3deg);
+}
+
+.screen h1,
+.screen p {
+  margin: 0;
+}
+
+.players {
+  width: min(100%, 32rem);
+  margin: 0;
+  padding: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  border: 0;
+}
+
+.players legend {
+  width: 100%;
+  margin-bottom: var(--space-2);
+  font-weight: 850;
+}
+
+.players label {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 2px solid var(--color-shell);
+  border-radius: var(--radius-control);
+  font-weight: 800;
+}
+
+.players input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-mandarin);
+}
+
+.screen > button {
+  width: min(100%, 32rem);
+}
+
+.screen h1 {
+  max-width: 12ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 12vw, 5rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.screen p {
+  max-width: 32ch;
+  color: #d7ebe2;
+  line-height: 1.5;
+  text-wrap: pretty;
+}

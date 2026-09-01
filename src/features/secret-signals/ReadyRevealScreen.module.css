@@ -1,0 +1,53 @@
+.screen {
+  width: min(100%, 36rem);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: max(var(--space-6), env(safe-area-inset-top)) var(--space-4) var(--space-8);
+  display: grid;
+  align-content: center;
+  gap: var(--space-3);
+}
+
+.player {
+  margin: 0;
+  color: var(--color-honey);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 10vw, 4rem);
+  line-height: 1;
+  text-align: center;
+}
+
+.secretStage {
+  min-height: 16rem;
+  padding: var(--space-6);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--color-petrol-deep);
+  background: var(--color-honey);
+  text-align: center;
+}
+
+.secret,
+.hidden {
+  margin: 0;
+  max-width: 13ch;
+  font-weight: 850;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.secret {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 9vw, 3.4rem);
+}
+
+.hidden {
+  font-size: 1.1rem;
+}
+
+.hold {
+  min-height: 72px;
+  touch-action: none;
+  user-select: none;
+}
