@@ -1,0 +1,58 @@
+.screen {
+  min-height: 100dvh;
+  padding: max(var(--space-4), env(safe-area-inset-top)) var(--space-4) var(--space-8);
+  display: grid;
+  place-items: center;
+}
+
+.cover {
+  width: min(100%, 34rem);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.shield {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-mint);
+}
+
+.shield svg {
+  width: 64px;
+  height: 64px;
+}
+
+.cover h1,
+.cover p {
+  margin: 0;
+}
+
+.cover h1 {
+  max-width: 10ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 12vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.cover > p {
+  color: #d7ebe2;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.notice {
+  font-weight: 800;
+}
+
+.actions {
+  width: 100%;
+  display: grid;
+  gap: var(--space-3);
+}

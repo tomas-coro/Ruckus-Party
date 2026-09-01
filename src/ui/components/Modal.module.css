@@ -1,0 +1,32 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: none;
+  background: rgb(19 40 36 / 72%);
+}
+
+.dialog {
+  width: min(100%, 30rem);
+  max-height: calc(100dvh - 2rem);
+  padding: var(--space-6);
+  overflow-y: auto;
+  touch-action: pan-y;
+  border: 3px solid var(--color-petrol-deep);
+  border-radius: var(--radius-surface);
+  color: var(--color-petrol-deep);
+  background: var(--color-shell);
+  box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 28%);
+}
+
+.title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 8vw, 2.4rem);
+  line-height: 0.98;
+}

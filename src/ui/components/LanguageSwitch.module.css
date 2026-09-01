@@ -1,0 +1,17 @@
+.switch {
+  min-width: 48px;
+  min-height: 44px;
+  padding: 0.45rem 0.65rem;
+  border: 2px solid var(--color-petrol-deep);
+  border-radius: 999px;
+  color: var(--color-petrol-deep);
+  background: var(--color-honey);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.switch:active {
+  transform: scale(0.96);
+}

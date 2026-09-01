@@ -1,0 +1,74 @@
+.screen {
+  width: min(100%, 44rem);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: max(var(--space-4), env(safe-area-inset-top)) var(--space-4) var(--space-8);
+  display: grid;
+  align-content: center;
+  gap: var(--space-3);
+}
+
+.back {
+  justify-self: start;
+}
+
+.card,
+.noMatch {
+  padding: clamp(1.4rem, 6vw, 2.4rem);
+  border-radius: 8px 24px 8px 24px;
+  color: var(--color-petrol-deep);
+  background: var(--color-shell);
+  box-shadow: var(--shadow-action);
+}
+
+.status {
+  margin: 0;
+  color: #8e2f21;
+  font-weight: 850;
+}
+
+.card h1,
+.noMatch h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 12vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.description,
+.reason,
+.noMatch p {
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.facts {
+  margin: var(--space-6) 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.facts li {
+  padding: 0.45rem 0.7rem;
+  border: 2px solid var(--color-petrol-deep);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.reason {
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--color-petrol-deep);
+  font-weight: 700;
+}
+
+.card > button,
+.noMatch > button {
+  width: 100%;
+  margin-top: var(--space-4);
+}
