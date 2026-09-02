@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23132824'/><text x='50' y='70' text-anchor='middle' font-size='62' font-family='sans-serif' font-weight='900' fill='%23f7c64b'>R</text></svg>">
+  <title>Ruckus Party - Recupero V1</title>
+  <style>
+    @font-face {
+      font-family: "Archivo Black";
+      src: url("assets/fonts/archivo-black-latin-400-normal.woff2") format("woff2");
+      font-display: swap;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: "Libre Franklin";
+      src: url("assets/fonts/libre-franklin-latin-wght-normal.woff2") format("woff2");
+      font-display: swap;
+      font-style: normal;
+      font-weight: 100 900;
+    }
+
+    :root {
+      --petrol: #0d3432;
+      --ink: #132824;
+      --mandarin: #ff643b;
+      --honey: #f7c64b;
+      --shell: #fff0d1;
+      --mint: #6fd2b8;
+      --danger: #b72f3c;
+      --focus: #fff3a1;
+      --display: "Archivo Black", sans-serif;
+      --body: "Libre Franklin", sans-serif;
+      --shadow: 6px 7px 0 #081d1b;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      min-height: 100%;
+      color: var(--shell);
+      background: #081d1b;
+      font-family: var(--body);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      overscroll-behavior: none;
+      user-select: none;
+    }
+
+    button,
+    input { font: inherit; }
+
+    input,
+    textarea { user-select: text; }
+
+    button {
+      min-height: 48px;
+      border: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    button:active { transform: translateY(3px); }
+    h1, h2, p { text-wrap: balance; }
+
+    .workspace {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) minmax(390px, 1fr);
+      background:
+        linear-gradient(135deg, rgb(111 210 184 / 7%) 0 18%, transparent 18% 78%, rgb(255 100 59 / 8%) 78%),
+        #081d1b;
+    }
+
+    .control-room {
+      padding: 32px 24px;
+      border-right: 1px solid rgb(255 240 209 / 15%);
+    }
+
+    .control-room h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .control-room p {
+      margin: 12px 0 24px;
+      color: #b9d5cb;
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    .screen-nav { display: grid; gap: 10px; }
+
+    .screen-nav button {
+      padding: 12px 14px;
+      border: 2px solid rgb(255 240 209 / 20%);
+      border-radius: 10px;
+      color: var(--shell);
+      background: transparent;
+      font-weight: 750;
+      text-align: left;
+    }
+
+    .screen-nav button[aria-current="true"] {
+      border-color: var(--honey);
+      color: var(--ink);
+      background: var(--honey);
+    }
+
+    .preview {
+      min-width: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .phone {
+      position: relative;
+      width: min(390px, 100%);
+      height: min(844px, calc(100vh - 48px));
+      min-height: 640px;
+      overflow: hidden;
+      border: 9px solid #020a09;
+      border-radius: 38px;
+      background: var(--petrol);
+      box-shadow: 0 30px 70px rgb(0 0 0 / 45%);
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      overflow: hidden auto;
+      display: none;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr auto;
+      background: var(--petrol);
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar { display: none; }
+
+    .screen.active { display: grid; }
+
+    .topbar {
+      min-height: 62px;
+      padding: max(10px, env(safe-area-inset-top)) 16px 8px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar-title {
+      overflow: hidden;
+      font-size: .68rem;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-align: center;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .icon-button {
+      width: 44px;
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgb(255 240 209 / 18%);
+      border-radius: 50%;
+      color: var(--shell);
+      background: transparent;
+      font-size: 1.1rem;
+      font-weight: 900;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      display: block;
+      overflow: hidden;
+      border-radius: 9px;
+      box-shadow: 0 3px 0 #081d1b;
+    }
+
+    .content {
+      min-height: 0;
+      padding: 12px 17px 24px;
+    }
+
+    .bottom-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      padding: 14px 17px max(18px, env(safe-area-inset-bottom));
+      display: grid;
+      gap: 10px;
+      background: linear-gradient(180deg, transparent, var(--petrol) 18%);
+    }
+
+    .primary,
+    .secondary {
+      width: 100%;
+      min-height: 58px;
+      padding: 12px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 8px 18px 8px 18px;
+      font-weight: 900;
+      box-shadow: 5px 6px 0 #081d1b;
+    }
+
+    .primary { color: var(--ink); background: var(--mandarin); }
+    .secondary { color: var(--ink); background: var(--shell); }
+
+    .primary:active,
+    .secondary:active { box-shadow: 2px 2px 0 #081d1b; }
+
+    .text-action {
+      min-height: 44px;
+      color: var(--shell);
+      background: transparent;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .screen-title {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(2.25rem, 11vw, 3.65rem);
+      line-height: .92;
+      letter-spacing: -.035em;
+    }
+
+    .screen-copy {
+      margin: 12px 0 0;
+      max-width: 36ch;
+      color: #cee3d9;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    /* Home */
+    .home .topbar { grid-template-columns: 38px minmax(0, 1fr) 48px; }
+    .home .content {
+      padding-top: 0;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+    }
+
+    .language {
+      width: 48px;
+      min-height: 44px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--honey);
+      font-size: .68rem;
+      font-weight: 900;
+    }
+
+    .ruckus-logo {
+      width: min(100%, 292px);
+      margin: -4px auto 0;
+      display: grid;
+      justify-items: center;
+    }
+
+    .ruckus-logo svg { width: 100%; height: auto; overflow: visible; }
+
+    .wordmark {
+      margin-top: -13px;
+      display: flex;
+      align-items: end;
+      gap: 8px;
+    }
+
+    .wordmark strong {
+      font-family: var(--display);
+      font-size: 2.85rem;
+      line-height: .84;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+    }
+
+    .wordmark b {
+      margin-bottom: 1px;
+      padding: 6px 8px 5px;
+      color: var(--ink);
+      background: var(--honey);
+      font-size: .66rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .promise {
+      max-width: 31ch;
+      margin: 14px 0 16px;
+      color: #cee3d9;
+      font-size: .78rem;
+      line-height: 1.45;
+    }
+
+    .home-stack {
+      min-height: 0;
+      padding-bottom: 8px;
+      display: grid;
+      grid-template-rows: 1.25fr 1fr 1fr;
+      gap: clamp(11px, 2.4vh, 19px);
+    }
+
+    .home-mode {
+      position: relative;
+      min-height: 94px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px;
+      border: 3px solid var(--ink);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .home-mode:nth-child(1) {
+      min-height: 124px;
+      border-radius: 6px 23px 6px 23px;
+      background: var(--mandarin);
+      transform: rotate(-.2deg);
+    }
+
+    .home-mode:nth-child(2) {
+      width: 92%;
+      margin-left: auto;
+      border-radius: 20px 5px 20px 5px;
+      background: var(--honey);
+      transform: rotate(.35deg);
+    }
+
+    .home-mode:nth-child(3) {
+      width: 96%;
+      border-radius: 5px 17px 5px 17px;
+      background: var(--shell);
+      transform: rotate(-.25deg);
+    }
+
+    .mode-copy {
+      min-width: 0;
+      padding: 15px 8px 14px 14px;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+    }
+
+    .mode-copy strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 1.12rem;
+      line-height: 1;
+    }
+
+    .mode-copy small {
+      display: block;
+      margin-top: 7px;
+      max-width: 24ch;
+      font-size: .65rem;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+
+    .object {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      border-left: 2px solid rgb(19 40 36 / 20%);
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .wheel {
+      width: 70px;
+      aspect-ratio: 1;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+      background: conic-gradient(var(--honey) 0 25%, var(--mint) 25% 50%, var(--shell) 50% 75%, var(--petrol) 75%);
+      box-shadow: 3px 4px 0 rgb(19 40 36 / 35%);
+      transition: transform 760ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .object.spinning .wheel { transform: rotate(520deg); }
+
+    .die {
+      width: 56px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 4px solid var(--ink);
+      border-radius: 13px;
+      color: var(--shell);
+      background: var(--petrol);
+      font-family: var(--display);
+      font-size: 1.6rem;
+      box-shadow: 4px 5px 0 rgb(19 40 36 / 35%);
+      transition: transform 460ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .object.rolling .die { transform: rotate(385deg) scale(.92); }
+
+    .cards {
+      position: relative;
+      width: 68px;
+      height: 66px;
+    }
+
+    .card {
+      position: absolute;
+      inset: 4px 14px;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 7px;
+      color: var(--ink);
+      background: var(--shell);
+      font-family: var(--display);
+      font-size: 1.15rem;
+      transition: transform 420ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .card:nth-child(1) { transform: rotate(-10deg) translateX(-8px); }
+    .card:nth-child(2) { transform: rotate(3deg); color: var(--danger); }
+    .card:nth-child(3) { transform: rotate(12deg) translateX(8px); }
+    .object.shuffling .card:nth-child(1) { transform: rotate(11deg) translateX(8px); }
+    .object.shuffling .card:nth-child(3) { transform: rotate(-11deg) translateX(-8px); }
+
+    /* Setup */
+    .step {
+      margin: 0 0 8px;
+      color: var(--mint);
+      font-size: .66rem;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .setup-grid { margin-top: 22px; padding-right: 7px; display: grid; gap: 14px; }
+
+    .choice-panel {
+      margin: 0;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 8px 22px 8px 22px;
+      color: var(--ink);
+      background: var(--shell);
+      box-shadow: 5px 6px 0 #081d1b;
+    }
+
+    .choice-panel.resources { background: var(--honey); }
+
+    .panel-title {
+      margin: 0 0 12px;
+      font-family: var(--display);
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+
+    .duration-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .resource-grid { display: grid; gap: 8px; }
+
+    .choice {
+      min-height: 52px;
+      padding: 9px 11px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 2px solid var(--ink);
+      border-radius: 11px;
+      background: transparent;
+      font-size: .83rem;
+      font-weight: 800;
+    }
+
+    .choice input { width: 20px; height: 20px; margin: 0; accent-color: var(--mandarin); }
+
+    /* Reveal */
+    .reveal .content {
+      display: grid;
+      grid-template-rows: auto minmax(280px, 1fr) auto;
+      gap: 16px;
+    }
+
+    .player-stamp {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .player-stamp strong {
+      color: var(--honey);
+      font-family: var(--display);
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .player-stamp span {
+      max-width: 19ch;
+      color: #cee3d9;
+      font-size: .72rem;
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    .secret-stage {
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      padding: 26px;
+      border: 3px solid var(--ink);
+      border-radius: 8px 42px 8px 42px;
+      color: var(--ink);
+      background: var(--honey);
+      box-shadow: var(--shadow);
+      touch-action: none;
+    }
+
+    .secret-stage::before,
+    .secret-stage::after {
+      content: "";
+      position: absolute;
+      width: 170px;
+      height: 48px;
+      background: var(--mint);
+      transform: rotate(-28deg);
+    }
+
+    .secret-stage::before { top: -4px; left: -48px; }
+    .secret-stage::after { right: -54px; bottom: 2px; background: var(--mandarin); }
+
+    .secret-stage p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: 11ch;
+      font-family: var(--display);
+      font-size: 2.5rem;
+      line-height: 1.02;
+      text-align: center;
+    }
+
+    .secret-stage .covered {
+      max-width: 18ch;
+      font-family: var(--body);
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .hold-label {
+      min-height: 64px;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      color: var(--ink);
+      background: var(--mandarin);
+      font-weight: 900;
+      box-shadow: 5px 6px 0 #081d1b;
+    }
+
+    .hold-label.is-held { box-shadow: 2px 2px 0 #081d1b; transform: translateY(3px); }
+
+    .memorized:disabled {
+      opacity: .42;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Standings and finale */
+    .progress-line {
+      margin: 18px 0 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      color: #cee3d9;
+      font-size: .7rem;
+      font-weight: 800;
+    }
+
+    .track { height: 8px; overflow: hidden; border-radius: 999px; background: rgb(255 240 209 / 18%); }
+    .track span { width: 46%; height: 100%; display: block; background: var(--mint); }
+
+    .score-list { margin: 0; padding: 0; display: grid; gap: 10px; list-style: none; }
+
+    .score-list li {
+      min-height: 76px;
+      padding: 12px 15px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 7px 18px 7px 18px;
+      color: var(--ink);
+      background: var(--shell);
+    }
+
+    .score-list li:first-child { background: var(--honey); box-shadow: 5px 6px 0 #081d1b; }
+    .rank { font-family: var(--display); font-size: 1.65rem; }
+    .score-list strong { overflow-wrap: anywhere; }
+    .points { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    .session-strip {
+      margin-top: 18px;
+      padding: 13px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      border: 2px solid rgb(255 240 209 / 22%);
+      border-radius: 13px;
+    }
+
+    .session-strip strong,
+    .session-strip span { display: block; }
+    .session-strip strong { color: var(--honey); font-family: var(--display); font-size: .86rem; line-height: 1.05; }
+    .session-strip span { margin-top: 4px; color: #cee3d9; font-size: .58rem; line-height: 1.3; }
+
+    .winner {
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+      display: grid;
+      align-content: end;
+      padding: 24px;
+      border: 3px solid var(--ink);
+      border-radius: 7px 38px 7px 38px;
+      color: var(--ink);
+      background: var(--mandarin);
+      box-shadow: var(--shadow);
+    }
+
+    .winner::before {
+      content: "1";
+      position: absolute;
+      top: -52px;
+      right: 12px;
+      color: rgb(255 240 209 / 28%);
+      font-family: var(--display);
+      font-size: 14rem;
+      line-height: 1;
+    }
+
+    .winner small,
+    .winner strong { position: relative; z-index: 1; }
+
+    .winner small { font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .winner strong { margin-top: 8px; font-family: var(--display); font-size: 3.25rem; line-height: .9; }
+
+    .recap {
+      margin-top: 16px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      border: 2px solid rgb(255 240 209 / 20%);
+      border-radius: 14px;
+    }
+
+    .recap div { min-width: 0; }
+    .recap strong { display: block; color: var(--honey); font-family: var(--display); font-size: 1.25rem; }
+    .recap span { display: block; margin-top: 3px; color: #cee3d9; font-size: .6rem; line-height: 1.25; }
+
+    .round-list {
+      margin: 14px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 7px;
+      list-style: none;
+    }
+
+    .round-list li {
+      min-height: 42px;
+      padding: 8px 11px;
+      display: grid;
+      grid-template-columns: 26px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgb(255 240 209 / 18%);
+      color: #cee3d9;
+      font-size: .68rem;
+    }
+
+    .round-list b { color: var(--shell); }
+    .round-list strong { color: var(--honey); }
+
+    .toast {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 20;
+      padding: 12px 14px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      color: var(--ink);
+      background: var(--mint);
+      font-size: .75rem;
+      font-weight: 800;
+      box-shadow: 4px 5px 0 #081d1b;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show { opacity: 1; transform: none; }
+
+    @media (max-width: 700px) {
+      .workspace { display: block; }
+      .control-room { display: none; }
+      .preview { min-height: 100dvh; padding: 0; }
+      .phone { width: 100%; height: 100dvh; min-height: 580px; border: 0; border-radius: 0; box-shadow: none; }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .workspace { display: block; }
+      .control-room { display: none; }
+      .preview { min-height: 100dvh; padding: 0; }
+      .phone { width: 100%; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+      .home .content { display: block; }
+      .home-stack { grid-template-columns: 1.25fr 1fr 1fr; grid-template-rows: none; }
+      .home-mode,
+      .home-mode:nth-child(2),
+      .home-mode:nth-child(3) { width: 100%; min-height: 132px; margin: 0; grid-template-columns: 1fr 72px; }
+      .ruckus-logo { width: 210px; }
+      .wordmark strong { font-size: 2.1rem; }
+      .promise { margin-block: 7px 10px; }
+    }
+
+    @media (max-height: 720px) and (min-width: 701px) {
+      .phone { height: calc(100vh - 24px); min-height: 600px; }
+      .preview { padding: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="workspace">
+    <aside class="control-room" aria-label="Schermate del prototipo">
+      <h1>Recupero V1</h1>
+      <p>Flusso mirato per validare gerarchia, densita, reveal e uscite prima di modificare l'app reale.</p>
+      <nav class="screen-nav">
+        <button type="button" data-open="home" aria-current="true">1. Home completa</button>
+        <button type="button" data-open="setup">2. Setup corretto</button>
+        <button type="button" data-open="reveal">3. Segreto unico</button>
+        <button type="button" data-open="standings">4. Classifica attiva</button>
+        <button type="button" data-open="final">5. Finale</button>
+      </nav>
+    </aside>
+
+    <section class="preview">
+      <div class="phone" data-phone>
+        <article class="screen home active" data-screen="home">
+          <header class="topbar">
+            <svg class="brand-icon" viewBox="0 0 100 100" role="img" aria-label="Ruckus Party">
+              <rect width="100" height="100" rx="18" fill="#132824"/>
+              <path d="M3 30h28l16 20-16 20H3l16-20Z" fill="#6fd2b8"/>
+              <path d="M97 30H69L53 50l16 20h28L81 50Z" fill="#ff643b"/>
+              <rect x="24" y="15" width="52" height="70" rx="10" fill="#f7c64b" stroke="#132824" stroke-width="4"/>
+              <text x="50" y="69" text-anchor="middle" fill="#132824" font-family="Archivo Black, sans-serif" font-size="50">R</text>
+            </svg>
+            <span class="topbar-title">La serata comincia qui</span>
+            <button class="language" type="button" aria-label="Cambia lingua">IT</button>
+          </header>
+          <div class="content">
+            <h1 class="ruckus-logo" aria-label="Ruckus Party">
+              <svg viewBox="0 0 390 150" aria-hidden="true">
+                <path d="M8 31h132l54 44-54 44H8l51-44Z" fill="#6fd2b8"/>
+                <path d="M382 31H250l-54 44 54 44h132l-51-44Z" fill="#ff643b"/>
+                <rect x="151" y="31" width="88" height="88" rx="12" fill="#f7c64b" stroke="#132824" stroke-width="6"/>
+                <text x="195" y="98" text-anchor="middle" fill="#132824" font-family="Archivo Black, sans-serif" font-size="64">R</text>
+              </svg>
+              <span class="wordmark" aria-hidden="true"><strong>Ruckus</strong><b>Party</b></span>
+            </h1>
+            <p class="promise">Una voce chiama. Il gruppo risponde. La serata prende vita.</p>
+            <div class="home-stack">
+              <section class="home-mode">
+                <button class="mode-copy" type="button" data-open="setup"><strong>Party Night</strong><small>Più giochi, classifica e un vero finale</small></button>
+                <button class="object" type="button" data-animate="spin" aria-label="Gira la ruota"><span class="wheel" aria-hidden="true"></span></button>
+              </section>
+              <section class="home-mode">
+                <button class="mode-copy" type="button" data-demo="quick"><strong>Partita veloce</strong><small>Una sfida subito, senza classifica condivisa</small></button>
+                <button class="object" type="button" data-animate="roll" aria-label="Lancia il dado"><span class="die" aria-hidden="true">4</span></button>
+              </section>
+              <section class="home-mode">
+                <button class="mode-copy" type="button" data-demo="games"><strong>Giochi</strong><small>Scopri regole, durata e materiali</small></button>
+                <button class="object" type="button" data-animate="shuffle" aria-label="Mescola le carte"><span class="cards" aria-hidden="true"><i class="card">A</i><i class="card">A</i><i class="card">A</i></span></button>
+              </section>
+            </div>
+          </div>
+        </article>
+
+        <article class="screen setup" data-screen="setup">
+          <header class="topbar">
+            <button class="icon-button" type="button" data-open="home" aria-label="Indietro">‹</button>
+            <span class="topbar-title">Party Night</span>
+            <button class="icon-button" type="button" data-demo="help" aria-label="Aiuto">?</button>
+          </header>
+          <div class="content">
+            <p class="step">Passo 2 di 3</p>
+            <h1 class="screen-title">Come giochiamo?</h1>
+            <p class="screen-copy">Scegli il ritmo e indica cosa avete davvero sul tavolo.</p>
+            <div class="setup-grid">
+              <section class="choice-panel" aria-labelledby="duration-title">
+                <h2 class="panel-title" id="duration-title">Durata</h2>
+                <div class="duration-grid">
+                  <label class="choice"><input type="radio" name="duration" checked> Breve</label>
+                  <label class="choice"><input type="radio" name="duration"> Standard</label>
+                  <label class="choice"><input type="radio" name="duration"> Lunga</label>
+                  <label class="choice"><input type="radio" name="duration"> Senza fine</label>
+                </div>
+              </section>
+              <section class="choice-panel resources" aria-labelledby="resources-title">
+                <h2 class="panel-title" id="resources-title">Cosa avete?</h2>
+                <div class="resource-grid">
+                  <label class="choice"><input type="checkbox" checked> Solo telefono</label>
+                  <label class="choice"><input type="checkbox"> Mazzo da Poker</label>
+                  <label class="choice"><input type="checkbox"> Mazzo da Briscola</label>
+                  <label class="choice"><input type="checkbox"> Carta e penna</label>
+                </div>
+              </section>
+            </div>
+          </div>
+          <footer class="bottom-actions">
+            <button class="primary" type="button" data-open="reveal">Continua</button>
+          </footer>
+        </article>
+
+        <article class="screen reveal" data-screen="reveal">
+          <header class="topbar">
+            <button class="icon-button" type="button" data-open="setup" aria-label="Indietro">‹</button>
+            <span class="topbar-title">Segnali segreti</span>
+            <button class="icon-button" type="button" data-demo="menu" aria-label="Menu sessione">•••</button>
+          </header>
+          <div class="content">
+            <div class="player-stamp"><strong>G</strong><span>Solo G guarda lo schermo. Gli altri si voltano.</span></div>
+            <button class="secret-stage" type="button" data-secret aria-label="Tieni premuto per mostrare il segreto">
+              <p class="covered" data-secret-copy>Tieni premuto qui per vedere il tuo segreto</p>
+            </button>
+            <div class="hold-label" data-hold-label>Tieni premuto. Rilascia per coprire.</div>
+          </div>
+          <footer class="bottom-actions">
+            <button class="primary memorized" type="button" disabled data-memorized data-open="standings">Ho memorizzato</button>
+          </footer>
+        </article>
+
+        <article class="screen standings" data-screen="standings">
+          <header class="topbar">
+            <span></span>
+            <span class="topbar-title">Party Night</span>
+            <button class="icon-button" type="button" data-demo="menu" aria-label="Menu sessione">•••</button>
+          </header>
+          <div class="content">
+            <h1 class="screen-title">La serata prende forma.</h1>
+            <div class="progress-line"><div class="track" aria-label="Avanzamento indicativo"><span></span></div><span>1 gioco</span></div>
+            <ol class="score-list">
+              <li><span class="rank">1</span><strong>Tommaso</strong><span class="points">1 punto</span></li>
+              <li><span class="rank">2</span><strong>Giulia</strong><span class="points">0 punti</span></li>
+            </ol>
+            <div class="session-strip" aria-label="Stato della sessione">
+              <div><strong>Breve</strong><span>ritmo scelto</span></div>
+              <div><strong>1 gioco</strong><span>completato</span></div>
+              <div><strong>Prossimo</strong><span>momento Party</span></div>
+            </div>
+          </div>
+          <footer class="bottom-actions">
+            <button class="primary" type="button" data-demo="continue">Continua la serata</button>
+            <button class="secondary" type="button" data-open="final">Concludi la serata</button>
+            <button class="text-action" type="button" data-open="home">Torna alla Home e riprendi dopo</button>
+          </footer>
+        </article>
+
+        <article class="screen final" data-screen="final">
+          <header class="topbar">
+            <span></span>
+            <span class="topbar-title">Finale Party Night</span>
+            <span></span>
+          </header>
+          <div class="content">
+            <div class="winner"><small>Campione della serata</small><strong>Tommaso</strong></div>
+            <div class="recap" aria-label="Riepilogo della serata">
+              <div><strong>3</strong><span>giochi completati</span></div>
+              <div><strong>2</strong><span>vittorie decisive</span></div>
+              <div><strong>42'</strong><span>di Party Night</span></div>
+            </div>
+            <ol class="round-list" aria-label="Risultati della serata">
+              <li><span>1</span><b>Segnali segreti</b><strong>Tommaso</strong></li>
+              <li><span>2</span><b>Specchio matto</b><strong>Giulia</strong></li>
+              <li><span>3</span><b>Segnali segreti</b><strong>Tommaso</strong></li>
+            </ol>
+          </div>
+          <footer class="bottom-actions">
+            <button class="primary" type="button" data-open="setup">Nuova Party Night</button>
+            <button class="secondary" type="button" data-open="home">Torna alla Home</button>
+          </footer>
+        </article>
+
+        <div class="toast" role="status" aria-live="polite" data-toast></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const screens = [...document.querySelectorAll("[data-screen]")];
+    const navButtons = [...document.querySelectorAll("[data-open]")];
+    const roomButtons = [...document.querySelectorAll(".screen-nav [data-open]")];
+    const toast = document.querySelector("[data-toast]");
+
+    function openScreen(id) {
+      screens.forEach((screen) => screen.classList.toggle("active", screen.dataset.screen === id));
+      roomButtons.forEach((button) => button.setAttribute("aria-current", String(button.dataset.open === id)));
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    navButtons.forEach((button) => button.addEventListener("click", () => openScreen(button.dataset.open)));
+
+    document.querySelectorAll("[data-demo]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const messages = {
+          quick: "Partita veloce: nel prodotto aprira scelta o Sorprendimi.",
+          games: "Giochi: nel prodotto aprira il catalogo iniziale.",
+          help: "La guida spiega cosa scegliere e come l'app usera questi dati.",
+          menu: "Menu sessione: impostazioni, Home senza perdita, concludi la serata.",
+          continue: "Prossimo passaggio: conseguenza opzionale o nuova proposta."
+        };
+        showToast(messages[button.dataset.demo]);
+      });
+    });
+
+    document.querySelectorAll("[data-animate]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const state = button.dataset.animate === "spin" ? "spinning" : button.dataset.animate === "roll" ? "rolling" : "shuffling";
+        button.classList.remove(state);
+        requestAnimationFrame(() => button.classList.add(state));
+        window.setTimeout(() => button.classList.remove(state), 900);
+      });
+    });
+
+    const secret = document.querySelector("[data-secret]");
+    const secretCopy = document.querySelector("[data-secret-copy]");
+    const holdLabel = document.querySelector("[data-hold-label]");
+    const memorized = document.querySelector("[data-memorized]");
+    let wasRevealed = false;
+
+    function revealSecret() {
+      secretCopy.className = "";
+      secretCopy.textContent = "Incrocia le caviglie";
+      holdLabel.classList.add("is-held");
+      holdLabel.textContent = "Segreto visibile. Rilascia per coprire.";
+      wasRevealed = true;
+    }
+
+    function coverSecret() {
+      secretCopy.className = "covered";
+      secretCopy.textContent = "Tieni premuto qui per vedere il tuo segreto";
+      holdLabel.classList.remove("is-held");
+      holdLabel.textContent = wasRevealed ? "Segreto coperto. Ora puoi continuare." : "Tieni premuto. Rilascia per coprire.";
+      memorized.disabled = !wasRevealed;
+    }
+
+    secret.addEventListener("pointerdown", revealSecret);
+    secret.addEventListener("pointerup", coverSecret);
+    secret.addEventListener("pointercancel", coverSecret);
+    secret.addEventListener("pointerleave", coverSecret);
+    secret.addEventListener("keydown", (event) => {
+      if (event.key === " " || event.key === "Enter") revealSecret();
+    });
+    secret.addEventListener("keyup", coverSecret);
+    window.addEventListener("blur", coverSecret);
+  </script>
+</body>
+</html>
